@@ -6,11 +6,11 @@
 
 ## Strategies
 
-`tests/fuzz/test_hypothesis.py`: hypothesis strategies that mutate fixtures (byte flips, truncation, object number swaps, xref corruption, zip entry renames) and assert the sandbox returns a report with a `parse.failure` finding, within the time limit, without an exception.
+`tests/fuzz/test_fuzz.py`: hypothesis strategies that mutate fixtures (byte flips, truncation, object number swaps, xref corruption, zip entry renames) and assert the sandbox returns a report with a `parse.failure` finding, within the time limit, without an exception.
 
 ## Running
 
-`uv run pytest tests/fuzz -q` (CI runs the corpus on every push; the hypothesis run uses a fixed seed in CI and a random seed nightly, US-021).
+Built at US-021 (22 Sep 2026). `uv run pytest tests/fuzz -q` runs the corpus (12 files) and three hypothesis strategies (byte replacement, truncation, random bytes) with `PAPERGLASS_FUZZ_EXAMPLES` examples each (15 by default; CI uses the same; a nightly run with more examples is a follow-up). Everything goes through `build_pages` and every registered detector; the assertion is that nothing raises.
 
 ## Adding a crasher
 
