@@ -36,6 +36,10 @@
   "parse_failures": [],
   "profile": "default",
   "rule_versions": {
+    "docx.part.hidden": "1",
+    "docx.run.color": "1",
+    "docx.run.tiny": "1",
+    "docx.run.vanish": "1",
     "pdf.active.content": "1",
     "pdf.actualtext.override": "1",
     "pdf.annotation.hidden": "1",

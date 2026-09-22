@@ -30,7 +30,7 @@ Built for PDF at US-007 (22 Sep 2026): `paperglass.views.structure.pdf_structure
 Probes per format emit candidates with a named mechanism and, where possible, a reproduce command:
 
 - PDF: text render mode, fill colour and alpha, ExtGState, clip path, optional content group state, MediaBox and CropBox, `/ActualText`, ToUnicode CMaps and font descriptors (Type 3, CID, missing ToUnicode), annotations and form fields, embedded files, `/JS` and `/OpenAction` (flag and stop), Info and XMP.
-- DOCX: `w:vanish`, run colour and shading, `w:sz`, comments, tracked changes, field codes, headers and footers, alt text, document properties.
+- DOCX (built at US-034, 22 Sep 2026: `parsers/docx_text.py`, `views/structure.docx_structure`, `models/docx.py`): `w:vanish` and `w:specVanish`, run colour against the page or shading colour, `w:sz`, comments, footnotes, endnotes, headers, footers, alt text, core properties, tracked deletions, field codes, `w:background`, a vbaProject part noted and never read. View A is python-docx paragraphs. There is no DOCX raster in v0.1.0, so the DOCX rules are self-proving; a converter for View B is a later story.
 - HTML and Markdown (v0.4.0): display none, visibility hidden, aria-hidden, zero size, off-screen positioning, comments, unused reference definitions; web-font remapping (v0.5.0).
 - PPTX and images (v0.5.0): hidden slides, off-slide shapes, notes, EXIF and XMP.
 

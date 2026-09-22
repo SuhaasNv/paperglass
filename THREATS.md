@@ -29,10 +29,10 @@ Thresholds are the defaults; profiles (`docs/04-report-design/REPORT_DESIGN.md`)
 
 | Technique id | Plain language | View, stage | Threshold or mechanism | Class | ATR | Release | Status |
 |--------------|----------------|-------------|------------------------|-------|-----|---------|--------|
-| `docx.run.vanish` | Text marked hidden in Word | C (self-proving) | `w:vanish` or `w:specVanish` on a run | data or instruction | none | v0.1.0 | planned |
-| `docx.run.color` | Text coloured to match the page | C, B stage 1 after conversion | run colour within 24/255 of the page or shading colour | data or instruction | none | v0.1.0 | planned |
-| `docx.run.tiny` | Text too small to read | C | run size below 2 pt (`w:sz` below 4) | data or instruction | none | v0.1.0 | planned |
-| `docx.part.hidden` | Text in comments, tracked changes, field codes, headers, footers, alt text or document properties | C | the part exists and carries text the body does not; alt text and properties are benign-hidden under length and phrasing constraints | data or instruction; benign-hidden | none | v0.1.0 | planned |
+| `docx.run.vanish` | Text marked hidden in Word | C (self-proving) | `w:vanish` or `w:specVanish` on a run | data or instruction | none | v0.1.0 | covered |
+| `docx.run.color` | Text coloured to match the page | C, B stage 1 after conversion | run colour within 24/255 of the page or shading colour | data or instruction | none | v0.1.0 | partial (colour rule only; no DOCX raster until a converter lands) |
+| `docx.run.tiny` | Text too small to read | C | run size below 2 pt (`w:sz` below 4) | data or instruction | none | v0.1.0 | covered |
+| `docx.part.hidden` | Text in comments, tracked changes, field codes, headers, footers, alt text or document properties | C | the part exists and carries text the body does not; alt text and properties are benign-hidden under length and phrasing constraints | data or instruction; benign-hidden | none | v0.1.0 | partial (comments, footnotes, endnotes, headers, footers, alt text, properties, tracked deletions, field codes) |
 
 ## Any text format
 

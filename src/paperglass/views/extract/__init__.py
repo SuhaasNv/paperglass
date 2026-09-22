@@ -8,11 +8,12 @@ OpenDataLoader are added there.
 from __future__ import annotations
 
 from paperglass.ingest.sniff import InputType
-from paperglass.parsers import pdf_text, plain_text
+from paperglass.parsers import docx_text, pdf_text, plain_text
 from paperglass.views.extract.base import Extractor, ExtractOutcome
 
 PDF = frozenset({InputType.PDF})
 TEXT = frozenset({InputType.TEXT, InputType.MARKDOWN})
+DOCX = frozenset({InputType.DOCX})
 
 EXTRACTORS: dict[str, Extractor] = {
     "pypdfium2": Extractor("pypdfium2", "pypdfium2", PDF, pdf_text.pypdfium2_extract),
@@ -20,6 +21,7 @@ EXTRACTORS: dict[str, Extractor] = {
     "pypdf": Extractor("pypdf", "pypdf", PDF, pdf_text.pypdf_extract),
     "pdfminer.six": Extractor("pdfminer.six", "pdfminer.six", PDF, pdf_text.pdfminer_extract),
     "plain": Extractor("plain", "paperglass", TEXT, plain_text.plain_extract),
+    "python-docx": Extractor("python-docx", "python-docx", DOCX, docx_text.docx_extract),
 }
 
 DEFAULT_EXTRACTOR = "pypdfium2"
@@ -27,6 +29,7 @@ DEFAULTS: dict[InputType, str] = {
     InputType.PDF: "pypdfium2",
     InputType.TEXT: "plain",
     InputType.MARKDOWN: "plain",
+    InputType.DOCX: "python-docx",
 }
 
 

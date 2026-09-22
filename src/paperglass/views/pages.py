@@ -7,9 +7,10 @@ from dataclasses import dataclass, field
 from paperglass.ingest import Limits, guard_pages, guard_size, guard_zip, sniff
 from paperglass.ingest.sniff import InputType
 from paperglass.models import DocumentStructure, DocumentText, ParseFailure
+from paperglass.models.docx import DocxStructure
 from paperglass.views.context import PageContext
 from paperglass.views.extract import Extractor, default_for, get
-from paperglass.views.structure import pdf_structure
+from paperglass.views.structure import docx_structure, pdf_structure
 
 ZIP_TYPES = frozenset({InputType.DOCX, InputType.PPTX, InputType.XLSX, InputType.ZIP})
 
@@ -63,11 +64,17 @@ def build_pages(data: bytes, *, limits: Limits, extractor: str | None = None) ->
     text = text_outcome.document
 
     structure: DocumentStructure | None = None
+    docx: DocxStructure | None = None
     if input_type is InputType.PDF:
         outcome = pdf_structure(data, limits=limits)
         if outcome.failure is not None:
             failures.append(outcome.failure)
         structure = outcome.structure
+    elif input_type is InputType.DOCX:
+        docx_outcome = docx_structure(data, limits=limits)
+        if docx_outcome.failure is not None:
+            failures.append(docx_outcome.failure)
+        docx = docx_outcome.structure
 
     page_count = structure.page_count if structure is not None else (text.page_count if text else 0)
     if (cap := guard_pages(page_count, limits)) is not None:
@@ -99,6 +106,7 @@ def build_pages(data: bytes, *, limits: Limits, extractor: str | None = None) ->
                 else (page_structure.height if page_structure else None),
                 structure=page_structure,
                 document=structure,
+                docx=docx,
             )
         )
     return Stage0(input_type, chosen.name, tuple(pages), text, structure, tuple(failures))
