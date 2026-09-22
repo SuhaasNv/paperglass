@@ -8,7 +8,7 @@ import pathlib
 import platform
 import time
 
-from pydantic import BaseModel, ConfigDict, ValidationError
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from paperglass.bench.adapter import AdapterResult, Detector
 from paperglass.bench.index import Corpus, Sample, sha256_file
@@ -27,6 +27,8 @@ class Results(BaseModel):
     hardware: str
     date: str
     metrics: Metrics
+    metrics_per_split: dict[str, Metrics] = Field(default_factory=dict)
+    """The same metrics per side of the split the index carries (train, test, unseen_generator)."""
     per_sample: tuple[SampleOutcome, ...]
 
     def to_json(self) -> str:
@@ -92,8 +94,17 @@ def run(corpus: Corpus, detector: Detector, *, command: str) -> Results:
         hardware=hardware(),
         date=dt.datetime.now(dt.UTC).date().isoformat(),
         metrics=compute(outcomes),
+        metrics_per_split=_per_split(corpus, outcomes),
         per_sample=tuple(outcomes),
     )
+
+
+def _per_split(corpus: Corpus, outcomes: list[SampleOutcome]) -> dict[str, Metrics]:
+    split_of = {s.sample_id: s.split for s in corpus.samples}
+    sides = sorted({s.split for s in corpus.samples})
+    if len(sides) < 2:
+        return {}
+    return {side: compute([o for o in outcomes if split_of[o.sample_id] == side]) for side in sides}
 
 
 def results_path(root: pathlib.Path, results: Results) -> pathlib.Path:

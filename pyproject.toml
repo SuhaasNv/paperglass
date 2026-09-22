@@ -134,6 +134,7 @@ module = [
   "puremagic.*",
   "rapidfuzz.*",
   "rapidocr_onnxruntime.*",
+  "sklearn.*",
   "lxml.*",
 ]
 ignore_missing_imports = true

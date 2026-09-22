@@ -361,6 +361,9 @@ def bench_fetch(
     corpus: Annotated[
         str, typer.Option(help="fixtures (in the repository) or a corpus name.")
     ] = "fixtures",
+    force: Annotated[
+        bool, typer.Option("--force", help="Rebuild a generated index, dropping its split.")
+    ] = False,
 ) -> None:
     """Build or fetch a corpus and verify every hash against its index."""
     from paperglass import __version__  # noqa: PLC0415
@@ -369,7 +372,7 @@ def bench_fetch(
 
     root = _repo_root()
     index = _corpus_index(corpus, root)
-    if corpus == "fixtures":
+    if corpus == "fixtures" and (force or not index.is_file()):
         built = fixtures_corpus(root / "tests" / "fixtures", version=__version__)
         write_index(built, index)
         typer.echo(f"wrote {index} with {len(built.samples)} samples (synthetic)")
@@ -448,6 +451,88 @@ def bench_report(
         splice(document.read_text(encoding="utf-8"), render(found)), encoding="utf-8"
     )
     typer.echo(f"{len(found)} results file(s) rendered into {document}")
+
+
+@bench_app.command("split")
+def bench_split(
+    corpus: Annotated[str, typer.Option()] = "fixtures",
+    test_share: Annotated[
+        float, typer.Option(help="Share of base documents on the test side.")
+    ] = 0.3,
+    seed: Annotated[int, typer.Option()] = 1,
+    held_out_source: Annotated[
+        str | None, typer.Option(help="A source held out entirely as the unseen generator.")
+    ] = None,
+) -> None:
+    """Write a hard-provenance split into the corpus index (whole base documents per side)."""
+    from paperglass.bench import (  # noqa: PLC0415
+        counts,
+        hard_provenance_split,
+        read_index,
+        straddling_bases,
+        write_index,
+    )
+
+    root = _repo_root()
+    index = _corpus_index(corpus, root)
+    if not index.is_file():
+        typer.echo(f"error: no index at {index}", err=True)
+        raise typer.Exit(3)
+    split = hard_provenance_split(
+        read_index(index, root), test_share=test_share, seed=seed, held_out_source=held_out_source
+    )
+    straddling = straddling_bases(split)
+    if straddling:
+        typer.echo(f"error: base documents straddle the split: {straddling[:5]}", err=True)
+        raise typer.Exit(3)
+    write_index(split, index)
+    for side, row in sorted(counts(split).items()):
+        typer.echo(f"{side}: {row['samples']} samples, {row['positives']} positives")
+
+
+@bench_app.command("audit")
+def bench_audit(
+    corpus: Annotated[str, typer.Option()] = "fixtures",
+    results: Annotated[
+        pathlib.Path | None, typer.Option(help="A results file for the label-shuffle check.")
+    ] = None,
+    out: Annotated[pathlib.Path | None, typer.Option(help="Write the audit as JSON here.")] = None,
+) -> None:
+    """Run the label-shuffle check on a results file and the text-only shortcut audit."""
+    from paperglass.bench import (  # noqa: PLC0415
+        label_shuffle_check,
+        load_results,
+        read_index,
+        shortcut_audit,
+    )
+
+    root = _repo_root()
+    index = _corpus_index(corpus, root)
+    if not index.is_file():
+        typer.echo(f"error: no index at {index}", err=True)
+        raise typer.Exit(3)
+    payload: dict[str, object] = {"corpus": corpus}
+    if results is not None:
+        loaded = load_results(results)
+        check = label_shuffle_check(list(loaded.per_sample))
+        payload["label_shuffle"] = check.model_dump()
+        typer.echo(
+            f"label shuffle: real f1 {check.f1_real}, shuffled f1 {check.f1_shuffled}, "
+            f"chance {check.f1_chance}: {'collapsed' if check.collapsed else 'DID NOT COLLAPSE'}"
+        )
+    audit = shortcut_audit(read_index(index, root))
+    payload["shortcut"] = audit.model_dump()
+    if audit.ran:
+        typer.echo(
+            f"shortcut audit: text-only accuracy {audit.text_only_accuracy}, f1 {audit.text_only_f1} "
+            f"on {audit.test_samples} test samples: {'SHORTCUT, the split is separable by text' if audit.shortcut else 'no shortcut'}"
+        )
+    else:
+        typer.echo(f"shortcut audit skipped: {audit.reason}")
+    if out is not None:
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        typer.echo(f"audit written to {out}")
 
 
 @bench_app.command("verify")

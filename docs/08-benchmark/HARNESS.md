@@ -15,10 +15,11 @@ Paperglass's own adapter maps its `Report` to that shape. Baselines wrap their C
 
 ## Commands
 
-`paperglass bench fetch --corpus v1` downloads or generates every sample the index names and verifies hashes.
+`paperglass bench fetch --corpus v1` downloads or generates every sample the index names and verifies hashes (`--force` rebuilds a generated index, dropping its split).
 `paperglass bench run --corpus v1 --detector paperglass` (or `--detector module:scan`) writes `results/<detector>/<version>/<corpus>.json`.
 `paperglass bench report --corpus v1` renders the tables in `BENCHMARK.md` from `results/`.
-`paperglass bench audit --corpus v1` runs the label-shuffle and shortcut audits (US-053).
+`paperglass bench split --corpus v1 [--test-share 0.3] [--seed 1] [--held-out-source redkit]` writes a hard-provenance split into the index: whole base documents per side, a held-out source in full as `unseen_generator`; refuses a split where a base document straddles (US-053).
+`paperglass bench audit --corpus v1 --results results/<detector>/<version>/v1.json` runs the label-shuffle check on that results file (F1 with permuted labels must fall to chance plus a margin) and the text-only shortcut audit (a TF-IDF logistic regression on View A text, fit on train, scored on test; above 0.8 accuracy the split is a shortcut); scikit-learn comes with `pip install 'paperglass[bench]'`, without it the audit says so (US-053). Results files carry `metrics_per_split` when the index has a split.
 `paperglass bench verify --corpus v1 --results results/<detector>/<version>/<corpus>.json` re-runs a committed file's command and refuses it if the numbers differ (latency excluded).
 
 ## Results file

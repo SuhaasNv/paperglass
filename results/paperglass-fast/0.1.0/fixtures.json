@@ -13,9 +13,9 @@
     "f1": 0.875,
     "false_positive_rate_informational": 0.0,
     "false_positive_rate_verdict_driving": 0.0,
-    "latency_p50_ms": 40.709,
+    "latency_p50_ms": 40.573,
     "latency_p50_per_page_ms": null,
-    "latency_p95_ms": 86.276,
+    "latency_p95_ms": 114.835,
     "negatives": 18,
     "positives": 18,
     "precision": 1.0,
@@ -51,6 +51,78 @@
     },
     "samples": 36
   },
+  "metrics_per_split": {
+    "test": {
+      "benign_hidden_called_malicious": 0,
+      "detection_recall": 1.0,
+      "errors": 0,
+      "f1": 0.8333,
+      "false_positive_rate_informational": 0.0,
+      "false_positive_rate_verdict_driving": 0.0,
+      "latency_p50_ms": 40.573,
+      "latency_p50_per_page_ms": null,
+      "latency_p95_ms": 47.555,
+      "negatives": 7,
+      "positives": 7,
+      "precision": 1.0,
+      "recall": 0.7143,
+      "recall_data": 1.0,
+      "recall_instruction": null,
+      "recall_per_family": {
+        "semantic-override": 0.0,
+        "structural": 1.0,
+        "unicode": 1.0,
+        "visual": 1.0
+      },
+      "recall_per_technique": {
+        "docx.run.color": 1.0,
+        "docx.run.vanish": 1.0,
+        "pdf.actualtext.override": 1.0,
+        "pdf.font.decoding_fallback": 1.0,
+        "pdf.text.low_contrast": 1.0,
+        "pdf.text.opacity": 1.0,
+        "text.unicode.invisible": 1.0
+      },
+      "samples": 14
+    },
+    "train": {
+      "benign_hidden_called_malicious": 0,
+      "detection_recall": 1.0,
+      "errors": 0,
+      "f1": 0.9,
+      "false_positive_rate_informational": 0.0,
+      "false_positive_rate_verdict_driving": 0.0,
+      "latency_p50_ms": 40.572,
+      "latency_p50_per_page_ms": null,
+      "latency_p95_ms": 248.708,
+      "negatives": 11,
+      "positives": 11,
+      "precision": 1.0,
+      "recall": 0.8182,
+      "recall_data": 1.0,
+      "recall_instruction": null,
+      "recall_per_family": {
+        "metadata": 1.0,
+        "semantic-override": 0.0,
+        "structural": 0.75,
+        "visual": 1.0
+      },
+      "recall_per_technique": {
+        "docx.part.hidden": 1.0,
+        "docx.run.tiny": 1.0,
+        "pdf.active.content": 1.0,
+        "pdf.annotation.hidden": 1.0,
+        "pdf.font.tounicode_mismatch": 1.0,
+        "pdf.layer.hidden": 1.0,
+        "pdf.metadata.payload": 1.0,
+        "pdf.render.mode": 1.0,
+        "pdf.text.covered": 1.0,
+        "pdf.text.offpage": 1.0,
+        "pdf.text.tiny": 1.0
+      },
+      "samples": 22
+    }
+  },
   "per_sample": [
     {
       "confirmed": [
@@ -68,7 +140,7 @@
       "labels": [
         "docx.part.hidden"
       ],
-      "latency_ms": 278.533,
+      "latency_ms": 275.171,
       "positive": true,
       "sample_id": "fixtures-docx.part.hidden-positive",
       "verdict": "malicious",
@@ -84,7 +156,7 @@
       "informational_findings": 0,
       "injection_kind": "none",
       "labels": [],
-      "latency_ms": 1.146,
+      "latency_ms": 0.986,
       "positive": false,
       "sample_id": "fixtures-docx.part.hidden-negative",
       "verdict": "clean",
@@ -106,7 +178,7 @@
       "labels": [
         "docx.run.color"
       ],
-      "latency_ms": 0.952,
+      "latency_ms": 0.864,
       "positive": true,
       "sample_id": "fixtures-docx.run.color-positive",
       "verdict": "malicious",
@@ -122,7 +194,7 @@
       "informational_findings": 0,
       "injection_kind": "none",
       "labels": [],
-      "latency_ms": 0.787,
+      "latency_ms": 0.836,
       "positive": false,
       "sample_id": "fixtures-docx.run.color-negative",
       "verdict": "clean",
@@ -144,7 +216,7 @@
       "labels": [
         "docx.run.tiny"
       ],
-      "latency_ms": 0.942,
+      "latency_ms": 0.654,
       "positive": true,
       "sample_id": "fixtures-docx.run.tiny-positive",
       "verdict": "malicious",
@@ -160,7 +232,7 @@
       "informational_findings": 0,
       "injection_kind": "none",
       "labels": [],
-      "latency_ms": 0.71,
+      "latency_ms": 0.738,
       "positive": false,
       "sample_id": "fixtures-docx.run.tiny-negative",
       "verdict": "clean",
@@ -182,7 +254,7 @@
       "labels": [
         "docx.run.vanish"
       ],
-      "latency_ms": 0.715,
+      "latency_ms": 0.781,
       "positive": true,
       "sample_id": "fixtures-docx.run.vanish-positive",
       "verdict": "malicious",
@@ -198,7 +270,7 @@
       "informational_findings": 0,
       "injection_kind": "none",
       "labels": [],
-      "latency_ms": 0.733,
+      "latency_ms": 0.637,
       "positive": false,
       "sample_id": "fixtures-docx.run.vanish-negative",
       "verdict": "clean",
@@ -220,7 +292,7 @@
       "labels": [
         "pdf.active.content"
       ],
-      "latency_ms": 226.525,
+      "latency_ms": 248.708,
       "positive": true,
       "sample_id": "fixtures-pdf.active.content-positive",
       "verdict": "clean",
@@ -236,7 +308,7 @@
       "informational_findings": 0,
       "injection_kind": "none",
       "labels": [],
-      "latency_ms": 37.854,
+      "latency_ms": 38.353,
       "positive": false,
       "sample_id": "fixtures-pdf.active.content-negative",
       "verdict": "clean",
@@ -256,7 +328,7 @@
       "labels": [
         "pdf.actualtext.override"
       ],
-      "latency_ms": 69.469,
+      "latency_ms": 48.893,
       "positive": true,
       "sample_id": "fixtures-pdf.actualtext.override-positive",
       "verdict": "clean",
@@ -272,7 +344,7 @@
       "informational_findings": 0,
       "injection_kind": "none",
       "labels": [],
-      "latency_ms": 42.109,
+      "latency_ms": 40.83,
       "positive": false,
       "sample_id": "fixtures-pdf.actualtext.override-negative",
       "verdict": "clean",
@@ -294,7 +366,7 @@
       "labels": [
         "pdf.annotation.hidden"
       ],
-      "latency_ms": 46.428,
+      "latency_ms": 41.653,
       "positive": true,
       "sample_id": "fixtures-pdf.annotation.hidden-positive",
       "verdict": "malicious",
@@ -310,7 +382,7 @@
       "informational_findings": 0,
       "injection_kind": "none",
       "labels": [],
-      "latency_ms": 45.416,
+      "latency_ms": 42.175,
       "positive": false,
       "sample_id": "fixtures-pdf.annotation.hidden-negative",
       "verdict": "clean",
@@ -330,7 +402,7 @@
       "labels": [
         "pdf.font.decoding_fallback"
       ],
-      "latency_ms": 42.98,
+      "latency_ms": 40.5,
       "positive": true,
       "sample_id": "fixtures-pdf.font.decoding_fallback-positive",
       "verdict": "clean",
@@ -346,7 +418,7 @@
       "informational_findings": 0,
       "injection_kind": "none",
       "labels": [],
-      "latency_ms": 58.228,
+      "latency_ms": 41.759,
       "positive": false,
       "sample_id": "fixtures-pdf.font.decoding_fallback-negative",
       "verdict": "clean",
@@ -366,7 +438,7 @@
       "labels": [
         "pdf.font.tounicode_mismatch"
       ],
-      "latency_ms": 48.768,
+      "latency_ms": 46.204,
       "positive": true,
       "sample_id": "fixtures-pdf.font.tounicode_mismatch-positive",
       "verdict": "clean",
@@ -382,7 +454,7 @@
       "informational_findings": 0,
       "injection_kind": "none",
       "labels": [],
-      "latency_ms": 34.666,
+      "latency_ms": 34.246,
       "positive": false,
       "sample_id": "fixtures-pdf.font.tounicode_mismatch-negative",
       "verdict": "clean",
@@ -404,7 +476,7 @@
       "labels": [
         "pdf.layer.hidden"
       ],
-      "latency_ms": 39.376,
+      "latency_ms": 39.274,
       "positive": true,
       "sample_id": "fixtures-pdf.layer.hidden-positive",
       "verdict": "malicious",
@@ -420,7 +492,7 @@
       "informational_findings": 0,
       "injection_kind": "none",
       "labels": [],
-      "latency_ms": 41.847,
+      "latency_ms": 39.988,
       "positive": false,
       "sample_id": "fixtures-pdf.layer.hidden-negative",
       "verdict": "clean",
@@ -442,7 +514,7 @@
       "labels": [
         "pdf.metadata.payload"
       ],
-      "latency_ms": 33.693,
+      "latency_ms": 33.886,
       "positive": true,
       "sample_id": "fixtures-pdf.metadata.payload-positive",
       "verdict": "malicious",
@@ -458,7 +530,7 @@
       "informational_findings": 0,
       "injection_kind": "none",
       "labels": [],
-      "latency_ms": 33.717,
+      "latency_ms": 33.478,
       "positive": false,
       "sample_id": "fixtures-pdf.metadata.payload-negative",
       "verdict": "clean",
@@ -480,7 +552,7 @@
       "labels": [
         "pdf.render.mode"
       ],
-      "latency_ms": 38.714,
+      "latency_ms": 40.709,
       "positive": true,
       "sample_id": "fixtures-pdf.render.mode-positive",
       "verdict": "malicious",
@@ -496,7 +568,7 @@
       "informational_findings": 0,
       "injection_kind": "none",
       "labels": [],
-      "latency_ms": 40.485,
+      "latency_ms": 40.495,
       "positive": false,
       "sample_id": "fixtures-pdf.render.mode-negative",
       "verdict": "clean",
@@ -518,7 +590,7 @@
       "labels": [
         "pdf.text.covered"
       ],
-      "latency_ms": 40.182,
+      "latency_ms": 40.648,
       "positive": true,
       "sample_id": "fixtures-pdf.text.covered-positive",
       "verdict": "malicious",
@@ -534,7 +606,7 @@
       "informational_findings": 0,
       "injection_kind": "none",
       "labels": [],
-      "latency_ms": 43.612,
+      "latency_ms": 40.741,
       "positive": false,
       "sample_id": "fixtures-pdf.text.covered-negative",
       "verdict": "clean",
@@ -556,7 +628,7 @@
       "labels": [
         "pdf.text.low_contrast"
       ],
-      "latency_ms": 41.082,
+      "latency_ms": 40.646,
       "positive": true,
       "sample_id": "fixtures-pdf.text.low_contrast-positive",
       "verdict": "malicious",
@@ -572,7 +644,7 @@
       "informational_findings": 0,
       "injection_kind": "none",
       "labels": [],
-      "latency_ms": 47.964,
+      "latency_ms": 41.095,
       "positive": false,
       "sample_id": "fixtures-pdf.text.low_contrast-negative",
       "verdict": "clean",
@@ -594,7 +666,7 @@
       "labels": [
         "pdf.text.offpage"
       ],
-      "latency_ms": 42.851,
+      "latency_ms": 42.322,
       "positive": true,
       "sample_id": "fixtures-pdf.text.offpage-positive",
       "verdict": "malicious",
@@ -610,7 +682,7 @@
       "informational_findings": 0,
       "injection_kind": "none",
       "labels": [],
-      "latency_ms": 40.12,
+      "latency_ms": 40.37,
       "positive": false,
       "sample_id": "fixtures-pdf.text.offpage-negative",
       "verdict": "clean",
@@ -632,7 +704,7 @@
       "labels": [
         "pdf.text.opacity"
       ],
-      "latency_ms": 49.127,
+      "latency_ms": 47.555,
       "positive": true,
       "sample_id": "fixtures-pdf.text.opacity-positive",
       "verdict": "malicious",
@@ -648,7 +720,7 @@
       "informational_findings": 0,
       "injection_kind": "none",
       "labels": [],
-      "latency_ms": 40.934,
+      "latency_ms": 41.475,
       "positive": false,
       "sample_id": "fixtures-pdf.text.opacity-negative",
       "verdict": "clean",
@@ -670,7 +742,7 @@
       "labels": [
         "pdf.text.tiny"
       ],
-      "latency_ms": 86.276,
+      "latency_ms": 114.835,
       "positive": true,
       "sample_id": "fixtures-pdf.text.tiny-positive",
       "verdict": "malicious",
@@ -686,7 +758,7 @@
       "informational_findings": 0,
       "injection_kind": "none",
       "labels": [],
-      "latency_ms": 44.007,
+      "latency_ms": 68.956,
       "positive": false,
       "sample_id": "fixtures-pdf.text.tiny-negative",
       "verdict": "clean",
@@ -708,7 +780,7 @@
       "labels": [
         "text.unicode.invisible"
       ],
-      "latency_ms": 0.531,
+      "latency_ms": 0.616,
       "positive": true,
       "sample_id": "fixtures-text.unicode.invisible-positive",
       "verdict": "malicious",
@@ -724,7 +796,7 @@
       "informational_findings": 0,
       "injection_kind": "none",
       "labels": [],
-      "latency_ms": 0.223,
+      "latency_ms": 0.233,
       "positive": false,
       "sample_id": "fixtures-text.unicode.invisible-negative",
       "verdict": "clean",

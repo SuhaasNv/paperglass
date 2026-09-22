@@ -17,6 +17,8 @@ One corpus, one harness, comparable numbers for any detector, and a public recor
 
 ## Hygiene (CrackedPDFs recipe, adopted)
 
+Built at US-053 (22 Sep 2026): `paperglass bench split` and `paperglass bench audit` (`HARNESS.md`). On the synthetic `fixtures` corpus the label shuffle collapses (real F1 0.875, shuffled 0.42, chance 0.67) and the shortcut audit reports a shortcut (text-only accuracy 0.86 on 14 test samples), which is expected of a corpus whose positives all carry a planted sentence and is one more reason none of its numbers is a headline.
+
 - Hard-provenance split by base document: an injected sample and its clean control never straddle train and test.
 - Confounders derived from the same base document (benign hidden content, benign small text, benign metadata).
 - Metadata, file paths, ids and generator fingerprints are forbidden as features; the harness strips them.
