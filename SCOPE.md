@@ -109,3 +109,5 @@ One Python 3.11+ package, `paperglass`, with a sandboxed ingest, three view buil
 ## Scope checks (one dated paragraph per weekly close)
 
 **22 Sep 2026, planning.** Brief v0.1 reviewed against the landscape (verified) and three research groups' method sections. Five use cases adopted; View B made a cascade; findings gained possible and confirmed; score removed; subtractive `clean()` with fidelity; fingerprint, mechanism and reproduce, profiles, MCP receipt gate, repository docs scan, false-positive bounty, glyph arbiter, technique disclosure added; leaderboard Space, Unstructured, Haystack, arXiv report, deep tier, multilingual packs, XLSX, EML, image Red Kit deferred; images moved from MUST to SHOULD. Show HN moves from v0.1.0 (week 4) to v0.2.0 (week 5). No code yet.
+
+**22 Sep 2026, week 1 close.** v0.1.0 code complete on `dev`: PDF and DOCX inputs, 18 techniques with fixture pairs, views A, B (cascade) and C, the engine, the CLI and the API, the sandbox worker, fuzzing, CI. M1 to M10 built (M9 measured on a laptop, gated at v1.0.0); M26 documents current. No scope change. US-019 moved to week 5 alongside the corpus index.
