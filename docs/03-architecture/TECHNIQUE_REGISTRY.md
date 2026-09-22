@@ -13,10 +13,10 @@
     views=("C", "B"),
     stage=1,
     self_proving=True,
-    severity_class="data",            # default class; the engine may escalate to instruction
+    severity_class="data",  # default class; the engine may escalate to instruction
     explanation="Text drawn in a mode that paints nothing (mode 3) or only sets a clip (mode 7).",
     threshold="Tr 3 or Tr 7 with extractable text",
-    atr_rule=None,                    # or "ATR-2026-00515"
+    atr_rule=None,  # or "ATR-2026-00515"
     rule_version="1",
 )
 class RenderModeDetector(Detector):
