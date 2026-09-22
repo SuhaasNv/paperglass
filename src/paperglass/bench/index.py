@@ -105,10 +105,10 @@ def read_index(target: pathlib.Path, root: pathlib.Path) -> Corpus:
 def fixtures_corpus(fixtures: pathlib.Path, *, version: str) -> Corpus:
     """The repository's own fixture pairs as a corpus: synthetic, one positive and one negative
     per technique, never a headline number. Positive and negative share a base document."""
-    from paperglass.detectors import REGISTRY  # noqa: PLC0415
+    from paperglass.engine import technique_specs  # noqa: PLC0415  # bench stays light to import
 
     samples: list[Sample] = []
-    for technique_id, spec in sorted(REGISTRY.specs().items()):
+    for technique_id, spec in sorted(technique_specs().items()):
         folder = fixtures / _folder(spec.formats[0]) / technique_id
         for which in ("positive", "negative"):
             path = next(folder.glob(f"{which}.*"))
