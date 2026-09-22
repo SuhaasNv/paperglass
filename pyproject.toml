@@ -95,7 +95,8 @@ ignore = [
 "scripts/**" = ["S603", "S607"]
 
 [tool.mypy]
-python_version = "3.11"
+# The interpreter version decides; 3.11 semantics are covered by the CI matrix, and pinning
+# 3.11 here makes mypy reject numpy 2.5 stubs (type statements) on 3.12 machines.
 strict = true
 warn_unreachable = true
 disallow_any_explicit = false

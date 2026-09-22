@@ -11,7 +11,7 @@ import re
 import sys
 
 EM_DASH = "—"
-EMOJI = re.compile("[\U0001F300-\U0001FAFF☀-➿]")
+EMOJI = re.compile("[\U0001f300-\U0001faff☀-➿]")
 FORBIDDEN_WORD = re.compile(r"assessment", re.IGNORECASE)
 SKIP_DIRS = {".git", ".venv", "node_modules", "bench", ".ruff_cache", ".mypy_cache"}
 

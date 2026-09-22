@@ -18,7 +18,8 @@ More than 90 percent of real injections are hidden data, not instructions (UNITE
 class SeverityHint(Protocol):
     name: str
     version: str
-    def score(self, text: str) -> float: ...   # 0 to 1, instruction-likeness
+
+    def score(self, text: str) -> float: ...  # 0 to 1, instruction-likeness
 ```
 
 Registered by entry point `paperglass.hints`. Prompt Guard 2 (Llama 4 Community Licence, gated download) can be wired by the user as such a plug-in; core never imports it. Any plug-in used is named in the report under `rule_versions`.
