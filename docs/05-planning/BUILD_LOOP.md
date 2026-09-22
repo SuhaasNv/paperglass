@@ -27,3 +27,4 @@ Merge into `main`, tag, publish to PyPI or GHCR as a release, deploy production,
 ## Log
 
 - 22 Sep 2026: loop started after US-037. UC2 has US-043 and US-045 left that the loop can build; US-042 (the v0.2.0 tag and PyPI) waits for the owner.
+- 22 Sep 2026: US-043 done (schema v2, the diff). US-045 drafted as far as the loop can (documents, shot list, posts); the recording and the posting wait for the owner. UC2 review agent launched.
