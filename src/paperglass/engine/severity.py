@@ -11,9 +11,15 @@ from paperglass.models import Severity, SeverityClass
 _WORD = re.compile(r"[a-z]+")
 
 
+INSTRUCTION_SCORE = 0.5
+"""A hint score at or above this makes a hidden run an instruction (never a finding alone)."""
+
+
 def looks_like_instruction(text: str, profile: Profile) -> bool:
-    lowered = text.casefold()
-    return any(phrase in lowered for phrase in profile.phrases.instruction)
+    from paperglass.engine.hints import instruction_score  # noqa: PLC0415  # avoids a cycle
+
+    score, _ = instruction_score(text, profile)
+    return score >= INSTRUCTION_SCORE
 
 
 def names_an_action(text: str, profile: Profile) -> bool:
