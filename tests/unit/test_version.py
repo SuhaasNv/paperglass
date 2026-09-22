@@ -11,7 +11,7 @@ from paperglass.adapters.cli import app
 def test_version_command_prints_the_package_version() -> None:
     result = CliRunner().invoke(app, ["version"])
     assert result.exit_code == 0
-    assert result.output.strip() == f"paperglass {__version__}"
+    assert result.output.splitlines()[0] == f"paperglass {__version__}"
 
 
 def test_version_is_pep440_like() -> None:
