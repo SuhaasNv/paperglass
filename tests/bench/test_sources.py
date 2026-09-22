@@ -5,10 +5,10 @@ from __future__ import annotations
 import pathlib
 from typing import Any
 
+from paperglass.adapters.corpus import FetchResult, crackedpdfs, phantomlint, phantomtext, sources
 from paperglass.bench.adapter import AdapterResult
 from paperglass.bench.index import Sample
 from paperglass.bench.metrics import compute, outcome
-from paperglass.bench.sources import FetchResult, crackedpdfs, phantomlint, phantomtext, sources
 
 INJECTED: dict[str, Any] = {
     "pdf_id": "sample_0032.injected",

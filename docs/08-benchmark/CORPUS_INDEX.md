@@ -1,6 +1,6 @@
 # Corpus index
 
-Built at US-050 (22 Sep 2026): `src/paperglass/bench/index.py` (the row model, JSON lines, the head line carries the corpus root relative to the repository) and `src/paperglass/bench/sources/` (one module per external source). `paperglass bench fetch --corpus v1 [--source name] [--limit N] [--seed S]` fetches or generates the files under `bench/corpus/v1/files/` (never committed), writes `bench/corpus/v1/index.jsonl` (committed) and verifies every hash. It is the one command in the benchmark that touches the network, and only when run by hand.
+Built at US-050 (22 Sep 2026): `src/paperglass/bench/index.py` (the row model, JSON lines, the head line carries the corpus root relative to the repository) and `src/paperglass/adapters/corpus/` (one module per external source). `paperglass bench fetch --corpus v1 [--source name] [--limit N] [--seed S]` fetches or generates the files under `bench/corpus/v1/files/` (never committed), writes `bench/corpus/v1/index.jsonl` (committed) and verifies every hash. It is the one command in the benchmark that touches the network, and only when run by hand.
 
 | Source | How | Pinned | Labels | Notes |
 |--------|-----|--------|--------|-------|

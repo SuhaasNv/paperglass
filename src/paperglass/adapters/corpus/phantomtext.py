@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from paperglass.bench.sources import FetchResult
+from paperglass.adapters.corpus import FetchResult
 
 INJECTION_TO_TECHNIQUE: dict[str, str] = {
     "camouflage": "pdf.text.low_contrast",

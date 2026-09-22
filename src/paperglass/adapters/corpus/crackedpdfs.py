@@ -13,8 +13,8 @@ import tarfile
 from pathlib import Path
 from typing import Any
 
+from paperglass.adapters.corpus import FetchResult
 from paperglass.bench.index import Family, InjectionKind, Sample, Split, sha256_file
-from paperglass.bench.sources import FetchResult
 
 REPO = "volkthienpreecha/crackedpdfs"
 REVISION = "245bc98ec7e838346ee6fd5bdf5fed1b16d2a3e5"
@@ -88,7 +88,9 @@ def sample_for(row: dict[str, Any], *, path: Path, root: Path, test_ids: frozens
     )
 
 
-def _rows(labels_parquet: Path) -> list[dict[str, Any]]:
+def _rows(
+    labels_parquet: Path,
+) -> list[dict[str, Any]]:  # pragma: no cover
     import pyarrow.parquet as pq  # noqa: PLC0415  # arrives with the bench extra (datasets)
 
     columns = [
@@ -121,7 +123,7 @@ def choose_bases(
     return set(rng.sample(bases, limit))
 
 
-def _extract(tar_path: Path, wanted: set[str], target: Path) -> dict[str, Path]:
+def _extract(tar_path: Path, wanted: set[str], target: Path) -> dict[str, Path]:  # pragma: no cover
     """Extract the wanted members (by their trailing `benign/...` or `injected/...` path)."""
     found: dict[str, Path] = {}
     with tarfile.open(tar_path, "r:gz") as archive:
@@ -142,7 +144,9 @@ def _extract(tar_path: Path, wanted: set[str], target: Path) -> dict[str, Path]:
     return found
 
 
-def fetch(root: Path, *, limit: int | None = None, seed: int = 1) -> FetchResult:
+def fetch(
+    root: Path, *, limit: int | None = None, seed: int = 1
+) -> FetchResult:  # pragma: no cover
     try:
         from huggingface_hub import hf_hub_download  # noqa: PLC0415
     except ImportError:
