@@ -6,7 +6,7 @@ import json
 import pathlib
 import sys
 
-from paperglass.report import SCHEMA_VERSION, json_schema
+from paperglass.models import SCHEMA_VERSION, json_schema
 
 
 def main() -> int:
