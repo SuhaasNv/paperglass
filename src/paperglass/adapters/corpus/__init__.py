@@ -1,4 +1,6 @@
-"""One module per external source (docs/08-benchmark/CORPUS_INDEX.md). Each exposes
+"""Corpus fetchers: one module per external source (docs/08-benchmark/CORPUS_INDEX.md). They
+live under adapters because they are the one place the benchmark touches the network, and
+only when `paperglass bench fetch` is run by hand. Each exposes
 `fetch(root, *, limit, seed) -> FetchResult`: the samples it produced under `root/files/<source>/`,
 and a sentence when it could not run (a toolkit not installed, a licence that forbids
 redistribution). Fetching is the one place the benchmark touches the network, and only when
@@ -26,7 +28,7 @@ Fetcher = Callable[..., FetchResult]
 
 
 def sources() -> dict[str, Fetcher]:
-    from paperglass.bench.sources import crackedpdfs, phantomlint, phantomtext  # noqa: PLC0415
+    from paperglass.adapters.corpus import crackedpdfs, phantomlint, phantomtext  # noqa: PLC0415
 
     return {
         "crackedpdfs": crackedpdfs.fetch,

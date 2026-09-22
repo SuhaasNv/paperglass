@@ -392,7 +392,7 @@ def bench_fetch(
         write_index(built, index, repo_root=root)
         typer.echo(f"wrote {index} with {len(built.samples)} samples (synthetic)")
     if corpus == "v1":
-        from paperglass.bench.sources import fetch_all  # noqa: PLC0415
+        from paperglass.adapters.corpus import fetch_all  # noqa: PLC0415
 
         corpus_root = index.parent
         fetched = fetch_all(corpus_root, limit=limit, seed=seed, only=tuple(source or ()))

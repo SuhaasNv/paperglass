@@ -10,8 +10,8 @@ import json
 import urllib.request
 from pathlib import Path
 
+from paperglass.adapters.corpus import FetchResult
 from paperglass.bench.index import Sample, sha256_file
-from paperglass.bench.sources import FetchResult
 
 REPO = "tobycmurray/phantom-lint"
 COMMIT = "7f6200145abf9d1592118780e117d14541a18dae"
@@ -20,13 +20,13 @@ API = f"https://api.github.com/repos/{REPO}/contents"
 RAW = f"https://raw.githubusercontent.com/{REPO}/{COMMIT}"
 
 
-def _listing(folder: str) -> list[dict[str, object]]:
+def _listing(folder: str) -> list[dict[str, object]]:  # pragma: no cover
     with urllib.request.urlopen(f"{API}/tests/{folder}?ref={COMMIT}", timeout=60) as response:  # noqa: S310  # https, pinned host
         payload = json.load(response)
     return [entry for entry in payload if isinstance(entry, dict)]
 
 
-def _download(folder: str, name: str, target: Path) -> Path:
+def _download(folder: str, name: str, target: Path) -> Path:  # pragma: no cover
     target.parent.mkdir(parents=True, exist_ok=True)
     if not target.is_file():
         with urllib.request.urlopen(f"{RAW}/tests/{folder}/{name}", timeout=300) as response:  # noqa: S310  # https, pinned host
