@@ -32,6 +32,23 @@ Every runtime dependency, its licence and why it is used. Permissive only: MIT, 
 | reportlab | 5.0.1 | BSD-3 | Red Kit PDF generation (v0.5.0) | redkit |
 | langchain-core, llama-index-core, docling | 0.3.86, 0.12.52, 2.129.0 | MIT, MIT, MIT | adapters (v0.4.0), pinned | langchain, llamaindex, docling |
 
+## Web tier (backend/ and frontend/, resolved 22 Sep 2026 at US-046 and US-047)
+
+| Package | Version | Licence | Used for |
+|---------|---------|---------|----------|
+| SQLAlchemy | 2.0.54 | MIT | report storage |
+| Alembic | 1.20.0 | MIT | migrations |
+| pg8000 | 1.31.5 | BSD-3 | PostgreSQL driver (pure Python; psycopg is LGPL, outside the allowlist) |
+| pydantic-settings | 2.15.0 | MIT | environment settings |
+| itsdangerous | 2.2.0 | BSD-3 | signed session cookie |
+| python-multipart | 0.0.32 | Apache-2.0 | upload parsing |
+| react, react-dom | 19.3.0 | MIT | UI |
+| @tanstack/react-query | 5.103.2 | MIT | server state |
+| react-router | 8.4.0 | MIT | routes |
+| tailwindcss | 4.3.3 | MIT | styles (build time) |
+
+Frontend development dependencies (Vite, TypeScript, vitest, Playwright, Testing Library, oxlint) are MIT or Apache-2.0 and ship nothing to the browser; CI checks the production tree against a permissive allowlist.
+
 Optional, user-installed, never imported by core: Prompt Guard 2 (Llama 4 Community Licence, gated); Florence-2 (MIT) or SmolVLM2 (Apache-2.0) for the deep tier.
 
 ## Corpora

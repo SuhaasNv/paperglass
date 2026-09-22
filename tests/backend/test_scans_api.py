@@ -40,7 +40,7 @@ def test_history_is_scoped_to_the_browser_session(client: TestClient) -> None:
     upload(client, simple("World"), name="b.pdf")
     listed = client.get("/api/v1/scans").json()["scans"]
     assert [s["file_name"] for s in listed] == ["b.pdf", "a.pdf"]
-    other = TestClient(client.app)
+    other = TestClient(client.app, base_url="https://testserver")
     assert other.get("/api/v1/scans").json()["scans"] == []
 
 
@@ -57,7 +57,7 @@ def test_get_by_id_and_unknown_id(client: TestClient) -> None:
 
 def test_share_link_works_without_the_cookie(client: TestClient) -> None:
     body = upload(client, simple("Hello"))
-    stranger = TestClient(client.app)
+    stranger = TestClient(client.app, base_url="https://testserver")
     assert stranger.get(f"/api/v1/scans/{body['id']}").status_code == 200
 
 
