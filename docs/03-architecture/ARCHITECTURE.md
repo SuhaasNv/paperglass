@@ -71,7 +71,7 @@ The backend is an adapter in the layering sense: it imports `paperglass.engine` 
 
 | Adapter | Entry point | Contract | Release | Doc |
 |---------|-------------|----------|---------|-----|
-| CLI | `paperglass` (typer) | `scan` (with `--report`), `fingerprint`, `show`, `report`, `clean`, `bench`; exit codes 0 to 3 | v0.1.0 (scan, fingerprint, show), v0.2.0 (report, built), v0.3.0 (bench), v0.4.0 (clean) | `../04-report-design/CLI_DESIGN.md` |
+| CLI | `paperglass` (typer) | `scan` (with `--report`), `fingerprint`, `show`, `report`, `clean`, `bench`; exit codes 0 to 3 | v0.1.0 (scan, fingerprint, show), v0.2.0 (report, built), v0.3.0 (bench fetch, run, report, verify: built), v0.4.0 (clean) | `../04-report-design/CLI_DESIGN.md` |
 | Python API | `paperglass.scan`, `.fingerprint`, `.clean`, `.report` | returns `Report` and `CleanResult` models | v0.1.0 | this file |
 | LangChain | `PaperglassTransformer` | metadata keys `paperglass.verdict`, `paperglass.severity_counts`, `paperglass.findings`, provenance tags; text replaced per Policy | v0.4.0 | `../11-integrations/LANGCHAIN.md` |
 | LlamaIndex | `PaperglassPostprocessor`, `PaperglassReader` | same keys | v0.4.0 | `../11-integrations/LLAMAINDEX.md` |

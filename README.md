@@ -36,6 +36,7 @@ paperglass scan ./inbox --tier fast --json   # a directory; exit code is the wor
 paperglass fingerprint resume.pdf            # which installed extractors hand the hidden text to a model
 paperglass show resume.pdf --page 1 --instruction 9   # the bytes behind a finding
 paperglass report resume.pdf --out report.html        # one-file HTML report, opens offline (also: scan --report)
+paperglass bench run --corpus fixtures                # the benchmark harness on the synthetic fixtures corpus
 paperglass version                           # tool and rule versions
 ```
 
@@ -78,7 +79,7 @@ Planned for v0.4.0 (LangChain, LlamaIndex, Docling, GitHub Action, MCP receipt g
 
 ## Benchmark
 
-Numbers appear in `BENCHMARK.md` only with the corpus, the version and the one command that reproduces them from a clean clone. Today it holds speed numbers on synthetic fixtures; the corpus, harness and baselines are v0.3.0. Design: `docs/08-benchmark/BENCHMARK_DESIGN.md`.
+Numbers appear in `BENCHMARK.md` only with the corpus, the version and the one command that reproduces them from a clean clone. The harness exists (`paperglass bench fetch|run|report|verify`, any detector through a two-function adapter, results files under `results/`); today it holds speed numbers and the synthetic fixtures corpus, both labelled synthetic; the external corpora and the baselines are the rest of v0.3.0. Design: `docs/08-benchmark/BENCHMARK_DESIGN.md`.
 
 ## Security
 

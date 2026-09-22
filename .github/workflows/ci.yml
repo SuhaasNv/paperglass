@@ -34,7 +34,11 @@ jobs:
       - run: uv run ruff format --check .
       - run: uv run mypy
       - run: uv run python scripts/check_copy.py
-      - run: echo "Lint, format, mypy strict and copy rules green" >> "$GITHUB_STEP_SUMMARY"
+      - name: The committed benchmark results reproduce (fixtures corpus)
+        run: |
+          uv run paperglass bench fetch --corpus fixtures
+          uv run paperglass bench verify --corpus fixtures --results results/paperglass-fast/$(uv run python -c 'import paperglass; print(paperglass.__version__)')/fixtures.json
+      - run: echo "Lint, format, mypy strict, copy rules and benchmark reproduction green" >> "$GITHUB_STEP_SUMMARY"
 
   tests:
     name: Tests (${{ matrix.os }}, py${{ matrix.python }})

@@ -1,0 +1,735 @@
+{
+  "command": "paperglass bench run --corpus fixtures --detector paperglass --tier fast --profile default",
+  "corpus": "fixtures",
+  "corpus_version": "0.1.0",
+  "date": "2026-09-22",
+  "detector": "paperglass-fast",
+  "detector_version": "0.1.0",
+  "hardware": "arm64 Darwin Python 3.12.7",
+  "metrics": {
+    "benign_hidden_called_malicious": 0,
+    "detection_recall": 1.0,
+    "errors": 0,
+    "f1": 0.875,
+    "false_positive_rate_informational": 0.0,
+    "false_positive_rate_verdict_driving": 0.0,
+    "latency_p50_ms": 40.709,
+    "latency_p50_per_page_ms": null,
+    "latency_p95_ms": 86.276,
+    "negatives": 18,
+    "positives": 18,
+    "precision": 1.0,
+    "recall": 0.7778,
+    "recall_data": 1.0,
+    "recall_instruction": null,
+    "recall_per_family": {
+      "metadata": 1.0,
+      "semantic-override": 0.0,
+      "structural": 0.8,
+      "unicode": 1.0,
+      "visual": 1.0
+    },
+    "recall_per_technique": {
+      "docx.part.hidden": 1.0,
+      "docx.run.color": 1.0,
+      "docx.run.tiny": 1.0,
+      "docx.run.vanish": 1.0,
+      "pdf.active.content": 1.0,
+      "pdf.actualtext.override": 1.0,
+      "pdf.annotation.hidden": 1.0,
+      "pdf.font.decoding_fallback": 1.0,
+      "pdf.font.tounicode_mismatch": 1.0,
+      "pdf.layer.hidden": 1.0,
+      "pdf.metadata.payload": 1.0,
+      "pdf.render.mode": 1.0,
+      "pdf.text.covered": 1.0,
+      "pdf.text.low_contrast": 1.0,
+      "pdf.text.offpage": 1.0,
+      "pdf.text.opacity": 1.0,
+      "pdf.text.tiny": 1.0,
+      "text.unicode.invisible": 1.0
+    },
+    "samples": 36
+  },
+  "per_sample": [
+    {
+      "confirmed": [
+        "docx.part.hidden"
+      ],
+      "detected": [
+        "docx.part.hidden"
+      ],
+      "error": null,
+      "family": "structural",
+      "findings": 1,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "data",
+      "labels": [
+        "docx.part.hidden"
+      ],
+      "latency_ms": 278.533,
+      "positive": true,
+      "sample_id": "fixtures-docx.part.hidden-positive",
+      "verdict": "malicious",
+      "verdict_driving_findings": 1
+    },
+    {
+      "confirmed": [],
+      "detected": [],
+      "error": null,
+      "family": "none",
+      "findings": 0,
+      "flagged": false,
+      "informational_findings": 0,
+      "injection_kind": "none",
+      "labels": [],
+      "latency_ms": 1.146,
+      "positive": false,
+      "sample_id": "fixtures-docx.part.hidden-negative",
+      "verdict": "clean",
+      "verdict_driving_findings": 0
+    },
+    {
+      "confirmed": [
+        "docx.run.color"
+      ],
+      "detected": [
+        "docx.run.color"
+      ],
+      "error": null,
+      "family": "visual",
+      "findings": 1,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "data",
+      "labels": [
+        "docx.run.color"
+      ],
+      "latency_ms": 0.952,
+      "positive": true,
+      "sample_id": "fixtures-docx.run.color-positive",
+      "verdict": "malicious",
+      "verdict_driving_findings": 1
+    },
+    {
+      "confirmed": [],
+      "detected": [],
+      "error": null,
+      "family": "none",
+      "findings": 0,
+      "flagged": false,
+      "informational_findings": 0,
+      "injection_kind": "none",
+      "labels": [],
+      "latency_ms": 0.787,
+      "positive": false,
+      "sample_id": "fixtures-docx.run.color-negative",
+      "verdict": "clean",
+      "verdict_driving_findings": 0
+    },
+    {
+      "confirmed": [
+        "docx.run.tiny"
+      ],
+      "detected": [
+        "docx.run.tiny"
+      ],
+      "error": null,
+      "family": "visual",
+      "findings": 1,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "data",
+      "labels": [
+        "docx.run.tiny"
+      ],
+      "latency_ms": 0.942,
+      "positive": true,
+      "sample_id": "fixtures-docx.run.tiny-positive",
+      "verdict": "malicious",
+      "verdict_driving_findings": 1
+    },
+    {
+      "confirmed": [],
+      "detected": [],
+      "error": null,
+      "family": "none",
+      "findings": 0,
+      "flagged": false,
+      "informational_findings": 0,
+      "injection_kind": "none",
+      "labels": [],
+      "latency_ms": 0.71,
+      "positive": false,
+      "sample_id": "fixtures-docx.run.tiny-negative",
+      "verdict": "clean",
+      "verdict_driving_findings": 0
+    },
+    {
+      "confirmed": [
+        "docx.run.vanish"
+      ],
+      "detected": [
+        "docx.run.vanish"
+      ],
+      "error": null,
+      "family": "structural",
+      "findings": 1,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "data",
+      "labels": [
+        "docx.run.vanish"
+      ],
+      "latency_ms": 0.715,
+      "positive": true,
+      "sample_id": "fixtures-docx.run.vanish-positive",
+      "verdict": "malicious",
+      "verdict_driving_findings": 1
+    },
+    {
+      "confirmed": [],
+      "detected": [],
+      "error": null,
+      "family": "none",
+      "findings": 0,
+      "flagged": false,
+      "informational_findings": 0,
+      "injection_kind": "none",
+      "labels": [],
+      "latency_ms": 0.733,
+      "positive": false,
+      "sample_id": "fixtures-docx.run.vanish-negative",
+      "verdict": "clean",
+      "verdict_driving_findings": 0
+    },
+    {
+      "confirmed": [
+        "pdf.active.content"
+      ],
+      "detected": [
+        "pdf.active.content"
+      ],
+      "error": null,
+      "family": "structural",
+      "findings": 1,
+      "flagged": false,
+      "informational_findings": 1,
+      "injection_kind": "none",
+      "labels": [
+        "pdf.active.content"
+      ],
+      "latency_ms": 226.525,
+      "positive": true,
+      "sample_id": "fixtures-pdf.active.content-positive",
+      "verdict": "clean",
+      "verdict_driving_findings": 0
+    },
+    {
+      "confirmed": [],
+      "detected": [],
+      "error": null,
+      "family": "none",
+      "findings": 0,
+      "flagged": false,
+      "informational_findings": 0,
+      "injection_kind": "none",
+      "labels": [],
+      "latency_ms": 37.854,
+      "positive": false,
+      "sample_id": "fixtures-pdf.active.content-negative",
+      "verdict": "clean",
+      "verdict_driving_findings": 0
+    },
+    {
+      "confirmed": [],
+      "detected": [
+        "pdf.actualtext.override"
+      ],
+      "error": null,
+      "family": "semantic-override",
+      "findings": 1,
+      "flagged": false,
+      "informational_findings": 1,
+      "injection_kind": "none",
+      "labels": [
+        "pdf.actualtext.override"
+      ],
+      "latency_ms": 69.469,
+      "positive": true,
+      "sample_id": "fixtures-pdf.actualtext.override-positive",
+      "verdict": "clean",
+      "verdict_driving_findings": 0
+    },
+    {
+      "confirmed": [],
+      "detected": [],
+      "error": null,
+      "family": "none",
+      "findings": 0,
+      "flagged": false,
+      "informational_findings": 0,
+      "injection_kind": "none",
+      "labels": [],
+      "latency_ms": 42.109,
+      "positive": false,
+      "sample_id": "fixtures-pdf.actualtext.override-negative",
+      "verdict": "clean",
+      "verdict_driving_findings": 0
+    },
+    {
+      "confirmed": [
+        "pdf.annotation.hidden"
+      ],
+      "detected": [
+        "pdf.annotation.hidden"
+      ],
+      "error": null,
+      "family": "structural",
+      "findings": 1,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "data",
+      "labels": [
+        "pdf.annotation.hidden"
+      ],
+      "latency_ms": 46.428,
+      "positive": true,
+      "sample_id": "fixtures-pdf.annotation.hidden-positive",
+      "verdict": "malicious",
+      "verdict_driving_findings": 1
+    },
+    {
+      "confirmed": [],
+      "detected": [],
+      "error": null,
+      "family": "none",
+      "findings": 0,
+      "flagged": false,
+      "informational_findings": 0,
+      "injection_kind": "none",
+      "labels": [],
+      "latency_ms": 45.416,
+      "positive": false,
+      "sample_id": "fixtures-pdf.annotation.hidden-negative",
+      "verdict": "clean",
+      "verdict_driving_findings": 0
+    },
+    {
+      "confirmed": [],
+      "detected": [
+        "pdf.font.decoding_fallback"
+      ],
+      "error": null,
+      "family": "semantic-override",
+      "findings": 1,
+      "flagged": false,
+      "informational_findings": 1,
+      "injection_kind": "none",
+      "labels": [
+        "pdf.font.decoding_fallback"
+      ],
+      "latency_ms": 42.98,
+      "positive": true,
+      "sample_id": "fixtures-pdf.font.decoding_fallback-positive",
+      "verdict": "clean",
+      "verdict_driving_findings": 0
+    },
+    {
+      "confirmed": [],
+      "detected": [],
+      "error": null,
+      "family": "none",
+      "findings": 0,
+      "flagged": false,
+      "informational_findings": 0,
+      "injection_kind": "none",
+      "labels": [],
+      "latency_ms": 58.228,
+      "positive": false,
+      "sample_id": "fixtures-pdf.font.decoding_fallback-negative",
+      "verdict": "clean",
+      "verdict_driving_findings": 0
+    },
+    {
+      "confirmed": [],
+      "detected": [
+        "pdf.font.tounicode_mismatch"
+      ],
+      "error": null,
+      "family": "semantic-override",
+      "findings": 1,
+      "flagged": false,
+      "informational_findings": 1,
+      "injection_kind": "none",
+      "labels": [
+        "pdf.font.tounicode_mismatch"
+      ],
+      "latency_ms": 48.768,
+      "positive": true,
+      "sample_id": "fixtures-pdf.font.tounicode_mismatch-positive",
+      "verdict": "clean",
+      "verdict_driving_findings": 0
+    },
+    {
+      "confirmed": [],
+      "detected": [],
+      "error": null,
+      "family": "none",
+      "findings": 0,
+      "flagged": false,
+      "informational_findings": 0,
+      "injection_kind": "none",
+      "labels": [],
+      "latency_ms": 34.666,
+      "positive": false,
+      "sample_id": "fixtures-pdf.font.tounicode_mismatch-negative",
+      "verdict": "clean",
+      "verdict_driving_findings": 0
+    },
+    {
+      "confirmed": [
+        "pdf.layer.hidden"
+      ],
+      "detected": [
+        "pdf.layer.hidden"
+      ],
+      "error": null,
+      "family": "structural",
+      "findings": 1,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "data",
+      "labels": [
+        "pdf.layer.hidden"
+      ],
+      "latency_ms": 39.376,
+      "positive": true,
+      "sample_id": "fixtures-pdf.layer.hidden-positive",
+      "verdict": "malicious",
+      "verdict_driving_findings": 1
+    },
+    {
+      "confirmed": [],
+      "detected": [],
+      "error": null,
+      "family": "none",
+      "findings": 0,
+      "flagged": false,
+      "informational_findings": 0,
+      "injection_kind": "none",
+      "labels": [],
+      "latency_ms": 41.847,
+      "positive": false,
+      "sample_id": "fixtures-pdf.layer.hidden-negative",
+      "verdict": "clean",
+      "verdict_driving_findings": 0
+    },
+    {
+      "confirmed": [
+        "pdf.metadata.payload"
+      ],
+      "detected": [
+        "pdf.metadata.payload"
+      ],
+      "error": null,
+      "family": "metadata",
+      "findings": 1,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "data",
+      "labels": [
+        "pdf.metadata.payload"
+      ],
+      "latency_ms": 33.693,
+      "positive": true,
+      "sample_id": "fixtures-pdf.metadata.payload-positive",
+      "verdict": "malicious",
+      "verdict_driving_findings": 1
+    },
+    {
+      "confirmed": [],
+      "detected": [],
+      "error": null,
+      "family": "none",
+      "findings": 0,
+      "flagged": false,
+      "informational_findings": 0,
+      "injection_kind": "none",
+      "labels": [],
+      "latency_ms": 33.717,
+      "positive": false,
+      "sample_id": "fixtures-pdf.metadata.payload-negative",
+      "verdict": "clean",
+      "verdict_driving_findings": 0
+    },
+    {
+      "confirmed": [
+        "pdf.render.mode"
+      ],
+      "detected": [
+        "pdf.render.mode"
+      ],
+      "error": null,
+      "family": "visual",
+      "findings": 1,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "data",
+      "labels": [
+        "pdf.render.mode"
+      ],
+      "latency_ms": 38.714,
+      "positive": true,
+      "sample_id": "fixtures-pdf.render.mode-positive",
+      "verdict": "malicious",
+      "verdict_driving_findings": 1
+    },
+    {
+      "confirmed": [],
+      "detected": [],
+      "error": null,
+      "family": "none",
+      "findings": 0,
+      "flagged": false,
+      "informational_findings": 0,
+      "injection_kind": "none",
+      "labels": [],
+      "latency_ms": 40.485,
+      "positive": false,
+      "sample_id": "fixtures-pdf.render.mode-negative",
+      "verdict": "clean",
+      "verdict_driving_findings": 0
+    },
+    {
+      "confirmed": [
+        "pdf.text.covered"
+      ],
+      "detected": [
+        "pdf.text.covered"
+      ],
+      "error": null,
+      "family": "visual",
+      "findings": 1,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "data",
+      "labels": [
+        "pdf.text.covered"
+      ],
+      "latency_ms": 40.182,
+      "positive": true,
+      "sample_id": "fixtures-pdf.text.covered-positive",
+      "verdict": "malicious",
+      "verdict_driving_findings": 1
+    },
+    {
+      "confirmed": [],
+      "detected": [],
+      "error": null,
+      "family": "none",
+      "findings": 0,
+      "flagged": false,
+      "informational_findings": 0,
+      "injection_kind": "none",
+      "labels": [],
+      "latency_ms": 43.612,
+      "positive": false,
+      "sample_id": "fixtures-pdf.text.covered-negative",
+      "verdict": "clean",
+      "verdict_driving_findings": 0
+    },
+    {
+      "confirmed": [
+        "pdf.text.low_contrast"
+      ],
+      "detected": [
+        "pdf.text.low_contrast"
+      ],
+      "error": null,
+      "family": "visual",
+      "findings": 1,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "data",
+      "labels": [
+        "pdf.text.low_contrast"
+      ],
+      "latency_ms": 41.082,
+      "positive": true,
+      "sample_id": "fixtures-pdf.text.low_contrast-positive",
+      "verdict": "malicious",
+      "verdict_driving_findings": 1
+    },
+    {
+      "confirmed": [],
+      "detected": [],
+      "error": null,
+      "family": "none",
+      "findings": 0,
+      "flagged": false,
+      "informational_findings": 0,
+      "injection_kind": "none",
+      "labels": [],
+      "latency_ms": 47.964,
+      "positive": false,
+      "sample_id": "fixtures-pdf.text.low_contrast-negative",
+      "verdict": "clean",
+      "verdict_driving_findings": 0
+    },
+    {
+      "confirmed": [
+        "pdf.text.offpage"
+      ],
+      "detected": [
+        "pdf.text.offpage"
+      ],
+      "error": null,
+      "family": "visual",
+      "findings": 1,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "data",
+      "labels": [
+        "pdf.text.offpage"
+      ],
+      "latency_ms": 42.851,
+      "positive": true,
+      "sample_id": "fixtures-pdf.text.offpage-positive",
+      "verdict": "malicious",
+      "verdict_driving_findings": 1
+    },
+    {
+      "confirmed": [],
+      "detected": [],
+      "error": null,
+      "family": "none",
+      "findings": 0,
+      "flagged": false,
+      "informational_findings": 0,
+      "injection_kind": "none",
+      "labels": [],
+      "latency_ms": 40.12,
+      "positive": false,
+      "sample_id": "fixtures-pdf.text.offpage-negative",
+      "verdict": "clean",
+      "verdict_driving_findings": 0
+    },
+    {
+      "confirmed": [
+        "pdf.text.opacity"
+      ],
+      "detected": [
+        "pdf.text.opacity"
+      ],
+      "error": null,
+      "family": "visual",
+      "findings": 1,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "data",
+      "labels": [
+        "pdf.text.opacity"
+      ],
+      "latency_ms": 49.127,
+      "positive": true,
+      "sample_id": "fixtures-pdf.text.opacity-positive",
+      "verdict": "malicious",
+      "verdict_driving_findings": 1
+    },
+    {
+      "confirmed": [],
+      "detected": [],
+      "error": null,
+      "family": "none",
+      "findings": 0,
+      "flagged": false,
+      "informational_findings": 0,
+      "injection_kind": "none",
+      "labels": [],
+      "latency_ms": 40.934,
+      "positive": false,
+      "sample_id": "fixtures-pdf.text.opacity-negative",
+      "verdict": "clean",
+      "verdict_driving_findings": 0
+    },
+    {
+      "confirmed": [
+        "pdf.text.tiny"
+      ],
+      "detected": [
+        "pdf.text.tiny"
+      ],
+      "error": null,
+      "family": "visual",
+      "findings": 1,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "data",
+      "labels": [
+        "pdf.text.tiny"
+      ],
+      "latency_ms": 86.276,
+      "positive": true,
+      "sample_id": "fixtures-pdf.text.tiny-positive",
+      "verdict": "malicious",
+      "verdict_driving_findings": 1
+    },
+    {
+      "confirmed": [],
+      "detected": [],
+      "error": null,
+      "family": "none",
+      "findings": 0,
+      "flagged": false,
+      "informational_findings": 0,
+      "injection_kind": "none",
+      "labels": [],
+      "latency_ms": 44.007,
+      "positive": false,
+      "sample_id": "fixtures-pdf.text.tiny-negative",
+      "verdict": "clean",
+      "verdict_driving_findings": 0
+    },
+    {
+      "confirmed": [
+        "text.unicode.invisible"
+      ],
+      "detected": [
+        "text.unicode.invisible"
+      ],
+      "error": null,
+      "family": "unicode",
+      "findings": 1,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "data",
+      "labels": [
+        "text.unicode.invisible"
+      ],
+      "latency_ms": 0.531,
+      "positive": true,
+      "sample_id": "fixtures-text.unicode.invisible-positive",
+      "verdict": "malicious",
+      "verdict_driving_findings": 1
+    },
+    {
+      "confirmed": [],
+      "detected": [],
+      "error": null,
+      "family": "none",
+      "findings": 0,
+      "flagged": false,
+      "informational_findings": 0,
+      "injection_kind": "none",
+      "labels": [],
+      "latency_ms": 0.223,
+      "positive": false,
+      "sample_id": "fixtures-text.unicode.invisible-negative",
+      "verdict": "clean",
+      "verdict_driving_findings": 0
+    }
+  ],
+  "synthetic": true
+}
