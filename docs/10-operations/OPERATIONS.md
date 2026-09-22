@@ -24,9 +24,9 @@ None are required to scan a file. `.env.example` documents every variable; each 
 
 Runs on push to `main` and `dev`, tags `v*`, and pull requests to either. `permissions: contents: read`, `shell: bash` (pipefail), one concurrent run per ref. Jobs: **Lint and types** (ruff check, ruff format, mypy strict, `scripts/check_copy.py`); **Tests** on Linux, macOS and Windows for Python 3.11 and 3.12 (pytest with the coverage gate at 90 percent over the package, switching to detectors and engine at US-008; layering; golden; fuzz corpus from US-021); **Install** (build the wheel, install it into a fresh environment on the three systems, run `paperglass version`); **Secret scan** (gitleaks over the full history, fixtures allowlisted in `.gitleaks.toml`); **Dependency audit** (pip-audit strict on the exported runtime requirements; pip-licenses blocks AGPL and GPL and prints the full table to the summary). Planned additions: Docs scan (v0.4.0), Adapters (one job per extra, v0.4.0), Image (v0.4.0, GHCR, `sha-<commit>` and branch tags, `vX.Y.Z` only on a tag). Required checks on `main` are the five job names above once the first run has produced them.
 
-## Release (planned, US-039)
+## Release (`.github/workflows/release.yml`, US-039)
 
-`BRANCHING.md` rule 5. PyPI via trusted publishing from the tag workflow; no long-lived token. GitHub release notes are the `CHANGELOG.md` section.
+`BRANCHING.md` rule 5. On a `v*` tag: the tag must equal `pyproject.toml`'s version; `uv build`; publish to PyPI through trusted publishing from the GitHub environment `pypi` (no token in the repository; the owner registers the pending publisher on PyPI once: project `paperglass`, owner `SuhaasNv`, repository `paperglass`, workflow `release.yml`, environment `pypi`); a GitHub release whose body is the `## vX.Y.Z` section of `CHANGELOG.md`, with the wheel and sdist attached.
 
 ## Railway (created 22 Sep 2026; deploy planned at US-067)
 
