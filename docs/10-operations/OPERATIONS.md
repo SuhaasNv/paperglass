@@ -20,9 +20,9 @@ None are required to scan a file. `.env.example` documents every variable; each 
 | `PAPERGLASS_METRICS_TOKEN` | none | REST (v0.4.0) | metrics endpoint off without it |
 | `PAPERGLASS_LOG_LEVEL` | info | REST | |
 
-## CI (planned, US-004)
+## CI (built at US-004, 22 Sep 2026; `.github/workflows/ci.yml`)
 
-GitHub Actions on push to `main` and `dev`, tags `v*`, and pull requests. `permissions: contents: read`, `shell: bash`. Jobs: Lint and types (ruff, ruff format, mypy strict); Tests on Linux, macOS and Windows (pytest with coverage gate, layering, golden, fuzz corpus; OCR-dependent tests Linux and macOS until v1.0.0); Install (pip install from the built wheel on the three systems and run the demo scan); Secret scan (gitleaks, full history); Audit (pip-audit, licence check); Docs scan (from v0.4.0, `paperglass scan ./docs` on the repository); Adapters (from v0.4.0, one job per extra with pinned versions); Image (from v0.4.0, build to GHCR, tagged `sha-<commit>` and the branch, `vX.Y.Z` only on a tag). Every job writes one line to the step summary.
+Runs on push to `main` and `dev`, tags `v*`, and pull requests to either. `permissions: contents: read`, `shell: bash` (pipefail), one concurrent run per ref. Jobs: **Lint and types** (ruff check, ruff format, mypy strict, `scripts/check_copy.py`); **Tests** on Linux, macOS and Windows for Python 3.11 and 3.12 (pytest with the coverage gate at 90 percent over the package, switching to detectors and engine at US-008; layering; golden; fuzz corpus from US-021); **Install** (build the wheel, install it into a fresh environment on the three systems, run `paperglass version`); **Secret scan** (gitleaks over the full history, fixtures allowlisted in `.gitleaks.toml`); **Dependency audit** (pip-audit strict on the exported runtime requirements; pip-licenses blocks AGPL and GPL and prints the full table to the summary). Planned additions: Docs scan (v0.4.0), Adapters (one job per extra, v0.4.0), Image (v0.4.0, GHCR, `sha-<commit>` and branch tags, `vX.Y.Z` only on a tag). Required checks on `main` are the five job names above once the first run has produced them.
 
 ## Release (planned, US-039)
 
