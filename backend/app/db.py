@@ -13,7 +13,16 @@ from sqlalchemy.pool import StaticPool
 from app.settings import get_settings
 
 
+def normalise_url(url: str) -> str:
+    """Platforms hand out postgres:// or postgresql:// URLs; the driver here is pg8000."""
+    for prefix in ("postgres://", "postgresql://"):
+        if url.startswith(prefix):
+            return "postgresql+pg8000://" + url[len(prefix) :]
+    return url
+
+
 def make_engine(url: str) -> Engine:
+    url = normalise_url(url)
     if url.startswith("sqlite"):
         return create_engine(
             url,
