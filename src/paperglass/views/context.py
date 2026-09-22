@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from paperglass.models import TextRun
+from paperglass.models import DocumentStructure, PageStructure, TextRun
 
 
 class PageContext(BaseModel):
@@ -21,5 +21,10 @@ class PageContext(BaseModel):
     input_type: str
     extractor: str
     runs: tuple[TextRun, ...] = ()
+    """View A for this page."""
     width: float | None = Field(default=None, gt=0)
     height: float | None = Field(default=None, gt=0)
+    structure: PageStructure | None = None
+    """View C for this page (PDF only until US-034)."""
+    document: DocumentStructure | None = None
+    """Document-level View C (layers, metadata, active content); the same object on every page."""

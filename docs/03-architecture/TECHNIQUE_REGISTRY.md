@@ -38,6 +38,10 @@ Rules:
 
 Applied by the engine, not the detector: the class from the registration, escalation from content (contradiction, action verbs), the profile's overrides, the benign-hidden constraints. `structure-only` techniques (`pdf.font.decoding_fallback`, `pdf.order.split`) are pinned to info and never drive a verdict alone.
 
+## Built detectors
+
+US-008 to US-013, US-016 to US-018 (22 Sep 2026): `detectors/pdf/` low_contrast, tiny, offpage, render_mode, opacity, hidden_layer, metadata_payload, annotation_hidden, active_content; `detectors/text/` unicode_invisible. Text-object detectors subclass `TextObjectDetector` and judge each `PdfTextObject`; document-level ones run on page 1. The reproduce command is `paperglass show --page N --instruction I [--object O] FILE`; `FILE` is substituted by the CLI. `views/pages.build_pages` is stage 0: sniff, guard, View A, View C, one `PageContext` per page.
+
 ## Adding a technique
 
 `CONTRIBUTING.md`, "Add a technique". Board: a story with label `technique`; `THREATS.md` row; ATR mapping or `none` with a reason; benchmark re-run with the false-positive rate in the pull request.

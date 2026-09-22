@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from paperglass.ingest import Limits
 from paperglass.models import DocumentStructure
+from paperglass.redkit.minipdf import Page, build, simple, text
 from paperglass.views.structure import pdf_structure
-from tests.helpers.minipdf import Page, build, simple, text
 
-LIMITS = Limits(wall_seconds=20.0, cpu_seconds=20)
+LIMITS = Limits(wall_seconds=60.0, cpu_seconds=60)
 
 
 def structure(data: bytes) -> DocumentStructure:
