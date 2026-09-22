@@ -44,7 +44,7 @@ Schema version 1, designed and built 22 Sep 2026 (US-001) in `src/paperglass/rep
 | `network_used` | list of named network features used (empty by default) |
 | `timing_ms` | per stage |
 
-## Verdict rules (default profile)
+## Verdict rules (default profile; `paperglass/profiles/default.toml`)
 
 | Condition (confirmed findings only) | Verdict |
 |-------------------------------------|---------|

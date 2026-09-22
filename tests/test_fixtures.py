@@ -13,6 +13,7 @@ import paperglass.detectors  # noqa: F401  # registration
 from paperglass.detectors import REGISTRY, Candidate
 from paperglass.ingest import Limits
 from paperglass.views.pages import build_pages
+from paperglass.views.render import choose_dpi, render_document
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "tests" / "fixtures"
@@ -23,8 +24,17 @@ FOLDER = {"pdf": "pdf", "any": "text", "docx": "docx", "pptx": "pptx", "html": "
 def candidates_for(data: bytes) -> list[Candidate]:
     stage0 = build_pages(data, limits=LIMITS)
     assert not stage0.failures, stage0.failures
+    rasters = {}
+    if stage0.input_type.value == "pdf":
+        numbers = tuple(p.page_number for p in stage0.pages)
+        outcome = render_document(
+            data, limits=LIMITS, numbers=numbers, dpi=choose_dpi(stage0.structure)
+        )
+        assert outcome.failure is None, outcome.failure
+        rasters = {r.number: r for r in outcome.rasters}
     found: list[Candidate] = []
-    for page in stage0.pages:
+    for bare in stage0.pages:
+        page = bare.model_copy(update={"raster": rasters.get(bare.page_number)})
         for technique_id in REGISTRY:
             detector = REGISTRY.detector(technique_id)()
             found.extend(detector.probe(page))

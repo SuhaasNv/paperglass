@@ -43,6 +43,7 @@ class HiddenAnnotationDetector(Detector):
                         mechanism=f"{annot.subtype or 'annotation'} {where} on page {ctx.page_number} has the {flag} flag and carries text",
                         reproduce=f"paperglass show --page {ctx.page_number} --annotation {index} FILE",
                         confidence=0.95,
+                        self_proving=True,
                     )
                 )
         if ctx.page_number == 1 and ctx.document is not None:
@@ -55,6 +56,7 @@ class HiddenAnnotationDetector(Detector):
                         mechanism=f"embedded file {name!r} in the document name tree",
                         reproduce="paperglass show --embedded FILE",
                         confidence=0.8,
+                        self_proving=True,
                     )
                 )
         return found

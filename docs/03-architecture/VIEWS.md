@@ -38,6 +38,8 @@ Self-proving mechanisms need no View B confirmation: render mode 3 with extracta
 
 ## The discrepancy engine
 
+Built at US-031, US-020 and US-032 (22 Sep 2026): `paperglass.engine.scan_bytes(data, tier=, profile=, extractor=, redact=, limits=)` runs stage 0, renders (fast tier and above), runs every registered detector with the raster on the page context, promotes candidates (`engine/promote.py`: self-proving confirms at stage 0; stage 1 invisible confirms, visible drops, uncertain goes to stage 2 in the standard tier; OCR agreement below the profile threshold confirms, above it drops), classifies severity (`engine/severity.py`: class from the registration, instruction escalation from the profile phrase list, critical when an action verb is named), applies the OCR-layer allowlist for render mode 3, derives the verdict from confirmed findings only, and assembles the `Report` with per-stage timings. Thresholds live in `paperglass/profiles/default.toml` (`engine/profile.py`). `pdf.text.covered` is a stage 1 detector reading the raster. Golden reports per positive fixture live under `tests/golden/reports/` (`scripts/make_goldens.py`).
+
 1. Every View C candidate starts as `possible`.
 2. Stage 1 or 2 evidence (no ink, OCR disagreement) or a self-proving mechanism promotes it to `confirmed`, and the finding gets its crop and its why-hidden sentence.
 3. Text that View A returns and stage 1 finds invisible with no View C mechanism becomes a `confirmed` finding of the closest technique (covered, low contrast) with mechanism "raster: no ink".
