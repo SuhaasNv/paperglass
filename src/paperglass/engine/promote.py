@@ -31,7 +31,10 @@ def promote(  # noqa: PLR0911  # one return per branch of the promotion table in
     *,
     profile: Profile,
     use_ocr: bool,
+    structure_only: bool = False,
 ) -> Promotion:
+    """structure_only: ink on the page does not contradict the candidate (fonts, ActualText);
+    it stays possible until stage 2 disagrees with what the model reads."""
     no_raster = RenderCrop(none_reason="no raster for this candidate")
     if candidate.self_proving:
         crop = crop_data_uri(raster, candidate.bbox) if raster and candidate.bbox else no_raster
@@ -41,16 +44,18 @@ def promote(  # noqa: PLR0911  # one return per branch of the promotion table in
         return Promotion(FindingStatus.POSSIBLE, 0, None, None, RenderCrop(none_reason=reason))
     ink = ink_check(raster, candidate.bbox)
     crop = crop_data_uri(raster, candidate.bbox)
-    if ink.classification == "invisible":
+    if ink.classification == "invisible" and not structure_only:
         return Promotion(FindingStatus.CONFIRMED, 1, ink, None, crop, views=("B", "C"))
     if ink.classification == "visible" and not use_ocr:
-        return Promotion(None, 1, ink, None, crop, views=("B", "C"))
+        status = FindingStatus.POSSIBLE if structure_only else None
+        return Promotion(status, 1, ink, None, crop, views=("B", "C"))
     if not use_ocr or not ocr_available():
         return Promotion(FindingStatus.POSSIBLE, 1, ink, None, crop, views=("B", "C"))
     read = ocr_crop(raster, candidate.bbox)
     score = agreement(candidate.extracted_text, read.text)
     if score >= profile.thresholds.ocr_agreement_benign and ink.classification == "visible":
-        return Promotion(None, 2, ink, read, crop, views=("B", "C"))
+        status = FindingStatus.POSSIBLE if structure_only else None
+        return Promotion(status, 2, ink, read, crop, views=("B", "C"))
     if score < profile.thresholds.ocr_agreement_hidden:
         return Promotion(FindingStatus.CONFIRMED, 2, ink, read, crop, views=("B", "C"))
     return Promotion(FindingStatus.POSSIBLE, 2, ink, read, crop, views=("B", "C"))

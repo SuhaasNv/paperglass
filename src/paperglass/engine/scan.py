@@ -11,7 +11,7 @@ from dataclasses import dataclass, field
 
 import paperglass.detectors  # noqa: F401  # registration
 from paperglass import __version__
-from paperglass.detectors import REGISTRY, Candidate
+from paperglass.detectors import REGISTRY, Candidate, SeverityDefault
 from paperglass.engine.profile import Profile, load_profile
 from paperglass.engine.promote import ocr_layer_is_benign, promote
 from paperglass.engine.severity import classify
@@ -142,12 +142,25 @@ def _promote_all(
         spec = REGISTRY.spec(candidate.technique_id)
         raster = rasters.get(candidate.page) if candidate.page is not None else None
         benign_read = ocr_layer_is_benign(candidate, raster, profile=profile, use_ocr=use_ocr)
-        promotion = promote(candidate, raster, profile=profile, use_ocr=use_ocr)
+        structure_only = spec.severity_class is SeverityDefault.STRUCTURE_ONLY
+        promotion = promote(
+            candidate, raster, profile=profile, use_ocr=use_ocr, structure_only=structure_only
+        )
         if promotion.status is None:
             continue
         if benign_read is not None:
             severity_class, severity = SeverityClass.BENIGN_HIDDEN, profile.severity.benign_hidden
             why = "OCR text layer on a scanned page: the render shows the same words"
+        elif (
+            structure_only and promotion.status is FindingStatus.CONFIRMED and promotion.stage >= 2
+        ):
+            # Stage 2 proved the model reads different words than the page shows.
+            severity_class, severity = classify(
+                spec.model_copy(update={"severity_class": SeverityDefault.DATA}),
+                candidate.extracted_text,
+                profile,
+            )
+            why = spec.explanation
         else:
             severity_class, severity = classify(spec, candidate.extracted_text, profile)
             why = spec.explanation

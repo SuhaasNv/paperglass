@@ -163,6 +163,99 @@ def covered_negative() -> bytes:
     return build([visible_page(under, text("Text on a light box.", y=100, fill="0 g"))])
 
 
+# pdf.font.tounicode_mismatch: a simple font whose ToUnicode declares other letters
+def _cmap(entries: dict[int, str]) -> str:
+    body = " ".join(f"<{code:02X}> <{ord(char):04X}>" for code, char in entries.items())
+    text_ = (
+        "/CIDInit /ProcSet findresource begin begincmap 1 begincodespacerange <00> <FF> "
+        f"endcodespacerange {len(entries)} beginbfchar {body} endbfchar endcmap end end"
+    )
+    return f"<< /Length {len(text_)} >>\nstream\n{text_}\nendstream"
+
+
+def _font_page(cmap: str, line: str) -> Page:
+    return Page(
+        text(VISIBLE, y=700) + "\n" + text(line, y=600, font="F2"),
+        extra_resources="/Font << /F1 3 0 R /F2 {1} >>",
+        extra_objects=(
+            cmap,
+            "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding "
+            "/ToUnicode {0} >>",
+        ),
+    )
+
+
+def tounicode_positive() -> bytes:
+    # Glyphs draw "Python"; the CMap tells the model "Rustlng".
+    return build(
+        [
+            _font_page(
+                _cmap({0x50: "R", 0x79: "u", 0x74: "s", 0x68: "t", 0x6F: "l", 0x6E: "g"}), "Python"
+            )
+        ]
+    )
+
+
+def tounicode_negative() -> bytes:
+    return build(
+        [
+            _font_page(
+                _cmap({0x50: "P", 0x79: "y", 0x74: "t", 0x68: "h", 0x6F: "o", 0x6E: "n"}), "Python"
+            )
+        ]
+    )
+
+
+# pdf.actualtext.override
+def actualtext_positive() -> bytes:
+    content = (
+        text(VISIBLE, y=700)
+        + f"\n/Span << /ActualText ({HIDDEN}) >> BDC\n"
+        + text("Certified", y=600)
+        + "\nEMC"
+    )
+    return build([Page(content)])
+
+
+def actualtext_negative() -> bytes:
+    content = (
+        text(VISIBLE, y=700)
+        + "\n/Span << /ActualText (fi) >> BDC\n"
+        + text("\\002", y=600)
+        + "\nEMC"
+    )
+    return build([Page(content)])
+
+
+# pdf.font.decoding_fallback
+def _type0_page(with_to_unicode: bool) -> Page:
+    extras = [
+        "<< /Type /Font /Subtype /Type0 /BaseFont /Fake /Encoding /Identity-H "
+        "/DescendantFonts [<< /Type /Font /Subtype /CIDFontType2 /BaseFont /Fake "
+        "/CIDSystemInfo << /Registry (Adobe) /Ordering (Identity) /Supplement 0 >> >>]"
+        + (" /ToUnicode {1} >>" if with_to_unicode else " >>"),
+    ]
+    if with_to_unicode:
+        cmap_text = (
+            "/CIDInit /ProcSet findresource begin begincmap 1 begincodespacerange <0000> <FFFF> "
+            "endcodespacerange 1 beginbfchar <0001> <0041> endbfchar endcmap end end"
+        )
+        extras.append(f"<< /Length {len(cmap_text)} >>\nstream\n{cmap_text}\nendstream")
+    return Page(
+        text(VISIBLE, y=700) + "\nBT /F2 12 Tf 72 600 Td <0001> Tj ET",
+        extra_resources="/Font << /F1 3 0 R /F2 {0} >>",
+        extra_objects=tuple(extras),
+    )
+
+
+def decoding_positive() -> bytes:
+    return build([_type0_page(with_to_unicode=False)])
+
+
+def decoding_negative() -> bytes:
+    return build([_type0_page(with_to_unicode=True)])
+
+
 # pdf.active.content
 def active_positive() -> bytes:
     return build(
@@ -197,6 +290,9 @@ GENERATORS: dict[tuple[str, str, str], tuple[Callable[[], bytes], Callable[[], b
     ("pdf", "pdf.metadata.payload", "pdf"): (metadata_positive, metadata_negative),
     ("pdf", "pdf.annotation.hidden", "pdf"): (annotation_positive, annotation_negative),
     ("pdf", "pdf.text.covered", "pdf"): (covered_positive, covered_negative),
+    ("pdf", "pdf.font.tounicode_mismatch", "pdf"): (tounicode_positive, tounicode_negative),
+    ("pdf", "pdf.actualtext.override", "pdf"): (actualtext_positive, actualtext_negative),
+    ("pdf", "pdf.font.decoding_fallback", "pdf"): (decoding_positive, decoding_negative),
     ("pdf", "pdf.active.content", "pdf"): (active_positive, active_negative),
     ("text", "text.unicode.invisible", "txt"): (unicode_positive, unicode_negative),
 }

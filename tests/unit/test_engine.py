@@ -37,6 +37,9 @@ EXPECTED_VERDICT = {
     "pdf.metadata.payload": Verdict.MALICIOUS,
     "pdf.annotation.hidden": Verdict.MALICIOUS,
     "pdf.active.content": Verdict.CLEAN,
+    "pdf.font.tounicode_mismatch": Verdict.CLEAN,
+    "pdf.actualtext.override": Verdict.CLEAN,
+    "pdf.font.decoding_fallback": Verdict.CLEAN,
     "text.unicode.invisible": Verdict.MALICIOUS,
 }
 
@@ -64,8 +67,13 @@ def test_positive_fixture_verdict(technique_id: str) -> None:
     report = scan_bytes(fixture(technique_id, "positive"), limits=LIMITS, tier=Tier.FAST)
     mine = [f for f in report.findings if f.technique_id == technique_id]
     assert len(mine) == 1
-    assert mine[0].status is FindingStatus.CONFIRMED, mine[0]
-    assert report.verdict is EXPECTED_VERDICT[technique_id]
+    expected = EXPECTED_VERDICT[technique_id]
+    spec = REGISTRY.spec(technique_id)
+    if spec.severity_class.value == "structure-only" and not spec.self_proving:
+        assert mine[0].status is FindingStatus.POSSIBLE, mine[0]
+    else:
+        assert mine[0].status is FindingStatus.CONFIRMED, mine[0]
+    assert report.verdict is expected
     assert report.parse_failures == ()
     assert report.rule_versions[technique_id] == "1"
 
