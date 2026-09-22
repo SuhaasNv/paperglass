@@ -52,6 +52,65 @@ jobs:
           python-version: ${{ matrix.python }}
       - run: uv sync --frozen --dev
       - run: uv run pytest -q --cov --cov-report=term --cov-report=xml
+      - name: Coverage summary
+        if: always()
+        run: |
+          echo "### Coverage (${{ matrix.os }}, py${{ matrix.python }})" >> "$GITHUB_STEP_SUMMARY"
+          uv run coverage report --format=total 2>/dev/null | sed 's/^/Total: /; s/$/ %/' >> "$GITHUB_STEP_SUMMARY" || true
+
+  frontend:
+    name: Frontend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run test:coverage
+      - run: npm run build
+      - name: Licence check (permissive only)
+        run: npx --yes license-checker-rseidelsohn --production --onlyAllow "MIT;ISC;BSD-2-Clause;BSD-3-Clause;Apache-2.0;MPL-2.0;0BSD;CC0-1.0;Unlicense" --summary >> "$GITHUB_STEP_SUMMARY"
+
+  e2e:
+    name: End to end
+    runs-on: ubuntu-latest
+    env:
+      CI: "true"
+      APP_ENV: test
+      PAPERGLASS_SESSION_SECRET: ci-only-secret-that-is-at-least-32-characters-long
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: uv sync --frozen --dev
+      - run: npm ci
+        working-directory: frontend
+      - run: npx playwright install --with-deps chromium
+        working-directory: frontend
+      - name: Journey at 375, 768 and 1280 px (the Playwright config starts the backend and Vite)
+        run: npm run test:e2e
+        working-directory: frontend
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: frontend/playwright-report
+          retention-days: 7
 
   backend-postgres:
     name: Backend on PostgreSQL
@@ -70,7 +129,7 @@ jobs:
     env:
       APP_ENV: test
       PAPERGLASS_SESSION_SECRET: ci-only-secret-that-is-at-least-32-characters-long
-      PAPERGLASS_DATABASE_URL: postgresql+psycopg://paperglass:paperglass@localhost:5432/paperglass_test
+      PAPERGLASS_DATABASE_URL: postgresql+pg8000://paperglass:paperglass@localhost:5432/paperglass_test
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
@@ -83,12 +142,7 @@ jobs:
           uv run alembic upgrade head
           uv run alembic downgrade base
           uv run alembic upgrade head
-      - run: uv run pytest -q backend/tests
-      - name: Coverage summary
-        if: always()
-        run: |
-          echo "### Coverage (${{ matrix.os }}, py${{ matrix.python }})" >> "$GITHUB_STEP_SUMMARY"
-          uv run coverage report --format=total 2>/dev/null | sed 's/^/Total: /; s/$/ %/' >> "$GITHUB_STEP_SUMMARY" || true
+      - run: uv run pytest -q tests/backend
 
   install:
     name: Install (${{ matrix.os }})
