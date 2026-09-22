@@ -1,6 +1,15 @@
 # Contributing
 
-Thank you. Paperglass is one maintainer plus whoever shows up; the two recipes below are the fastest way to help. Sign your commits with the DCO (`git commit -s`). Conventional commit messages; no em dashes, no emoji in docs or copy.
+Thank you. Paperglass is one maintainer plus whoever shows up; the two recipes below are the fastest way to help.
+
+## Ground rules
+
+- Sign your commits with the Developer Certificate of Origin (`git commit -s`); by signing you certify https://developercertificate.org/.
+- Conventional commit messages (`feat:`, `fix:`, `test:`, `bench:`, `docs:`, `chore:`), subject at most 50 characters.
+- No em dashes, no emoji in documents or copy (`scripts/check_copy.py` runs in CI).
+- Branch from `dev`; `main` only receives releases (`docs/10-operations/BRANCHING.md`).
+- Security issues go through `SECURITY.md`, never a public issue.
+- Issue templates: new technique, false positive, new sample. A false-positive report is answered before feature work.
 
 ## Add a technique
 
@@ -25,4 +34,4 @@ Thank you. Paperglass is one maintainer plus whoever shows up; the two recipes b
 
 ## Code of conduct
 
-`CODE_OF_CONDUCT.md`. Security issues: `SECURITY.md`, never a public issue.
+`CODE_OF_CONDUCT.md`. Contributors are listed in `CONTRIBUTORS.md`.
