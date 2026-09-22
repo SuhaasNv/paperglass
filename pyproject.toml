@@ -1,0 +1,124 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "paperglass"
+version = "0.1.0.dev0"
+description = "See exactly what the model reads: a document trust scanner and benchmark for AI pipelines."
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+authors = [{ name = "Suhaas Nadukooru" }]
+keywords = ["prompt-injection", "document-security", "pdf", "rag", "llm-security"]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Information Technology",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Security",
+  "Typing :: Typed",
+]
+# Fast tier: no OCR, no system packages. Every entry has its licence in THIRD_PARTY.md.
+dependencies = [
+  "pypdfium2>=4.30",
+  "pikepdf>=9.0",
+  "fonttools>=4.55",
+  "pdfplumber>=0.11",
+  "pypdf>=5.0",
+  "pdfminer.six>=20240706",
+  "python-docx>=1.1",
+  "lxml>=5.3",
+  "puremagic>=1.28",
+  "pillow>=11.0",
+  "numpy>=2.0",
+  "rapidfuzz>=3.10",
+  "pydantic>=2.9",
+  "typer>=0.15",
+  "jinja2>=3.1",
+]
+
+[project.optional-dependencies]
+ocr = ["rapidocr-onnxruntime>=1.4", "onnxruntime>=1.20"]
+langchain = ["langchain-core>=0.3,<0.4"]
+llamaindex = ["llama-index-core>=0.12,<0.13"]
+docling = ["docling>=2.0,<3"]
+mcp = ["mcp>=1.2"]
+rest = ["fastapi>=0.115", "uvicorn>=0.32"]
+bench = ["datasets>=3.0", "scikit-learn>=1.5"]
+redkit = ["reportlab>=4.2"]
+pptx = ["python-pptx>=1.0"]
+html = ["selectolax>=0.3"]
+
+[project.urls]
+Homepage = "https://github.com/SuhaasNv/paperglass"
+Documentation = "https://github.com/SuhaasNv/paperglass/tree/main/docs"
+Changelog = "https://github.com/SuhaasNv/paperglass/blob/main/CHANGELOG.md"
+Security = "https://github.com/SuhaasNv/paperglass/blob/main/SECURITY.md"
+
+[project.scripts]
+paperglass = "paperglass.adapters.cli:app"
+
+[dependency-groups]
+dev = [
+  "ruff>=0.8",
+  "mypy>=1.13",
+  "pytest>=8.3",
+  "pytest-cov>=6.0",
+  "hypothesis>=6.115",
+  "pre-commit>=4.0",
+  "types-docutils",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/paperglass"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests", "scripts"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "ANN", "S", "BLE", "C4", "SIM", "RUF", "PL"]
+ignore = [
+  "ANN401",  # Any in *args/**kwargs is handled by mypy strict; public signatures still forbid Any
+  "PLR2004", # magic numbers are documented thresholds in profiles
+  "S101",    # asserts in tests
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S", "PLR", "ANN"]
+"scripts/**" = ["S603", "S607"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unreachable = true
+disallow_any_explicit = false
+mypy_path = "src"
+files = ["src", "tests", "scripts"]
+
+[[tool.mypy.overrides]]
+module = ["pypdfium2.*", "pikepdf.*", "fontTools.*", "pdfplumber.*", "pdfminer.*", "docx.*", "puremagic.*", "rapidfuzz.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --strict-markers"
+markers = [
+  "fuzz: malformed-input tests (tests/fuzz)",
+  "ocr: needs the ocr extra",
+]
+
+[tool.coverage.run]
+source = ["paperglass.detectors", "paperglass.engine"]
+branch = true
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
+skip_empty = true

@@ -1,6 +1,6 @@
 # Architecture
 
-One Python package, `paperglass`, with a pipeline of pure detectors behind one adapter surface. Status: designed 22 Sep 2026; nothing built. The package tree below is the target for US-000 and is corrected as built.
+One Python package, `paperglass`, with a pipeline of pure detectors behind one adapter surface. Status: skeleton built at US-000 (22 Sep 2026); the pipeline itself lands story by story and this file is amended as each piece exists.
 
 ## Pipeline
 
@@ -19,7 +19,7 @@ input (path | bytes | stream)
 
 Tiers: fast = stages 0 and 1; standard = plus 2 and 3; deep = plus 4. Full detail in `VIEWS.md`.
 
-## Packages (target)
+## Packages (as built at US-000, 22 Sep 2026; modules fill in per story)
 
 ```
 src/paperglass/
