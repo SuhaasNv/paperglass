@@ -1,0 +1,46 @@
+# The local stack: PostgreSQL, the backend, the web app on http://localhost:8080.
+#   docker compose up --build
+# For the backend or the frontend alone in development, see docs/10-operations/OPERATIONS.md.
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: paperglass
+      POSTGRES_PASSWORD: paperglass
+      POSTGRES_DB: paperglass
+    # Not published on the host: the backend reaches it on the compose network.
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U paperglass -d paperglass"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      APP_ENV: development
+      PAPERGLASS_DATABASE_URL: postgresql+pg8000://paperglass:paperglass@postgres:5432/paperglass
+      PAPERGLASS_SESSION_SECRET: compose-only-secret-that-is-at-least-32-characters-long
+      PAPERGLASS_CORS_ORIGINS: http://localhost:8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: frontend
+    environment:
+      BACKEND_URL: http://backend:8000
+    depends_on:
+      - backend
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres-data:

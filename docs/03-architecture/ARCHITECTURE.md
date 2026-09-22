@@ -53,7 +53,9 @@ frontend/           React 19 + TypeScript strict + Vite + Tailwind + TanStack Qu
   src/app/          route table, layout frame, query client
   src/pages/        upload, results, history, techniques, about: plumbing until the design pass
   e2e/              Playwright journey at 375, 768 and 1280 px against the real backend
-                    served as one static image behind nginx with the API proxied on the same origin (US-048)
+  Dockerfile        static build behind nginx, /api proxied to the backend on the same origin (US-048)
+backend/Dockerfile  library with the ocr extra plus the backend, non-root, migrates then serves
+compose.yaml        the local stack; .github/workflows/images.yml publishes both images to GHCR
 ```
 
 The backend is an adapter in the layering sense (it sits above `engine`); the frontend talks to it over `/api/v1`. Uploaded bytes are scanned in memory and discarded; the stored report is the `Report` JSON plus the fingerprint when requested; an anonymous signed session cookie scopes the history; reports expire after 7 days. No accounts in v0.2.0.

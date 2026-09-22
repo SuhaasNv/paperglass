@@ -1,0 +1,85 @@
+name: Images
+
+# Builds the backend and frontend images and pushes them to GHCR on dev, main and release
+# tags. Pull requests build without pushing. Railway builds from the same Dockerfiles.
+
+on:
+  push:
+    branches: [main, dev]
+    tags: ["v*"]
+  pull_request:
+    branches: [main, dev]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: images-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: ${{ matrix.image }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - image: backend
+            context: .
+            dockerfile: backend/Dockerfile
+          - image: frontend
+            context: frontend
+            dockerfile: frontend/Dockerfile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        if: github.event_name != 'pull_request'
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/paperglass-${{ matrix.image }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
+      - uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: PAPERGLASS_VERSION=${{ steps.meta.outputs.version }}
+          cache-from: type=gha,scope=${{ matrix.image }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.image }}
+      - name: Smoke test the image
+        run: |
+          set -euo pipefail
+          tag=$(echo "${{ steps.meta.outputs.tags }}" | head -n1)
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            docker buildx build --load -t "$tag" -f "${{ matrix.dockerfile }}" "${{ matrix.context }}" --cache-from type=gha,scope=${{ matrix.image }}
+          else
+            docker pull "$tag"
+          fi
+          if [ "${{ matrix.image }}" = "backend" ]; then
+            docker run -d --name smoke -p 8000:8000 -e APP_ENV=test -e PAPERGLASS_SESSION_SECRET=smoke-only-secret-that-is-at-least-32-characters-long -e PAPERGLASS_DATABASE_URL=sqlite+pysqlite:////tmp/smoke.sqlite3 "$tag"
+            for i in $(seq 1 30); do curl -sf http://localhost:8000/healthz && break; sleep 2; done
+            curl -sf http://localhost:8000/healthz | grep -q '"status":"ok"'
+            curl -sf -F file=@tests/fixtures/pdf/pdf.text.low_contrast/positive.pdf -F tier=fast http://localhost:8000/api/v1/scans | grep -q '"verdict":"malicious"'
+          else
+            docker run -d --name smoke -p 8080:8080 -e BACKEND_URL=http://127.0.0.1:9 "$tag"
+            for i in $(seq 1 15); do curl -sf http://localhost:8080/ >/dev/null && break; sleep 2; done
+            curl -sfI http://localhost:8080/ | grep -qi 'content-security-policy'
+          fi
+          docker logs smoke
+          docker rm -f smoke
