@@ -9,8 +9,6 @@ from paperglass.detectors.docx._common import locate, preview, reproduce
 from paperglass.detectors.registry import SeverityDefault, technique
 from paperglass.views.context import PageContext
 
-TINY_PT = 2.0
-
 
 @technique(
     id="docx.run.tiny",
@@ -40,7 +38,7 @@ class TinyRunDetector(Detector):
             )
             for run in ctx.docx.runs
             if run.size_pt is not None
-            and run.size_pt < TINY_PT
+            and run.size_pt < ctx.profile.thresholds.tiny_pt
             and run.text.strip()
             and not run.vanish
         ]

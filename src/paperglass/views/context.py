@@ -10,6 +10,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from paperglass.models import DocumentStructure, PageRaster, PageStructure, TextRun
 from paperglass.models.docx import DocxStructure
+from paperglass.profiles import Profile, load_profile
 
 
 class PageContext(BaseModel):
@@ -33,3 +34,5 @@ class PageContext(BaseModel):
     """View B raster for this page when stage 1 ran; stage 1 detectors read it."""
     docx: DocxStructure | None = None
     """View C for a DOCX (one page: Word documents are not paginated before layout)."""
+    profile: Profile = Field(default_factory=load_profile)
+    """Thresholds and allowlist limits the detectors read; the engine picks the profile."""

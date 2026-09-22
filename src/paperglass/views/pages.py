@@ -8,6 +8,7 @@ from paperglass.ingest import Limits, guard_pages, guard_size, guard_zip, sniff
 from paperglass.ingest.sniff import InputType
 from paperglass.models import DocumentStructure, DocumentText, ParseFailure
 from paperglass.models.docx import DocxStructure
+from paperglass.profiles import Profile, load_profile
 from paperglass.views.context import PageContext
 from paperglass.views.extract import Extractor, default_for, get
 from paperglass.views.structure import docx_structure, pdf_structure
@@ -33,8 +34,11 @@ class Stage0:
         return self.text.page_count if self.text is not None else 0
 
 
-def build_pages(data: bytes, *, limits: Limits, extractor: str | None = None) -> Stage0:
+def build_pages(
+    data: bytes, *, limits: Limits, extractor: str | None = None, profile: Profile | None = None
+) -> Stage0:
     """Sniff, guard, extract (View A) and probe (View C), then zip the two per page."""
+    prof = profile or load_profile()
     input_type = sniff(data)
     failures: list[ParseFailure] = []
     for failure in (
@@ -97,6 +101,7 @@ def build_pages(data: bytes, *, limits: Limits, extractor: str | None = None) ->
                 page_count=page_count,
                 input_type=input_type.value,
                 extractor=chosen.name,
+                profile=prof,
                 runs=page_text.runs if page_text is not None else (),
                 width=page_text.width
                 if page_text is not None

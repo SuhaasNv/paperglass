@@ -20,14 +20,16 @@ One HTML file. No external requests. Opens from `file://` with the browser offli
 
 ## Profiles
 
-| Profile | What changes |
+| Profile | What changes (built at US-044) |
 |---------|--------------|
 | `default` | thresholds as in `THREATS.md` |
-| `resume` | ActualText never benign; hidden data that duplicates a supplied job description (optional `--job-description` input) escalates to high; contradiction check between hidden and visible dates and years |
-| `peer-review` | ligature ActualText and tagged structure expected (benign-hidden with constraints); instruction phrases about reviews and scores escalate |
-| `rag-ingest` | OCR layers expected; `structure-only` findings hidden from the top line; Policy defaults to `clean` |
+| `resume` | hidden data is high (one hidden skill list makes the verdict malicious); any ActualText is a finding (a resume has no ligature override); alt text and properties benign only under 100 characters; hiring phrases ("top candidate", "years of experience", "shortlist") count as instructions and "hire", "shortlist", "interview" reach critical |
+| `peer-review` | ligature and short-symbol ActualText benign up to 6 characters; figure alt text benign up to 600 characters; review phrases ("strong accept", "recommend acceptance", "overall score") count as instructions and "accept", "reject", "rate" reach critical |
+| `rag-ingest` | OCR text layers on scans benign at 0.7 agreement instead of 0.8; phrases addressed to the assistant ("when asked", "tell the user", "respond with", "the following link") count as instructions and "respond", "tell", "visit" reach critical |
 
-Profiles are TOML files under `src/paperglass/profiles/`; the profile name is in the report header.
+Deferred from the original plan: the resume `--job-description` duplicate check and the date contradiction check (a later story), and the `rag-ingest` Policy default (v0.4.0 with `clean()`).
+
+Profiles are TOML files under `src/paperglass/profiles/`; a profile `extends = "default"` and states only what it changes (tables merge key by key, phrase and verb lists extend the base). Detectors read their thresholds and allowlist limits from the profile on the page context, so no threshold lives in code. The profile name is in the report header; `paperglass profiles` and `GET /api/v1/profiles` list them.
 
 ## Tested before Done
 

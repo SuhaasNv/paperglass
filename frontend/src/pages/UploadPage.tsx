@@ -1,12 +1,11 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router'
 
-import { useCreateScan } from '../api/queries'
+import { useCreateScan, useProfiles } from '../api/queries'
 import type { Tier } from '../api/types'
 import { errorMessage } from './errorMessage'
 
 const TIERS: Tier[] = ['fast', 'standard']
-const PROFILES = ['default']
 const ACCEPT = '.pdf,.docx,.txt,.md,.markdown'
 
 /**
@@ -16,6 +15,7 @@ const ACCEPT = '.pdf,.docx,.txt,.md,.markdown'
 export function UploadPage() {
   const navigate = useNavigate()
   const create = useCreateScan()
+  const profiles = useProfiles()
   const [file, setFile] = useState<File | null>(null)
   const [tier, setTier] = useState<Tier>('standard')
   const [profile, setProfile] = useState<string>('default')
@@ -55,11 +55,13 @@ export function UploadPage() {
         <label>
           Profile
           <select name="profile" value={profile} onChange={(event) => setProfile(event.target.value)}>
-            {PROFILES.map((value) => (
-              <option key={value} value={value}>
-                {value}
-              </option>
-            ))}
+            {(profiles.data?.profiles ?? [{ name: 'default', version: '', description: '' }]).map(
+              (option) => (
+                <option key={option.name} value={option.name} title={option.description}>
+                  {option.name}
+                </option>
+              ),
+            )}
           </select>
         </label>
         <button type="submit" disabled={file === null || create.isPending}>

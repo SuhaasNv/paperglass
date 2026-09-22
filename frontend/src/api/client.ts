@@ -7,6 +7,7 @@
 import type {
   ErrorBody,
   Health,
+  ProfileList,
   ScanDetail,
   ScanList,
   TechniqueList,
@@ -95,6 +96,10 @@ export function fingerprintScan(id: string, file: File): Promise<ScanDetail> {
 
 export function listTechniques(): Promise<TechniqueList> {
   return request<TechniqueList>(`${API_BASE}/techniques`)
+}
+
+export function listProfiles(): Promise<ProfileList> {
+  return request<ProfileList>(`${API_BASE}/profiles`)
 }
 
 export function health(): Promise<Health> {

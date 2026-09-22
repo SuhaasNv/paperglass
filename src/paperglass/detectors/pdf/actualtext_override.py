@@ -11,8 +11,6 @@ from paperglass.detectors.pdf._common import preview, reproduce
 from paperglass.detectors.registry import SeverityDefault, technique
 from paperglass.views.context import PageContext
 
-BENIGN_MAX_CHARS = 4
-
 
 @technique(
     id="pdf.actualtext.override",
@@ -34,7 +32,7 @@ class ActualTextOverrideDetector(Detector):
             actual = obj.actual_text
             if actual is None or actual == obj.text:
                 continue
-            if len(actual) <= BENIGN_MAX_CHARS:
+            if len(actual) <= ctx.profile.allowlist.actual_text_max_chars:
                 continue
             found.append(
                 Candidate(

@@ -195,6 +195,6 @@ def test_redact_shortens_extracted_text() -> None:
 def test_public_scan_entry_point_and_profiles() -> None:
     report = scan(simple("Hi"), tier=Tier.FAST, limits=LIMITS)
     assert isinstance(report, Report)
-    assert profile_names() == ["default"]
+    assert profile_names() == ["default", "peer-review", "rag-ingest", "resume"]
     with pytest.raises(KeyError, match="unknown profile"):
         load_profile("nope")

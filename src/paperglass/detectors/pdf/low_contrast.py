@@ -10,7 +10,6 @@ from paperglass.views.context import PageContext
 
 BACKGROUND_GREY = 1.0
 """White; a page-background probe (stage 1) replaces this with the sampled background."""
-CONTRAST_THRESHOLD = 24 / 255
 
 
 @technique(
@@ -29,8 +28,9 @@ class LowContrastDetector(TextObjectDetector):
     def check(self, ctx: PageContext, obj: PdfTextObject) -> Candidate | None:
         if obj.render_mode not in PAINTING_MODES or obj.fill is None or obj.fill.grey is None:
             return None
+        threshold = ctx.profile.thresholds.contrast
         distance = abs(obj.fill.grey - BACKGROUND_GREY)
-        if distance > CONTRAST_THRESHOLD:
+        if distance > threshold:
             return None
         components = " ".join(f"{c:g}" for c in obj.fill.components)
         return Candidate(
@@ -44,5 +44,5 @@ class LowContrastDetector(TextObjectDetector):
                 f"text {preview(obj.text)!r}"
             ),
             reproduce=reproduce(ctx, obj),
-            confidence=0.95 if distance <= CONTRAST_THRESHOLD / 2 else 0.85,
+            confidence=0.95 if distance <= threshold / 2 else 0.85,
         )

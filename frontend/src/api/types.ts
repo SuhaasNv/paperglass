@@ -133,6 +133,16 @@ export interface TechniqueList {
   techniques: Technique[]
 }
 
+export interface Profile {
+  name: string
+  version: string
+  description: string
+}
+
+export interface ProfileList {
+  profiles: Profile[]
+}
+
 export interface Health {
   status: string
   database: string

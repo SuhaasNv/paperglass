@@ -140,3 +140,20 @@ def test_expired_scans_are_invisible_and_purged(client: TestClient) -> None:
         session.commit()
         assert client.get(f"/api/v1/scans/{body['id']}").status_code == 404
         assert ScanRepository(session).purge_expired() == 1
+
+
+def test_profiles_are_listed_with_a_sentence_each(client: TestClient) -> None:
+    body = client.get("/api/v1/profiles").json()
+    names = [p["name"] for p in body["profiles"]]
+    assert names == ["default", "peer-review", "rag-ingest", "resume"]
+    assert all(p["description"] for p in body["profiles"])
+    scan = upload(client, simple("Hello"), name="a.pdf", profile="resume")
+    assert scan["profile"] == "resume"
+    report = scan["report"]
+    assert isinstance(report, dict) and report["profile"] == "resume"
+    refused = client.post(
+        "/api/v1/scans",
+        files={"file": ("a.pdf", simple("Hello"), "application/pdf")},
+        data={"profile": "nope"},
+    )
+    assert refused.status_code == 422

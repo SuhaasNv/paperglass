@@ -1,6 +1,6 @@
 """docx.part.hidden: text in comments, tracked changes, field codes, headers, footers, alt
 text or document properties. Alt text and properties are benign-hidden under length and
-phrasing constraints; the engine applies those (profile allowlist)."""
+phrasing constraints from the profile allowlist."""
 
 from __future__ import annotations
 
@@ -9,10 +9,10 @@ from collections.abc import Iterable
 from paperglass.detectors.base import Candidate, Detector
 from paperglass.detectors.docx._common import preview, reproduce
 from paperglass.detectors.registry import SeverityDefault, technique
+from paperglass.profiles import Allowlist
 from paperglass.views.context import PageContext
 
 BENIGN_KINDS = {"alt_text", "property"}
-BENIGN_MAX = {"alt_text": 300, "property": 200}
 STANDARD_PROPERTIES = {
     "title",
     "subject",
@@ -31,10 +31,11 @@ STANDARD_PROPERTIES = {
 INSTRUCTION_CUES = ("ignore", "instruction", "rank", "recommend", "candidate", "you are", "system")
 
 
-def benign(kind: str, name: str, text: str) -> bool:
+def benign(kind: str, name: str, text: str, allowlist: Allowlist) -> bool:
     if kind not in BENIGN_KINDS:
         return False
-    if len(text) > BENIGN_MAX[kind]:
+    limit = allowlist.alt_text_max_chars if kind == "alt_text" else allowlist.properties_max_chars
+    if len(text) > limit:
         return False
     if kind == "property" and name not in STANDARD_PROPERTIES:
         return False
@@ -60,7 +61,9 @@ class HiddenPartDetector(Detector):
             return ()
         found: list[Candidate] = []
         for part in ctx.docx.parts:
-            if not part.text.strip() or benign(part.kind, part.name, part.text):
+            if not part.text.strip() or benign(
+                part.kind, part.name, part.text, ctx.profile.allowlist
+            ):
                 continue
             found.append(
                 Candidate(
