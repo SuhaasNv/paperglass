@@ -157,3 +157,12 @@ def test_profiles_are_listed_with_a_sentence_each(client: TestClient) -> None:
         data={"profile": "nope"},
     )
     assert refused.status_code == 422
+
+
+def test_platform_database_urls_are_routed_to_pg8000() -> None:
+    from app.db import normalise_url  # noqa: PLC0415
+
+    assert normalise_url("postgres://u:p@h:5432/d") == "postgresql+pg8000://u:p@h:5432/d"
+    assert normalise_url("postgresql://u:p@h/d") == "postgresql+pg8000://u:p@h/d"
+    assert normalise_url("postgresql+pg8000://u:p@h/d") == "postgresql+pg8000://u:p@h/d"
+    assert normalise_url("sqlite+pysqlite:///:memory:") == "sqlite+pysqlite:///:memory:"

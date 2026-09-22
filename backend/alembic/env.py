@@ -8,13 +8,14 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
+from app.db import normalise_url
 from app.models import Base
 
 config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 if url := os.environ.get("PAPERGLASS_DATABASE_URL"):
-    config.set_main_option("sqlalchemy.url", url)
+    config.set_main_option("sqlalchemy.url", normalise_url(url))
 
 target_metadata = Base.metadata
 
