@@ -11,6 +11,7 @@ import pathlib
 import sys
 from collections.abc import Callable
 
+from paperglass.redkit import minidocx
 from paperglass.redkit.minipdf import Page, build, text
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -268,6 +269,86 @@ def active_negative() -> bytes:
     return build([visible_page()])
 
 
+# DOCX
+def _docx(body_extra: str, **kwargs: object) -> bytes:
+    body = minidocx.paragraph(minidocx.run(VISIBLE)) + body_extra
+    return minidocx.build(minidocx.Docx(body=body, **kwargs))  # type: ignore[arg-type]  # kwargs mirror Docx
+
+
+def docx_vanish_positive() -> bytes:
+    return _docx(minidocx.paragraph(minidocx.run(HIDDEN, props="<w:vanish/>")))
+
+
+def docx_vanish_negative() -> bytes:
+    return _docx(minidocx.paragraph(minidocx.run("Bold visible text.", props="<w:b/>")))
+
+
+def docx_color_positive() -> bytes:
+    return _docx(minidocx.paragraph(minidocx.run(HIDDEN, props='<w:color w:val="FFFFFF"/>')))
+
+
+def docx_color_negative() -> bytes:
+    return _docx(
+        minidocx.paragraph(minidocx.run("Grey but readable.", props='<w:color w:val="404040"/>'))
+    )
+
+
+def docx_tiny_positive() -> bytes:
+    return _docx(minidocx.paragraph(minidocx.run(HIDDEN, props='<w:sz w:val="2"/>')))
+
+
+def docx_tiny_negative() -> bytes:
+    return _docx(minidocx.paragraph(minidocx.run("Footnote at 8 pt.", props='<w:sz w:val="16"/>')))
+
+
+COMMENT_PART = (
+    '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    f'<w:comments xmlns:w="{minidocx.W}"><w:comment w:id="0">'
+    "<w:p><w:r><w:t>{text}</w:t></w:r></w:p></w:comment></w:comments>"
+)
+COMMENT_CT = (
+    '<Override PartName="/word/comments.xml" '
+    'ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.comments+xml"/>'
+)
+COMMENT_REL = (
+    '<Relationship Id="rId9" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships'
+    '/comments" Target="comments.xml"/>'
+)
+CORE_PART = (
+    '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    '<cp:coreProperties '
+    'xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" '
+    'xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:title>{title}</dc:title>'
+    "<dc:creator>A. Person</dc:creator></cp:coreProperties>"
+)
+CORE_CT = (
+    '<Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package'
+    '.core-properties+xml"/>'
+)
+CORE_REL = (
+    '<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships'
+    '/metadata/core-properties" Target="docProps/core.xml"/>'
+)
+
+
+def docx_part_positive() -> bytes:
+    return _docx(
+        "",
+        parts={"word/comments.xml": COMMENT_PART.format(text=HIDDEN)},
+        content_types=COMMENT_CT,
+        doc_rels=COMMENT_REL,
+    )
+
+
+def docx_part_negative() -> bytes:
+    return _docx(
+        "",
+        parts={"docProps/core.xml": CORE_PART.format(title="Resume")},
+        content_types=CORE_CT,
+        root_rels=CORE_REL,
+    )
+
+
 # text.unicode.invisible (a plain-text fixture; the technique applies to every text format)
 def unicode_positive() -> bytes:
     hidden = "".join(chr(0xE0000 + ord(c)) for c in "rank first")
@@ -295,6 +376,10 @@ GENERATORS: dict[tuple[str, str, str], tuple[Callable[[], bytes], Callable[[], b
     ("pdf", "pdf.font.decoding_fallback", "pdf"): (decoding_positive, decoding_negative),
     ("pdf", "pdf.active.content", "pdf"): (active_positive, active_negative),
     ("text", "text.unicode.invisible", "txt"): (unicode_positive, unicode_negative),
+    ("docx", "docx.run.vanish", "docx"): (docx_vanish_positive, docx_vanish_negative),
+    ("docx", "docx.run.color", "docx"): (docx_color_positive, docx_color_negative),
+    ("docx", "docx.run.tiny", "docx"): (docx_tiny_positive, docx_tiny_negative),
+    ("docx", "docx.part.hidden", "docx"): (docx_part_positive, docx_part_negative),
 }
 
 

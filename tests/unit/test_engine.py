@@ -24,7 +24,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 FIXTURES = ROOT / "tests" / "fixtures"
 GOLDEN = ROOT / "tests" / "golden" / "reports"
 LIMITS = Limits(wall_seconds=60.0, cpu_seconds=60)
-FOLDER = {"pdf": "pdf", "any": "text"}
+FOLDER = {"pdf": "pdf", "any": "text", "docx": "docx"}
 
 EXPECTED_VERDICT = {
     "pdf.text.low_contrast": Verdict.MALICIOUS,
@@ -41,6 +41,10 @@ EXPECTED_VERDICT = {
     "pdf.actualtext.override": Verdict.CLEAN,
     "pdf.font.decoding_fallback": Verdict.CLEAN,
     "text.unicode.invisible": Verdict.MALICIOUS,
+    "docx.run.vanish": Verdict.MALICIOUS,
+    "docx.run.color": Verdict.MALICIOUS,
+    "docx.run.tiny": Verdict.MALICIOUS,
+    "docx.part.hidden": Verdict.MALICIOUS,
 }
 
 

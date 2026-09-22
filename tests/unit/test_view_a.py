@@ -69,7 +69,7 @@ def test_available_lists_default_first_and_filters_by_type() -> None:
     names = [e.name for e in available(InputType.PDF)]
     assert names[0] == DEFAULT_EXTRACTOR
     assert set(names) == set(PDF_BACKENDS)
-    assert available(InputType.DOCX) == []
+    assert [e.name for e in available(InputType.DOCX)] == ["python-docx"]
     assert [e.name for e in available(InputType.TEXT)] == ["plain"]
 
 

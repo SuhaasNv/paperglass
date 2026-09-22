@@ -9,6 +9,7 @@ from __future__ import annotations
 from pydantic import BaseModel, ConfigDict, Field
 
 from paperglass.models import DocumentStructure, PageRaster, PageStructure, TextRun
+from paperglass.models.docx import DocxStructure
 
 
 class PageContext(BaseModel):
@@ -30,3 +31,5 @@ class PageContext(BaseModel):
     """Document-level View C (layers, metadata, active content); the same object on every page."""
     raster: PageRaster | None = None
     """View B raster for this page when stage 1 ran; stage 1 detectors read it."""
+    docx: DocxStructure | None = None
+    """View C for a DOCX (one page: Word documents are not paginated before layout)."""

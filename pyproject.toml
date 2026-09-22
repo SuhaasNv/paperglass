@@ -97,6 +97,8 @@ ignore = [
 "tests/**" = ["S", "PLR", "ANN"]
 # Detector registrations carry the THREATS.md sentence and threshold verbatim; they may be long.
 "src/paperglass/detectors/**" = ["E501"]
+# OOXML boilerplate strings are long by nature.
+"src/paperglass/redkit/minidocx.py" = ["E501"]
 "scripts/**" = ["S603", "S607"]
 
 [tool.mypy]
@@ -119,6 +121,7 @@ module = [
   "puremagic.*",
   "rapidfuzz.*",
   "rapidocr_onnxruntime.*",
+  "lxml.*",
 ]
 ignore_missing_imports = true
 
