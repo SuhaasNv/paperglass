@@ -1,4 +1,4 @@
-"""An app on an in-memory SQLite database, one per test module."""
+"""An app on the database the environment names (SQLite in memory by default)."""
 
 from __future__ import annotations
 
@@ -21,6 +21,7 @@ def client() -> Iterator[TestClient]:
     engine = get_engine()
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
-    with TestClient(create_app()) as test_client:
+    # https so the secure session cookie (every environment but development) travels back.
+    with TestClient(create_app(), base_url="https://testserver") as test_client:
         yield test_client
     Base.metadata.drop_all(engine)

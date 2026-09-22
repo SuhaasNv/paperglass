@@ -121,7 +121,7 @@ strict = true
 warn_unreachable = true
 disallow_any_explicit = false
 mypy_path = "src"
-files = ["src", "tests", "scripts", "backend/app", "backend/tests"]
+files = ["src", "tests", "scripts", "backend/app"]
 
 [[tool.mypy.overrides]]
 module = [
@@ -139,8 +139,8 @@ module = [
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
-testpaths = ["tests", "backend/tests"]
-addopts = "-q --strict-markers --import-mode=importlib"
+testpaths = ["tests"]
+addopts = "-q --strict-markers"
 markers = [
   "fuzz: malformed-input tests (tests/fuzz)",
   "ocr: needs the ocr extra",
