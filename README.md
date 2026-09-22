@@ -62,7 +62,7 @@ for finding in report.findings:
     print(finding.technique_id, finding.status, finding.mechanism)
 
 table = paperglass.fingerprint(open("resume.pdf", "rb").read())
-print(table.fooled)   # extractor name to number of hidden runs it returns
+print(table.fooled)  # extractor name to number of hidden runs it returns
 ```
 
 `Report` and `Finding` are pydantic models; `report.to_json()` is canonical and validates against `schemas/report-v1.json`. Schema: `docs/03-architecture/FINDING_SCHEMA.md`.

@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 import pathlib
+import re
 
 import pytest
 
@@ -55,7 +56,8 @@ def fixture(technique_id: str, which: str) -> bytes:
 
 
 def normalised(report: Report) -> str:
-    """The report with crops replaced and timings dropped: what the golden files hold."""
+    """The report as the golden files hold it: crops replaced, timings dropped, and the
+    numbers that vary by platform (glyph boxes from system fonts, ink fractions) rounded."""
     payload = json.loads(report.to_json())
     payload["timing_ms"] = {}
     payload["tool_version"] = "<version>"
@@ -63,6 +65,9 @@ def normalised(report: Report) -> str:
         crop = finding["render_crop"]
         if crop.get("data_uri"):
             crop["data_uri"] = f"<png {len(crop['data_uri']) > 100}>"
+        if finding.get("bbox"):
+            finding["bbox"] = {k: round(v) for k, v in finding["bbox"].items()}
+        finding["mechanism"] = re.sub(r"\d+\.\d+", "#", finding["mechanism"])
     return json.dumps(payload, indent=2, sort_keys=True) + "\n"
 
 
