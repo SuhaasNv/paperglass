@@ -68,6 +68,13 @@ def normalised(report: Report) -> str:
         if finding.get("bbox"):
             finding["bbox"] = {k: round(v) for k, v in finding["bbox"].items()}
         finding["mechanism"] = re.sub(r"\d+\.\d+", "#", finding["mechanism"])
+    for page in payload.get("pages", []):
+        thumb = page["thumbnail"]
+        if thumb.get("data_uri"):
+            thumb["data_uri"] = f"<jpeg {len(thumb['data_uri']) > 100}>"
+        for run in page["runs"]:
+            if run.get("bbox"):
+                run["bbox"] = {k: round(v) for k, v in run["bbox"].items()}
     return json.dumps(payload, indent=2, sort_keys=True) + "\n"
 
 
@@ -159,7 +166,7 @@ def test_fast_tier_never_calls_ocr_and_report_says_which_pages_were_verified() -
     assert report.tier is Tier.FAST
     assert report.pages_render_verified == 1 and report.page_count == 1
     assert report.dpi == 150
-    assert set(report.timing_ms) == {"stage0", "render", "detectors", "promote", "verdict"}
+    assert set(report.timing_ms) == {"stage0", "render", "detectors", "promote", "pages", "verdict"}
 
 
 @pytest.mark.ocr

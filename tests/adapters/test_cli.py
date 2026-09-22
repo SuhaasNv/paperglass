@@ -58,7 +58,7 @@ def test_scan_json_and_out(tmp_path: pathlib.Path) -> None:
     )
     assert result.exit_code == 2
     payload = json.loads(result.output)
-    assert payload["verdict"] == "malicious" and payload["schema_version"] == 1
+    assert payload["verdict"] == "malicious" and payload["schema_version"] == 2
     assert json.loads(out.read_text())["verdict"] == "malicious"
 
 

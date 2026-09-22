@@ -37,13 +37,14 @@
   "input_type": "pdf",
   "network_used": [],
   "page_count": 1,
+  "pages": [],
   "pages_render_verified": 1,
   "parse_failures": [],
   "profile": "default",
   "rule_versions": {
     "pdf.text.low_contrast": "1"
   },
-  "schema_version": 1,
+  "schema_version": 2,
   "severity_counts": {
     "critical": 0,
     "high": 1,

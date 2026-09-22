@@ -13,6 +13,7 @@ import paperglass.detectors  # noqa: F401  # registration
 from paperglass import __version__
 from paperglass.detectors import REGISTRY, Candidate, SeverityDefault
 from paperglass.engine.hints import hints_for
+from paperglass.engine.pageviews import build_page_views
 from paperglass.engine.profile import Profile, load_profile
 from paperglass.engine.promote import ocr_layer_is_benign, promote
 from paperglass.engine.severity import classify
@@ -79,6 +80,9 @@ def scan_bytes(  # noqa: PLR0913  # the public entry point takes one keyword per
 
     if redact:
         findings = [_redacted(f) for f in findings]
+    findings = sorted(findings, key=_finding_order)
+    pages = build_page_views(stage0.pages, rasters, findings, prof, redact=redact)
+    timer.lap("pages")
 
     confirmed = [f for f in findings if f.status is FindingStatus.CONFIRMED]
     counts = dict.fromkeys(Severity, 0)
@@ -104,7 +108,8 @@ def scan_bytes(  # noqa: PLR0913  # the public entry point takes one keyword per
         dpi=dpi if rasters else None,
         verdict=verdict,
         severity_counts=counts,
-        findings=tuple(sorted(findings, key=_finding_order)),
+        findings=tuple(findings),
+        pages=pages,
         parse_failures=tuple(failures),
         network_used=(),
         timing_ms=timer.marks,
