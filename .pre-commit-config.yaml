@@ -1,0 +1,25 @@
+# Runs the same gate as CI on every commit. Install once: uv run pre-commit install
+repos:
+  - repo: local
+    hooks:
+      - id: ruff-check
+        name: ruff check
+        entry: uv run ruff check --fix
+        language: system
+        types: [python]
+      - id: ruff-format
+        name: ruff format
+        entry: uv run ruff format
+        language: system
+        types: [python]
+      - id: mypy
+        name: mypy --strict
+        entry: uv run mypy
+        language: system
+        pass_filenames: false
+      - id: copy-rules
+        name: copy rules (no em dashes, no emoji, no coursework wording)
+        entry: uv run python scripts/check_copy.py
+        language: system
+        pass_filenames: false
+        files: \.md$
