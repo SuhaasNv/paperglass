@@ -7,6 +7,7 @@ from paperglass.detectors.base import Candidate, Detector
 from paperglass.detectors.pdf import (  # noqa: F401  # registration side effects
     active_content,
     annotation_hidden,
+    covered,
     hidden_layer,
     low_contrast,
     metadata_payload,

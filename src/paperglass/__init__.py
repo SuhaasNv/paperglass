@@ -18,4 +18,15 @@ try:
 except PackageNotFoundError:  # pragma: no cover - only when run from an unbuilt checkout
     __version__ = "0.0.0+unknown"
 
-__all__ = ["__version__"]
+
+def scan(data: bytes, **options: object) -> object:
+    """Scan bytes and return a Report. Options: tier, profile, extractor, redact, limits.
+
+    Imported lazily so `paperglass version` does not load the parsers.
+    """
+    from paperglass.engine import scan_bytes  # noqa: PLC0415
+
+    return scan_bytes(data, **options)  # type: ignore[arg-type]  # options mirror scan_bytes
+
+
+__all__ = ["__version__", "scan"]

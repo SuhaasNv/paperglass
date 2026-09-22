@@ -47,6 +47,7 @@ def decode_tags(text: str) -> str:
     formats=("any",),
     views=("A",),
     stage=0,
+    self_proving=True,  # these code points draw nothing by definition
     severity_class=SeverityDefault.DATA,
     explanation="Characters that carry text but draw nothing: tag characters, zero-width joiners, direction overrides, look-alike letters",
     threshold="U+E0000 block, U+200B to U+200F, U+202A to U+202E, U+2066 to U+2069, confusables outside the document's script",
@@ -77,6 +78,7 @@ class InvisibleUnicodeDetector(Detector):
                     ),
                     reproduce=f"paperglass show --page {ctx.page_number} --run {index} --codepoints FILE",
                     confidence=0.98 if any(p in TAG_BLOCK for p, _ in hits) else 0.9,
+                    self_proving=True,
                 )
             )
         return found

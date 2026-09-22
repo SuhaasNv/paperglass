@@ -151,6 +151,18 @@ def _with_annots(data: bytes, numbers: list[int]) -> bytes:
     return data.replace(b"/Resources", f"/Annots [{refs}] /Resources".encode(), 1)
 
 
+# pdf.text.covered
+def covered_positive() -> bytes:
+    hidden = text(HIDDEN, y=100, fill="0 g")
+    cover = "1 1 1 rg 60 90 480 30 re f"
+    return build([visible_page(hidden, cover)])
+
+
+def covered_negative() -> bytes:
+    under = "0.9 0.9 0.9 rg 60 90 480 30 re f"
+    return build([visible_page(under, text("Text on a light box.", y=100, fill="0 g"))])
+
+
 # pdf.active.content
 def active_positive() -> bytes:
     return build(
@@ -184,6 +196,7 @@ GENERATORS: dict[tuple[str, str, str], tuple[Callable[[], bytes], Callable[[], b
     ("pdf", "pdf.layer.hidden", "pdf"): (hidden_layer_positive, hidden_layer_negative),
     ("pdf", "pdf.metadata.payload", "pdf"): (metadata_positive, metadata_negative),
     ("pdf", "pdf.annotation.hidden", "pdf"): (annotation_positive, annotation_negative),
+    ("pdf", "pdf.text.covered", "pdf"): (covered_positive, covered_negative),
     ("pdf", "pdf.active.content", "pdf"): (active_positive, active_negative),
     ("text", "text.unicode.invisible", "txt"): (unicode_positive, unicode_negative),
 }

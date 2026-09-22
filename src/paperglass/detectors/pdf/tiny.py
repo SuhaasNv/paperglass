@@ -16,6 +16,7 @@ TINY_PT = 2.0
     formats=("pdf",),
     views=("B", "C"),
     stage=1,
+    self_proving=True,  # ink exists but is unreadable: the raster cannot contradict the size
     severity_class=SeverityDefault.DATA,
     explanation="Text too small for a person to read",
     threshold="effective font size after the CTM below 2 pt, or zero",
@@ -40,4 +41,5 @@ class TinyTextDetector(TextObjectDetector):
             ),
             reproduce=reproduce(ctx, obj),
             confidence=0.98 if size == 0 else 0.95,
+            self_proving=True,
         )

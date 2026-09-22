@@ -62,6 +62,7 @@ class MetadataPayloadDetector(Detector):
                     mechanism=f"Info dictionary key /{key} carries {reason} ({len(value)} characters)",
                     reproduce="paperglass show --info FILE",
                     confidence=0.92 if long else 0.7,
+                    self_proving=True,
                 )
             )
         xmp = ctx.document.metadata
@@ -74,6 +75,7 @@ class MetadataPayloadDetector(Detector):
                     mechanism=f"XMP packet is {xmp.xmp_length} characters long",
                     reproduce="paperglass show --xmp FILE",
                     confidence=0.6,
+                    self_proving=True,
                 )
             )
         return found
