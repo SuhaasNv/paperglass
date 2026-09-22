@@ -10,3 +10,4 @@ Twelve weeks, one release per use case, one maintainer at 15 to 20 hours a week.
 | `RELEASE_PLAN_V0_1_0.md` | The first release in detail: stories, order, exit criteria, what is cut first |
 
 Start with `ROADMAP.md`. Board: Notion "Paperglass". Related: `../10-operations/BRANCHING.md`, `../10-operations/RELEASE_CHECKLIST.md`.
+- `BUILD_LOOP.md`: the autonomous build loop, its order of work, the review ritual after every use case and what waits for the owner (written).
