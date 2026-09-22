@@ -78,7 +78,7 @@ jobs:
       - run: npm run test:coverage
       - run: npm run build
       - name: Licence check (permissive only)
-        run: npx --yes license-checker-rseidelsohn --production --excludePackages "paperglass-frontend@0.2.0-dev" --onlyAllow "MIT;ISC;BSD-2-Clause;BSD-3-Clause;Apache-2.0;MPL-2.0;0BSD;CC0-1.0;Unlicense" --summary >> "$GITHUB_STEP_SUMMARY"
+        run: npx --yes license-checker-rseidelsohn --production --excludePackages "paperglass-frontend@0.2.0-dev" --onlyAllow "MIT;ISC;BSD-2-Clause;BSD-3-Clause;Apache-2.0;MPL-2.0;0BSD;CC0-1.0;Unlicense;OFL-1.1" --summary >> "$GITHUB_STEP_SUMMARY"
 
   e2e:
     name: End to end
