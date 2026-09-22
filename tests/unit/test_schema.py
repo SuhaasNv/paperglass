@@ -8,7 +8,7 @@ import pathlib
 import pytest
 from pydantic import ValidationError
 
-from paperglass.report import (
+from paperglass.models import (
     SCHEMA_VERSION,
     BBox,
     Finding,
