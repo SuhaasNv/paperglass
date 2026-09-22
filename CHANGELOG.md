@@ -21,6 +21,10 @@ Build loop (22 Sep 2026): the owner asked for the rest of the product to be buil
 
 Handover (22 Sep 2026): the web app runs at https://frontend-development-341b.up.railway.app (dev) and https://frontend-production-ae91.up.railway.app (main). What remains in v0.2.0: US-045 demo (script and posts as drafts), the UC2 review (build loop), then US-042 release (version bump, tag, PyPI), which waits for the owner.
 
+## v0.3.0 (in progress): UC3 Benchmark and leaderboard
+
+- US-052: the harness. `paperglass bench fetch|run|report|verify`, any detector through the two-function adapter (`paperglass` or `module:function`), the corpus index format with a synthetic `fixtures` corpus built from the repository's own fixture pairs, metrics in plain Python (verdict recall and detection recall kept apart, per technique and per family, instruction versus data, two false-positive rates, benign-hidden mislabelled, latency), `results/` with Paperglass's own file and a CI step that refuses it if it does not reproduce. Nothing here is a headline number.
+
 ## v0.1.0 (unreleased): UC1 Scan and Verdict
 
 What you get: `pip install paperglass`, then `paperglass scan file.pdf` (or a `.docx`, `.txt`, `.md`, or a whole directory) prints a verdict of clean, benign-hidden, suspicious or malicious, with every finding's technique in plain words, the page and region, the hidden text, the exact object that hid it, and a `paperglass show` command that prints those bytes so you can check without trusting the tool. `paperglass fingerprint` tells you which of your installed PDF extractors would hand the hidden text to a model. The Python API (`paperglass.scan`, `paperglass.fingerprint`) returns the same as typed models with a versioned JSON schema.

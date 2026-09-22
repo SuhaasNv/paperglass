@@ -29,3 +29,4 @@ Merge into `main`, tag, publish to PyPI or GHCR as a release, deploy production,
 - 22 Sep 2026: loop started after US-037. UC2 has US-043 and US-045 left that the loop can build; US-042 (the v0.2.0 tag and PyPI) waits for the owner.
 - 22 Sep 2026: US-043 done (schema v2, the diff). US-045 drafted as far as the loop can (documents, shot list, posts); the recording and the posting wait for the owner. UC2 review agent launched.
 - 22 Sep 2026: UC2 reviewed (`docs/12-reviews/REVIEW_UC2.md`: 0 high, 1 medium, 4 low); all five resolved on `fix/uc2-review` with regression tests. UC2 is complete apart from US-042 (release, owner) and the recording of US-045 (owner). UC3 starts with US-052, the harness.
+- 22 Sep 2026: UC3 started. US-052 done (the harness, results/, CI verification). Next: US-050 corpus index over external sources, US-051 benign corpus tooling, US-053 splits and audits, US-054 baselines, US-059 results flow, US-055 dataset card.

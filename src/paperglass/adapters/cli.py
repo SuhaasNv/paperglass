@@ -344,5 +344,145 @@ def _show_ink(data: bytes, page: int, run: int) -> None:
     )
 
 
+bench_app = typer.Typer(name="bench", help="The benchmark harness (docs/08-benchmark/HARNESS.md).")
+app.add_typer(bench_app, name="bench")
+
+
+def _repo_root() -> pathlib.Path:
+    return pathlib.Path.cwd()
+
+
+def _corpus_index(name: str, root: pathlib.Path) -> pathlib.Path:
+    return root / "bench" / "corpus" / name / "index.jsonl"
+
+
+@bench_app.command("fetch")
+def bench_fetch(
+    corpus: Annotated[
+        str, typer.Option(help="fixtures (in the repository) or a corpus name.")
+    ] = "fixtures",
+) -> None:
+    """Build or fetch a corpus and verify every hash against its index."""
+    from paperglass import __version__  # noqa: PLC0415
+    from paperglass.bench import fixtures_corpus, read_index, write_index  # noqa: PLC0415
+    from paperglass.bench.run import verify_hashes  # noqa: PLC0415
+
+    root = _repo_root()
+    index = _corpus_index(corpus, root)
+    if corpus == "fixtures":
+        built = fixtures_corpus(root / "tests" / "fixtures", version=__version__)
+        write_index(built, index)
+        typer.echo(f"wrote {index} with {len(built.samples)} samples (synthetic)")
+    if not index.is_file():
+        typer.echo(f"error: no index at {index}; external corpora arrive with US-050", err=True)
+        raise typer.Exit(3)
+    problems = verify_hashes(read_index(index, root))
+    for problem in problems:
+        typer.echo(f"  {problem}", err=True)
+    if problems:
+        raise typer.Exit(3)
+    typer.echo(f"{corpus}: every hash matches the index")
+
+
+@bench_app.command("run")
+def bench_run(
+    corpus: Annotated[str, typer.Option()] = "fixtures",
+    detector: Annotated[str, typer.Option(help="paperglass, or module:function.")] = "paperglass",
+    tier: Annotated[
+        str, typer.Option(help="Paperglass tier when the detector is paperglass.")
+    ] = "fast",
+    profile: Annotated[str, typer.Option()] = "default",
+    out: Annotated[
+        pathlib.Path | None, typer.Option(help="Results root (default results/).")
+    ] = None,
+) -> None:
+    """Run a detector over a corpus; write results/<detector>/<version>/<corpus>.json."""
+    from paperglass.bench import load_detector, read_index, results_path, run  # noqa: PLC0415
+
+    root = _repo_root()
+    index = _corpus_index(corpus, root)
+    if not index.is_file():
+        typer.echo(
+            f"error: no index at {index}; run `paperglass bench fetch --corpus {corpus}`", err=True
+        )
+        raise typer.Exit(3)
+    try:
+        chosen = load_detector(detector, tier=tier, profile=profile)
+    except (ValueError, ImportError, AttributeError) as exc:
+        typer.echo(f"error: {exc}", err=True)
+        raise typer.Exit(3) from exc
+    command = f"paperglass bench run --corpus {corpus} --detector {detector} --tier {tier} --profile {profile}"
+    try:
+        results = run(read_index(index, root), chosen, command=command)
+    except ValueError as exc:
+        typer.echo(f"error: {exc}", err=True)
+        raise typer.Exit(3) from exc
+    target = results_path(out or root / "results", results)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(results.to_json(), encoding="utf-8")
+    m = results.metrics
+    typer.echo(
+        f"{results.detector} {results.detector_version} on {corpus} {results.corpus_version}: "
+        f"precision {m.precision}, recall {m.recall}, f1 {m.f1}, "
+        f"fp rate {m.false_positive_rate_verdict_driving}, p50 {m.latency_p50_ms} ms -> {target}"
+    )
+    raise typer.Exit(0)
+
+
+@bench_app.command("report")
+def bench_report(
+    results: Annotated[
+        pathlib.Path | None, typer.Option(help="Results root (default results/).")
+    ] = None,
+    target: Annotated[
+        pathlib.Path | None, typer.Option(help="Markdown file (default BENCHMARK.md).")
+    ] = None,
+) -> None:
+    """Render the results tables into BENCHMARK.md."""
+    from paperglass.bench import collect, render, splice  # noqa: PLC0415
+
+    root = _repo_root()
+    found = collect(results or root / "results")
+    document = target or root / "BENCHMARK.md"
+    document.write_text(
+        splice(document.read_text(encoding="utf-8"), render(found)), encoding="utf-8"
+    )
+    typer.echo(f"{len(found)} results file(s) rendered into {document}")
+
+
+@bench_app.command("verify")
+def bench_verify(
+    corpus: Annotated[str, typer.Option()] = "fixtures",
+    results: Annotated[
+        pathlib.Path, typer.Option(help="A committed results file to reproduce.")
+    ] = pathlib.Path("results/paperglass-fast/0.1.0/fixtures.json"),
+) -> None:
+    """Re-run a committed results file's command and refuse it if the numbers differ."""
+    from paperglass.bench import (  # noqa: PLC0415
+        load_detector,
+        load_results,
+        read_index,
+        run,
+        same_numbers,
+    )
+
+    root = _repo_root()
+    committed = load_results(results)
+    detector = committed.detector.replace("paperglass-", "")
+    spec = "paperglass" if committed.detector.startswith("paperglass-") else committed.detector
+    fresh = run(
+        read_index(_corpus_index(corpus, root), root),
+        load_detector(spec, tier=detector if spec == "paperglass" else "fast"),
+        command=committed.command,
+    )
+    differing = same_numbers(committed, fresh)
+    if differing:
+        typer.echo(
+            "error: the committed results do not reproduce: " + ", ".join(differing), err=True
+        )
+        raise typer.Exit(1)
+    typer.echo(f"{results}: reproduces ({fresh.metrics.samples} samples)")
+
+
 if __name__ == "__main__":  # pragma: no cover
     app()
