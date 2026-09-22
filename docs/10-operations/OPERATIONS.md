@@ -4,7 +4,7 @@ Describes what exists. Sections are filled as the stories that create them land;
 
 ## Local setup
 
-`uv sync --all-extras --dev` creates one environment for the library and the backend (a uv workspace); `uv run paperglass --help`. Python 3.11+. No system packages for the fast tier; `paperglass[ocr]` pulls RapidOCR and onnxruntime wheels. Backend (US-046): `docker compose up postgres` (compose file lands with US-048) or any PostgreSQL 16, then in `backend/`: `uv run alembic upgrade head` and `uv run paperglass-backend`, or `uv run uvicorn app.main:app --reload`; with `PAPERGLASS_DATABASE_URL` unset the backend uses a local SQLite file and creates the table itself, which is for local play and tests only. API docs at `/api/docs`.
+`uv sync --all-extras --dev` creates one environment for the library and the backend (a uv workspace); `uv run paperglass --help`. Python 3.11+. No system packages for the fast tier; `paperglass[ocr]` pulls RapidOCR and onnxruntime wheels. Backend (US-046): `docker compose up postgres` (compose file lands with US-048) or any PostgreSQL 16, then in `backend/`: `uv run alembic upgrade head` and `uv run paperglass-backend`, or `uv run uvicorn app.main:app --reload`; with `PAPERGLASS_DATABASE_URL` unset the backend uses a local SQLite file and creates the table itself, which is for local play and tests only. API docs at `/api/docs`. Frontend (US-047): in `frontend/`, `npm install` then `npm run dev` on http://localhost:5173 with `/api` proxied to the backend; `npm test` for the unit tests and `npm run test:e2e` for the Playwright journey, which starts both servers itself.
 
 ## Environment variables
 

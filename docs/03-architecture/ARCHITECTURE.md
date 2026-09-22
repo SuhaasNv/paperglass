@@ -48,7 +48,12 @@ backend/            FastAPI + SQLAlchemy 2 + Alembic + PostgreSQL; imports the l
   app/models/       Scan (id, session_id, created_at, expires_at, file_name, sha256, verdict, report_json, fingerprint_json)
   app/repositories/ SQLAlchemy access
   alembic/          migrations
-frontend/           React 19 + TypeScript strict + Vite + Tailwind + TanStack Query + React Router; one static image served by nginx with runtime config
+frontend/           React 19 + TypeScript strict + Vite + Tailwind + TanStack Query + React Router (US-047)
+  src/api/          types mirrored from backend/app/api/schemas.py and schemas/report-v1.json, the fetch client, TanStack hooks
+  src/app/          route table, layout frame, query client
+  src/pages/        upload, results, history, techniques, about: plumbing until the design pass
+  e2e/              Playwright journey at 375, 768 and 1280 px against the real backend
+                    served as one static image behind nginx with the API proxied on the same origin (US-048)
 ```
 
 The backend is an adapter in the layering sense (it sits above `engine`); the frontend talks to it over `/api/v1`. Uploaded bytes are scanned in memory and discarded; the stored report is the `Report` JSON plus the fingerprint when requested; an anonymous signed session cookie scopes the history; reports expire after 7 days. No accounts in v0.2.0.
