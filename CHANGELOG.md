@@ -9,8 +9,10 @@ All notable milestones. One section per weekly close plus in-week milestones. St
 - US-049: CI jobs Frontend and End to end.
 - US-048 (part one): backend and frontend images, `compose.yaml`, the Images workflow to GHCR with smoke tests. The PostgreSQL driver is pg8000 (BSD-3); psycopg was LGPL.
 - Fix: the sandbox tests broke on every platform after the backend tests changed the import mode; the backend tests now live in `tests/backend/`.
+- US-044: profiles `resume`, `peer-review` and `rag-ingest`; every threshold and benign-hidden limit now comes from the profile file, none from code; `GET /api/v1/profiles`.
+- US-041: closed; the registry already feeds THREATS.md, the report and the techniques page.
 
-Handover (22 Sep 2026): the next step is the owner's yes to create the Railway services (US-048 part two) and the design pass with Fable for the screens; nothing in `src/pages/` is styled on purpose.
+Handover (22 Sep 2026): what remains in v0.2.0 is the owner's yes to create the Railway services (US-048 part two), then the design pass with Fable for the screens (US-037, US-043 presentation; nothing in `frontend/src/pages/` is styled on purpose), then US-042 release and US-045 demo.
 
 ## v0.1.0 (unreleased): UC1 Scan and Verdict
 
