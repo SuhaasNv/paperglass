@@ -38,12 +38,14 @@ export function PageUnderGlass({ page, onRun }: PageUnderGlassProps) {
                 <button
                   type="button"
                   key={i}
-                  className="absolute cursor-pointer border-0 bg-glass-2/60 p-0 outline outline-1 outline-offset-2 outline-glass"
-                  style={box}
+                  className="absolute -m-3 cursor-pointer border-0 bg-transparent p-3 outline-none focus-visible:outline-2 focus-visible:outline-glass"
+                  style={{ ...box, boxSizing: 'content-box' }}
                   aria-label={`${run.status === 'hidden' ? 'Hidden' : 'Benign-hidden'} run ${run.finding_id ?? ''}: ${run.text.slice(0, 80)}`}
                   onClick={() => onRun?.(run)}
                   data-testid="hidden-run"
-                />
+                >
+                  <span className={`block h-full w-full ${run.status === 'hidden' ? 'bg-glass-2/60 outline outline-1 outline-offset-2 outline-glass' : 'outline outline-1 outline-dashed outline-offset-2 outline-ink-2'}`} aria-hidden="true" />
+                </button>
               )
             })}
           </>

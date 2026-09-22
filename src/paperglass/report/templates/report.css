@@ -63,8 +63,9 @@ footer{margin-top:56px;border-top:1px solid var(--ink);padding-top:20px;font-siz
 @media print{body{padding:0}.region{cursor:auto}.ring{display:none!important}h1.file{font-size:48px}.verdict .word{font-size:40px}}
 
 .region.page .ring{width:192px;height:192px;margin:-96px 0 0 -96px}
-.region .hit{position:absolute;display:block;background:rgba(217,230,238,.6);outline:1px solid var(--glass);outline-offset:2px}
-.region .hit.benign-hidden{background:transparent;outline:1px dashed var(--ink2)}
+.region .hit{position:absolute;display:block;padding:12px;margin:-12px;box-sizing:content-box}
+.region .hit::after{content:"";position:absolute;inset:12px;background:rgba(217,230,238,.6);outline:1px solid var(--glass);outline-offset:2px}
+.region .hit.benign-hidden::after{background:transparent;outline:1px dashed var(--ink2)}
 .region .pagereads{padding:0}
 .region .pagereads .run{position:absolute;overflow:hidden;white-space:nowrap;line-height:1;font-family:"Geist Mono",ui-monospace,monospace;color:var(--ink);font-size:10px}
 .region .pagereads .run.hidden{background:var(--glass2);outline:1px solid var(--glass)}

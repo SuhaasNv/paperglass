@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import pathlib
 
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from paperglass.redkit.minipdf import simple
@@ -176,3 +177,24 @@ def test_html_report_download(client: TestClient) -> None:
     assert response.headers["content-disposition"] == 'attachment; filename="a.paperglass.html"'
     assert response.text.startswith("<!doctype html>") and "CLEAN" in response.text
     assert client.get("/api/v1/scans/nope/report.html").status_code == 404
+
+
+def test_the_retention_sweep_runs_without_a_restart(client: TestClient) -> None:
+    from datetime import UTC, datetime, timedelta  # noqa: PLC0415
+
+    from app.db import get_session  # noqa: PLC0415
+    from app.main import purge_once  # noqa: PLC0415
+    from app.models import Scan  # noqa: PLC0415
+
+    scan = upload(client, simple("Hello"), name="a.pdf")
+    for session in get_session():
+        row = session.get(Scan, scan["id"])
+        assert row is not None
+        row.expires_at = datetime.now(UTC) - timedelta(days=1)
+        session.commit()
+    app = client.app
+    assert isinstance(app, FastAPI)
+    assert app.state.purge_task is not None and not app.state.purge_task.done()
+    assert purge_once() == 1
+    for session in get_session():
+        assert session.get(Scan, scan["id"]) is None

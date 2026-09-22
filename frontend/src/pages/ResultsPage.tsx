@@ -11,7 +11,7 @@ import { SeverityMark, SeverityShape } from '../components/SeverityMark'
 import { errorMessage } from './errorMessage'
 
 const LEVELS: Severity[] = ['critical', 'high', 'medium', 'low', 'info', 'benign-hidden']
-const VERDICT_SHAPE: Record<string, Severity> = { malicious: 'critical', suspicious: 'medium', 'benign-hidden': 'benign-hidden', clean: 'low' }
+const VERDICT_SHAPE: Record<string, Severity> = { malicious: 'critical', suspicious: 'medium', 'benign-hidden': 'benign-hidden', clean: 'info' }
 
 function verdictSentence(scan: ScanDetail): string {
   const confirmed = scan.report.findings.filter((f) => f.status === 'confirmed')

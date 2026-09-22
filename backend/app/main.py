@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import asyncio
+import contextlib
 import logging
 import uuid
 from collections.abc import AsyncIterator, Awaitable, Callable
@@ -20,19 +22,44 @@ from app.settings import get_settings
 log = logging.getLogger("paperglass.backend")
 
 
+def purge_once() -> int:
+    """Delete every scan past its expiry. Runs at startup and on the sweep interval."""
+    settings = get_settings()
+    purged = 0
+    for session in get_session():
+        purged = ScanService(
+            session, retention_days=settings.retention_days, max_upload_mb=settings.max_upload_mb
+        ).purge_expired()
+    if purged:
+        log.info("purged %d expired scans", purged)
+    return purged
+
+
+async def purge_forever(interval_seconds: float) -> None:
+    """The retention sweep: the 7-day promise holds on a process that never restarts."""
+    while True:
+        await asyncio.sleep(interval_seconds)
+        try:
+            await asyncio.to_thread(purge_once)
+        except Exception:  # a failed sweep is logged, never fatal
+            log.exception("retention sweep failed")
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     settings = get_settings()
     settings.validate_for_startup()
     if settings.database_url.startswith("sqlite"):
         Base.metadata.create_all(get_engine())  # tests and local play; Postgres uses Alembic
-    for session in get_session():
-        purged = ScanService(
-            session, retention_days=settings.retention_days, max_upload_mb=settings.max_upload_mb
-        ).purge_expired()
-        if purged:
-            log.info("purged %d expired scans", purged)
-    yield
+    purge_once()
+    sweep = asyncio.create_task(purge_forever(settings.purge_interval_minutes * 60))
+    app.state.purge_task = sweep
+    try:
+        yield
+    finally:
+        sweep.cancel()
+        with contextlib.suppress(asyncio.CancelledError):
+            await sweep
 
 
 def create_app() -> FastAPI:

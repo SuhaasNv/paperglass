@@ -5,7 +5,7 @@ import type { Severity, Verdict } from '../api/types'
 import { SeverityMark } from '../components/SeverityMark'
 import { errorMessage } from './errorMessage'
 
-const SHAPE: Record<Verdict, Severity | null> = { malicious: 'critical', suspicious: 'medium', 'benign-hidden': 'benign-hidden', clean: null }
+const SHAPE: Record<Verdict, Severity> = { malicious: 'critical', suspicious: 'medium', 'benign-hidden': 'benign-hidden', clean: 'info' }
 
 /** History: the reports this browser made, as an archive index. */
 export function HistoryPage() {
@@ -44,7 +44,7 @@ export function HistoryPage() {
                     <tr key={scan.id}>
                       <td className="whitespace-nowrap font-mono text-[12.5px] text-ink-2">{new Date(scan.created_at).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
                       <td><Link to={`/scans/${scan.id}`} className="serif text-[20px] text-ink no-underline md:text-[22px]">{scan.file_name}</Link></td>
-                      <td>{shape ? <SeverityMark level={shape} label={scan.verdict} /> : <span className="text-[13px] font-medium tracking-[0.04em]">{scan.verdict}</span>}</td>
+                      <td><SeverityMark level={shape} label={scan.verdict} /></td>
                       <td>{scan.tier}</td>
                       <td>{scan.profile}</td>
                       <td className="text-right"><Link to={`/scans/${scan.id}`} className="text-[13px]">Open report</Link></td>

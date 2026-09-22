@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from paperglass.engine import scan_bytes
+from paperglass.engine.pageviews import _finding_for
 from paperglass.ingest import Limits
 from paperglass.models import Tier
 from paperglass.redkit.minipdf import Page, build, text
@@ -43,3 +44,21 @@ def test_text_documents_have_no_raster_so_runs_are_unverified_unless_confirmed()
     report = scan_bytes(b"plain text with nothing hidden\n", limits=LIMITS, tier=Tier.FAST)
     assert report.pages and report.pages[0].thumbnail.none_reason == "no raster for this page"
     assert {run.status for run in report.pages[0].runs} <= {"unverified", "hidden"}
+
+
+def test_a_run_links_to_the_finding_that_covers_it_best() -> None:
+    report = scan_bytes(_doc(), limits=LIMITS, tier=Tier.FAST)
+    real = report.findings[0]
+    assert real.bbox is not None
+    wide = real.model_copy(
+        update={
+            "id": "f-9",
+            "bbox": real.bbox.model_copy(
+                update={"x0": real.bbox.x0 - 300, "x1": real.bbox.x1 + 300}
+            ),
+        }
+    )
+    run_box = real.bbox
+    # The wide finding also covers the run; the exact one wins whatever the list order.
+    assert _finding_for("hidden sentence", run_box, 1, [wide, real]) is real
+    assert _finding_for("hidden sentence", run_box, 1, [real, wide]) is real
