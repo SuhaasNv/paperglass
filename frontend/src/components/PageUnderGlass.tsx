@@ -1,4 +1,4 @@
-import type { PageView } from '../api/types'
+import type { PageView, RunView } from '../api/types'
 import { Lens } from './Lens'
 import { runBox } from './pageGeometry'
 
