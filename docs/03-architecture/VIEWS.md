@@ -23,6 +23,8 @@ Full-page OCR is never in the standard tier; on CPU it costs 0.5 to 2 s a page a
 
 ## View C: structure
 
+Built for PDF at US-007 (22 Sep 2026): `paperglass.views.structure.pdf_structure(data, limits=)` runs `paperglass.parsers.pdf_structure.pikepdf_structure` inside the sandbox and returns a `DocumentStructure`: per page, every text-showing operation as a `PdfTextObject` (instruction index as the mechanism locator, decoded text through ToUnicode when present, font resource, effective size after the text matrix and CTM, render mode, fill colour reduced to a grey level, alpha and blend mode from ExtGState, the clip rectangle from `re W n`, the optional content group in force and whether it is OFF, ActualText from marked content), the font table (`PdfFontInfo`: subtype, ToUnicode, embedded, Type 3, Type 0), the annotations (`PdfAnnotation`: hidden and no-view flags, contents, field values, JavaScript actions), and at document level the OCG names and OFF set, Info and XMP metadata, JavaScript, OpenAction and additional actions, embedded files, encryption. Nothing is executed; fonts are read as dictionaries. Width estimates are 0.5 em per character until View B refines them. Detectors (US-008 onward) read this and emit candidates; the probes decide nothing.
+
 Probes per format emit candidates with a named mechanism and, where possible, a reproduce command:
 
 - PDF: text render mode, fill colour and alpha, ExtGState, clip path, optional content group state, MediaBox and CropBox, `/ActualText`, ToUnicode CMaps and font descriptors (Type 3, CID, missing ToUnicode), annotations and form fields, embedded files, `/JS` and `/OpenAction` (flag and stop), Info and XMP.

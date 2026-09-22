@@ -22,7 +22,7 @@ class Page:
     extra_resources: str = ""
     """Extra entries for the page's /Resources dictionary, for example ExtGState or OCG refs."""
     extra_objects: tuple[str, ...] = field(default_factory=tuple)
-    """Whole extra objects this page needs, numbered after the fixed ones (see build)."""
+    """Whole extra objects this page needs; "{n}" inside one is replaced by the n-th extra's ref."""
 
 
 def text(
@@ -70,6 +70,10 @@ def build(pages: list[Page], *, catalog_extra: str = "", trailer_extra: str = ""
         )
         extra_ids = [add(obj) for obj in page.extra_objects]
         refs = [f"{i} 0 R" for i in extra_ids]
+        # Extra objects may reference each other by position: "{0}" is the first extra object.
+        for extra_id, obj in zip(extra_ids, page.extra_objects, strict=True):
+            if "{" in obj:
+                objects[extra_id - 1] = obj.format(*refs).encode("latin-1")
         resources = f"<< /Font << /F1 {font} 0 R >> {page.extra_resources.format(*refs)} >>"
         page_id = add(
             f"<< /Type /Page /Parent {pages_obj} 0 R /MediaBox [0 0 {page.width} {page.height}] "
