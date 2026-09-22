@@ -61,7 +61,7 @@ backend/Dockerfile  library with the ocr extra plus the backend, non-root, migra
 compose.yaml        the local stack; .github/workflows/images.yml publishes both images to GHCR
 ```
 
-The backend is an adapter in the layering sense (it sits above `engine`); the frontend talks to it over `/api/v1`. Uploaded bytes are scanned in memory and discarded; the stored report is the `Report` JSON plus the fingerprint when requested; an anonymous signed session cookie scopes the history; reports expire after 7 days. No accounts in v0.2.0.
+The backend is an adapter in the layering sense: it imports `paperglass.engine` to scan and `paperglass.report` to write the HTML download, nothing lower; the frontend talks to it over `/api/v1`. Uploaded bytes are scanned in memory and discarded; the stored report is the `Report` JSON plus the fingerprint when requested; an anonymous signed session cookie scopes the history; reports expire after 7 days. No accounts in v0.2.0.
 
 ## Layering rule (enforced by `tests/unit/test_layering.py`)
 
@@ -71,7 +71,7 @@ The backend is an adapter in the layering sense (it sits above `engine`); the fr
 
 | Adapter | Entry point | Contract | Release | Doc |
 |---------|-------------|----------|---------|-----|
-| CLI | `paperglass` (typer) | `scan`, `fingerprint`, `show`, `report`, `clean`, `bench`; exit codes 0 to 3 | v0.1.0 (scan, fingerprint, show), v0.2.0 (report), v0.3.0 (bench), v0.4.0 (clean) | `../04-report-design/CLI_DESIGN.md` |
+| CLI | `paperglass` (typer) | `scan` (with `--report`), `fingerprint`, `show`, `report`, `clean`, `bench`; exit codes 0 to 3 | v0.1.0 (scan, fingerprint, show), v0.2.0 (report, built), v0.3.0 (bench), v0.4.0 (clean) | `../04-report-design/CLI_DESIGN.md` |
 | Python API | `paperglass.scan`, `.fingerprint`, `.clean`, `.report` | returns `Report` and `CleanResult` models | v0.1.0 | this file |
 | LangChain | `PaperglassTransformer` | metadata keys `paperglass.verdict`, `paperglass.severity_counts`, `paperglass.findings`, provenance tags; text replaced per Policy | v0.4.0 | `../11-integrations/LANGCHAIN.md` |
 | LlamaIndex | `PaperglassPostprocessor`, `PaperglassReader` | same keys | v0.4.0 | `../11-integrations/LLAMAINDEX.md` |

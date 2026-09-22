@@ -50,6 +50,7 @@ function Report({ scan }: { scan: ScanDetail }) {
           </div>
           <div className="flex gap-5 text-[14px] md:pb-3">
             <CopyLink url={shareUrl} />
+            <a href={`/api/v1/scans/${encodeURIComponent(scan.id)}/report.html`} download data-testid="download-report">Download HTML report</a>
             <button type="button" className="cursor-pointer border-0 bg-transparent p-0 text-[14px] text-glass underline underline-offset-[3px]" onClick={() => window.print()}>Print</button>
           </div>
         </div>

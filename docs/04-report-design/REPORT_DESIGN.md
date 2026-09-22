@@ -1,5 +1,9 @@
 # Report design (v0.2.0)
 
+Built at US-037 (22 Sep 2026): `paperglass.report.render_html`, `paperglass scan --report out.html`, `paperglass report <file>`, and `GET /api/v1/scans/{id}/report.html` (a download from the results page). The template, stylesheet, script and severity shapes live in `src/paperglass/report/templates/`; the look is the web app's (direction 1, the Lens, in `DESIGN_DIRECTION.md`) with system fallbacks for the faces, since a file that opens offline embeds no fonts. As built: header and verdict; "Under the glass", every confirmed region's crop with the extracted text shown inside a ring that follows the pointer (a few lines of inline script), beside the list of unmatched runs; the findings; parse failures and rule versions; the footer with the reproduce command, the deferred list and the disclosure link; the report JSON in a script tag. A `Content-Security-Policy` meta tag in the file forbids every request except inline style, inline script and `data:` images. Not yet built: the word-aligned diff with the page thumbnail (US-043 provides the alignment) and the pages tab, which need page rasters the report does not carry today.
+
+The original design follows.
+
 One HTML file. No external requests. Opens from `file://` with the browser offline. Everything inline: CSS, the page images as data URIs, the findings as JSON in a script tag.
 
 ## Layout, top to bottom
@@ -33,4 +37,4 @@ Profiles are TOML files under `src/paperglass/profiles/`; a profile `extends = "
 
 ## Tested before Done
 
-Opened offline at 375, 768 and 1280 px: no horizontal scroll, overlays aligned to thumbnails, hidden text readable beside each region, verdict visible without scrolling, print to PDF renders the diff and the cards. Golden HTML tests in `tests/report/`.
+Opened offline at 375, 768 and 1280 px: no horizontal scroll, overlays aligned to thumbnails, hidden text readable beside each region, verdict visible without scrolling, print to PDF renders the diff and the cards. Tests in `tests/report/test_html.py`: one file, no external URL, deterministic, the evidence and the verdict present, no forbidden words.

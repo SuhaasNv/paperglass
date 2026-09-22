@@ -35,6 +35,7 @@ paperglass scan resume.pdf                   # verdict, counts, findings with me
 paperglass scan ./inbox --tier fast --json   # a directory; exit code is the worst verdict
 paperglass fingerprint resume.pdf            # which installed extractors hand the hidden text to a model
 paperglass show resume.pdf --page 1 --instruction 9   # the bytes behind a finding
+paperglass report resume.pdf --out report.html        # one-file HTML report, opens offline (also: scan --report)
 paperglass version                           # tool and rule versions
 ```
 

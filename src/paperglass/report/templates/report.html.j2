@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
+<title>Paperglass report: {{ file_name }}</title>
+<style>{{ css | safe }}</style>
+</head>
+<body>
+<header class="top"><span>PAPERGLASS</span><span class="tag">report · paperglass {{ report.tool_version }} · profile {{ report.profile }} · tier {{ report.tier.value }}</span></header>
+
+<section class="head">
+<div>
+<div class="eyebrow">Report · SHA-256 {{ report.input_sha256[:12] }}</div>
+<h1 class="file">{{ file_name }}</h1>
+<div class="eyebrow" style="margin-top:24px">Verdict</div>
+<div class="verdict">{{ shape(verdict_shape, 22) | safe }}<span class="word">{{ report.verdict.value | upper }}</span></div>
+<p class="lede">{{ lede }}</p>
+<div class="counts">{% for level in levels %}<span class="mark">{{ shape(level, 12) | safe }}<span>{{ level }} {{ report.severity_counts.get(level_enum[level], 0) }}</span></span>{% endfor %}</div>
+</div>
+<div class="meta">
+<div><span class="eyebrow">Format</span><span>{{ report.input_type }}</span></div>
+<div><span class="eyebrow">Extractor</span><code>{{ report.extractor }}</code></div>
+<div><span class="eyebrow">Tier</span><span>{{ report.tier.value }}</span></div>
+<div><span class="eyebrow">Profile</span><span>{{ report.profile }}</span></div>
+<div><span class="eyebrow">Render-verified</span><span>{{ report.pages_render_verified }} of {{ report.page_count }}{% if report.dpi %} · {{ report.dpi }} dpi{% endif %}</span></div>
+<div><span class="eyebrow">Tool</span><code>paperglass {{ report.tool_version }}</code></div>
+<div><span class="eyebrow">Schema</span><code>report v{{ report.schema_version }}</code></div>
+<div><span class="eyebrow">SHA-256</span><code>{{ report.input_sha256[:6] }}…{{ report.input_sha256[-6:] }}</code></div>
+</div>
+</section>
+
+<section>
+<h2>Under the glass <span class="sub">{{ unmatched | length }} unmatched {{ 'run' if unmatched | length == 1 else 'runs' }} · move the pointer over a region to read what the model reads</span></h2>
+{% if unmatched %}
+<div class="regions">
+<div>
+{% for f in unmatched %}
+<div class="region" data-lens="off" id="region-{{ f.id }}">
+{% if f.render_crop.data_uri %}<img src="{{ f.render_crop.data_uri }}" alt="Rendered region of {{ where(f) }} for {{ f.id | upper }}">{% else %}<div class="none">No render of this region ({{ f.render_crop.none_reason or 'no reason given' }}).</div>{% endif %}
+<div class="reads" aria-hidden="true"><pre><mark>{{ f.extracted_text }}</mark></pre></div>
+<div class="ring" aria-hidden="true"></div>
+</div>
+<div class="regionfoot"><span><span class="ital" style="font-size:16px;color:var(--ink)">{{ f.id | upper }}</span> · {{ where(f) }}{% if f.bbox %} · bbox {{ '%.1f' % f.bbox.x0 }} {{ '%.1f' % f.bbox.y0 }} {{ '%.1f' % f.bbox.x1 }} {{ '%.1f' % f.bbox.y1 }} pt{% endif %}</span><span class="readout">{% if f.render_crop.data_uri %}render verified{% else %}no raster{% endif %}</span></div>
+{% endfor %}
+</div>
+<div>
+<div class="eyebrow">Unmatched runs · what the model reads and the page does not show</div>
+<ol class="runs">
+{% for f in unmatched %}
+<li><div style="display:flex;justify-content:space-between;font-size:13px"><span><span class="ital" style="font-size:18px">{{ f.id | upper }}</span> · {{ where(f) }} · <code>{{ f.technique_id }}</code></span><a href="#{{ f.id }}">evidence</a></div>
+<blockquote class="hidden">{{ f.extracted_text }}</blockquote>
+<span style="font-size:13px;color:var(--ink2)">{{ f.extracted_text | length }} characters, extracted by {{ f.extractor }}</span></li>
+{% endfor %}
+</ol>
+</div>
+</div>
+{% else %}
+<p style="color:var(--ink2)">No confirmed hidden text on any page: there is nothing to put under the glass.</p>
+{% endif %}
+</section>
+
+<section>
+<h2>Findings <span class="sub">{{ report.findings | length }} {{ 'finding' if report.findings | length == 1 else 'findings' }} · {{ confirmed }} confirmed · {{ report.findings | length - confirmed }} possible</span></h2>
+{% if report.findings %}
+<ol class="findings">
+{% for f in report.findings %}
+<li class="finding" id="{{ f.id }}">
+<div><div class="fid">{{ f.id | upper }}</div><div style="font-size:13px;color:var(--ink2)">{{ where(f) }}</div></div>
+<div>
+<div class="row"><span class="mark" style="font-weight:600">{{ shape(f.severity.value, 14) | safe }}<span>{{ f.severity.value }}</span></span><span class="status"{% if f.status.value != 'confirmed' %} style="color:var(--ink2)"{% endif %}>{{ f.status.value }}</span><code>{{ f.technique_id }}</code><span style="font-size:13px;color:var(--ink2)">confidence {{ '%.2f' % f.confidence }} · views {{ f.views | join(', ') }} · stage {{ f.stage }}</span></div>
+<p class="sentence">{{ f.why_hidden }}</p>
+<div class="kv">
+{% if f.extracted_text.strip() %}<span class="eyebrow">Hidden text</span><blockquote class="hidden">{{ f.extracted_text }}</blockquote>{% endif %}
+<span class="eyebrow">Mechanism</span><code>{{ f.mechanism }}</code>
+<span class="eyebrow">Reproduce</span><code class="cmd">{{ f.reproduce | replace('FILE', file_name) }}</code>
+<span class="eyebrow">Class</span><span>{{ f.severity_class.value }}{% if f.atr_rule %} · {{ f.atr_rule }}{% endif %}</span>
+</div>
+</div>
+<figure>
+{% if f.render_crop.data_uri %}<img src="{{ f.render_crop.data_uri }}" alt="Rendered crop of {{ where(f) }}">{% else %}<div class="none">No crop: {{ f.render_crop.none_reason or 'this finding has no region on the page' }}.</div>{% endif %}
+<figcaption>Evidence {{ f.id | upper }} · {{ where(f) }}{% if f.bbox %}, region {{ '%.0f' % f.bbox.x0 }} {{ '%.0f' % f.bbox.y0 }} {{ '%.0f' % f.bbox.x1 }} {{ '%.0f' % f.bbox.y1 }} pt{% endif %}</figcaption>
+</figure>
+</li>
+{% endfor %}
+</ol>
+{% else %}
+<p style="color:var(--ink2);padding:24px 0">No findings.</p>
+{% endif %}
+</section>
+
+<section class="two">
+<div><h2 style="font-size:22px">Parse failures</h2>
+{% if report.parse_failures %}<ul style="list-style:none;margin:0;padding:0;font-size:14px">{% for p in report.parse_failures %}<li style="border-bottom:1px solid var(--rule);padding:8px 0"><code>{{ p.parser }}</code> {{ p.reason }} {{ p.message }}</li>{% endfor %}</ul>{% else %}<p style="color:var(--ink2)">None. Every parser call finished inside its limits.</p>{% endif %}</div>
+<div><h2 style="font-size:22px">Rule versions</h2><pre style="font-size:12px;color:var(--ink2)">{% for k, v in report.rule_versions | dictsort %}{{ k }} {{ v }}
+{% endfor %}</pre></div>
+</section>
+
+<footer>
+<span>Reproduce this report: <code>paperglass scan {{ file_name }} --tier {{ report.tier.value }} --profile {{ report.profile }} --report report.html</code></span>
+<span>Not checked by design: {{ deferred }}. Hidden is not always malicious: alt text, ligature ActualText, OCR layers on scans and tagged structure are benign-hidden, never an attack.</span>
+<span>This report describes the document, not the person. Paperglass, Apache-2.0 · <a href="{{ disclosure }}">security policy and disclosure</a></span>
+</footer>
+<script type="application/json" id="paperglass-report">{{ report_json | safe }}</script>
+<script>{{ js | safe }}</script>
+</body>
+</html>

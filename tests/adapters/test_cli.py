@@ -119,3 +119,29 @@ def test_version_and_profiles() -> None:
     assert result.exit_code == 0 and "pdf.render.mode rule 1" in result.output
     result = runner.invoke(app, ["profiles"])
     assert result.exit_code == 0 and "default" in result.output
+
+
+def test_scan_writes_the_html_report_and_report_command_does_too(tmp_path: pathlib.Path) -> None:
+    target = tmp_path / "out.html"
+    result = runner.invoke(
+        app,
+        ["scan", str(positive("pdf.text.low_contrast")), "--tier", "fast", "--report", str(target)],
+    )
+    assert result.exit_code == 2
+    html = target.read_text(encoding="utf-8")
+    assert html.startswith("<!doctype html>") and "MALICIOUS" in html
+
+    other = tmp_path / "report.html"
+    result = runner.invoke(
+        app,
+        ["report", str(positive("pdf.text.low_contrast")), "--tier", "fast", "--out", str(other)],
+    )
+    assert result.exit_code == 2, result.output
+    assert "MALICIOUS" in result.output and other.exists()
+
+    folder = tmp_path / "docs"
+    folder.mkdir()
+    (folder / "a.txt").write_text("hello")
+    (folder / "b.txt").write_text("world")
+    result = runner.invoke(app, ["scan", str(folder), "--tier", "fast", "--report", str(target)])
+    assert result.exit_code == 3

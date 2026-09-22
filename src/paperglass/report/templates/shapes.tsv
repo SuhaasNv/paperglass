@@ -1,0 +1,6 @@
+critical	<svg width="{s}" height="{s}" viewBox="0 0 12 12" aria-hidden="true"><polygon points="3.5,0.5 8.5,0.5 11.5,3.5 11.5,8.5 8.5,11.5 3.5,11.5 0.5,8.5 0.5,3.5" fill="#7a2e1f"/></svg>
+high	<svg width="{s}" height="{s}" viewBox="0 0 12 12" aria-hidden="true"><polygon points="6,0.8 11.5,11.2 0.5,11.2" fill="#9a4a1c"/></svg>
+medium	<svg width="{s}" height="{s}" viewBox="0 0 12 12" aria-hidden="true"><polygon points="6,0.5 11.5,6 6,11.5 0.5,6" fill="#8a6a1e"/></svg>
+low	<svg width="{s}" height="{s}" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5.5" fill="#4f6a3a"/></svg>
+info	<svg width="{s}" height="{s}" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="none" stroke="#5b5850" stroke-width="1.4"/></svg>
+benign-hidden	<svg width="{s}" height="{s}" viewBox="0 0 12 12" aria-hidden="true"><rect x="1" y="1" width="10" height="10" fill="none" stroke="#5b5850" stroke-width="1.4"/></svg>

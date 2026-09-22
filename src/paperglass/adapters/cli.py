@@ -94,6 +94,10 @@ def scan(  # noqa: PLR0913  # one option per documented flag
     output: Annotated[
         pathlib.Path | None, typer.Option("--out", help="Write the JSON report here.")
     ] = None,
+    report_html: Annotated[
+        pathlib.Path | None,
+        typer.Option("--report", help="Write the one-file HTML report here (single file only)."),
+    ] = None,
 ) -> None:
     """Scan a document and print the verdict with evidence."""
     from paperglass.engine import scan_bytes  # noqa: PLC0415
@@ -133,7 +137,50 @@ def scan(  # noqa: PLR0913  # one option per documented flag
             ),
             encoding="utf-8",
         )
+    if report_html is not None:
+        if len(reports) != 1:
+            typer.echo("error: --report writes one file; scan a single document", err=True)
+            raise typer.Exit(3)
+        _write_html(report_html, reports[0][0], reports[0][1])
     raise typer.Exit(worst)
+
+
+def _write_html(target: pathlib.Path, source: pathlib.Path, report: object) -> None:
+    from paperglass.models import Report  # noqa: PLC0415
+    from paperglass.report import render_html  # noqa: PLC0415
+
+    assert isinstance(report, Report)
+    target.write_text(render_html(report, file_name=source.name), encoding="utf-8")
+
+
+@app.command()
+def report(
+    path: Annotated[pathlib.Path, typer.Argument(exists=True, readable=True, dir_okay=False)],
+    out: Annotated[
+        pathlib.Path, typer.Option("--out", help="Where to write the HTML.")
+    ] = pathlib.Path("report.html"),
+    tier: Annotated[str, typer.Option(help="fast, standard or deep.")] = "standard",
+    profile: Annotated[str, typer.Option()] = "default",
+) -> None:
+    """Scan a document and write the one-file HTML report."""
+    from paperglass.engine import scan_bytes  # noqa: PLC0415
+    from paperglass.models import Tier  # noqa: PLC0415
+
+    try:
+        tier_value = Tier(tier)
+    except ValueError as exc:
+        typer.echo(f"error: unknown tier {tier!r}; use fast, standard or deep", err=True)
+        raise typer.Exit(3) from exc
+    try:
+        result = scan_bytes(_read(path), tier=tier_value, profile=profile)
+    except KeyError as exc:
+        typer.echo(f"error: {exc.args[0]}", err=True)
+        raise typer.Exit(3) from exc
+    _write_html(out, path, result)
+    typer.echo(
+        f"{path}: {result.verdict.value.upper()} {SHAPES.get(result.verdict.value, '')} -> {out}"
+    )
+    raise typer.Exit(EXIT[result.verdict.value])
 
 
 def _print_report(file: pathlib.Path, report: object) -> None:

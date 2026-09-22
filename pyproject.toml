@@ -86,7 +86,7 @@ dev = [
 packages = ["src/paperglass"]
 
 [tool.hatch.build]
-include = ["src/paperglass/**/*.py", "src/paperglass/**/*.toml", "src/paperglass/py.typed"]
+include = ["src/paperglass/**/*.py", "src/paperglass/**/*.toml", "src/paperglass/report/templates/*", "src/paperglass/py.typed"]
 
 [tool.ruff]
 line-length = 100

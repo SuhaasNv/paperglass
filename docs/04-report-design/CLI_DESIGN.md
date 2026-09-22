@@ -1,6 +1,6 @@
 # CLI design
 
-Built at US-036 (22 Sep 2026): `paperglass scan`, `fingerprint`, `show`, `version`, `profiles` (`src/paperglass/adapters/cli.py`, tests in `tests/adapters/test_cli.py`). `report`, `clean` and `bench` land with their stories. `paperglass` (typer). Every command prints JSON with `--json`, human text otherwise. No telemetry. No network unless `--allow-network` (v0.4.0).
+Built at US-036 (22 Sep 2026): `paperglass scan`, `fingerprint`, `show`, `version`, `profiles` (`src/paperglass/adapters/cli.py`, tests in `tests/adapters/test_cli.py`). `report` and `scan --report` landed at US-037 (22 Sep 2026); `clean` and `bench` land with their stories. `paperglass` (typer). Every command prints JSON with `--json`, human text otherwise. No telemetry. No network unless `--allow-network` (v0.4.0).
 
 | Command | Release | What it does |
 |---------|---------|--------------|

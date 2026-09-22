@@ -1,5 +1,5 @@
-"""The JSON, HTML and SARIF writers. Reads models only.
+"""The report writers: HTML (US-037). SARIF lands at US-040. Reads models only."""
 
-Writers land at US-036 (JSON on the CLI), US-037 (HTML) and US-040 (SARIF). Models live in
-paperglass.models.
-"""
+from paperglass.report.html import render_html
+
+__all__ = ["render_html"]

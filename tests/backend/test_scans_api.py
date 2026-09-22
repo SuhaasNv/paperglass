@@ -166,3 +166,13 @@ def test_platform_database_urls_are_routed_to_pg8000() -> None:
     assert normalise_url("postgresql://u:p@h/d") == "postgresql+pg8000://u:p@h/d"
     assert normalise_url("postgresql+pg8000://u:p@h/d") == "postgresql+pg8000://u:p@h/d"
     assert normalise_url("sqlite+pysqlite:///:memory:") == "sqlite+pysqlite:///:memory:"
+
+
+def test_html_report_download(client: TestClient) -> None:
+    scan = upload(client, simple("Hello"), name="a.pdf")
+    response = client.get(f"/api/v1/scans/{scan['id']}/report.html")
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("text/html")
+    assert response.headers["content-disposition"] == 'attachment; filename="a.paperglass.html"'
+    assert response.text.startswith("<!doctype html>") and "CLEAN" in response.text
+    assert client.get("/api/v1/scans/nope/report.html").status_code == 404
