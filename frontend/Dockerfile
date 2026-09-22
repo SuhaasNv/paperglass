@@ -17,6 +17,7 @@ LABEL org.opencontainers.image.source="https://github.com/SuhaasNv/paperglass" \
       org.opencontainers.image.version="${PAPERGLASS_VERSION}"
 # The official image renders /etc/nginx/templates/*.template with envsubst at start-up.
 ENV PORT=8080 \
+    NGINX_ENTRYPOINT_LOCAL_RESOLVERS=true \
     BACKEND_URL=http://backend:8000
 COPY docker/default.conf.template /etc/nginx/templates/default.conf.template
 COPY docker/security-headers.conf /etc/nginx/snippets/security-headers.conf
