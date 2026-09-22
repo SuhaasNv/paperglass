@@ -39,7 +39,7 @@ src/paperglass/
   profiles/      resume.toml, peer_review.toml, rag_ingest.toml, default.toml
 ```
 
-## Web tier (v0.2.0, decided 22 Sep 2026)
+## Web tier (v0.2.0, decided 22 Sep 2026; backend built at US-046 the same day)
 
 ```
 backend/            FastAPI + SQLAlchemy 2 + Alembic + PostgreSQL; imports the library through paperglass.engine only
