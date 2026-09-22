@@ -2,6 +2,16 @@
 
 All notable milestones. One section per weekly close plus in-week milestones. Story ids refer to `docs/05-planning/ISSUES.md`. Release sections are written in the users' words before the tag.
 
+## v0.2.0 (in progress): UC2 Web app and report
+
+- US-046: `backend/`, a FastAPI service that scans an upload in memory, keeps the report 7 days under an unguessable id, scopes history to an anonymous signed cookie, and runs on PostgreSQL through Alembic; tests on SQLite and on PostgreSQL in CI.
+- US-047: `frontend/`, the React app shell (upload, results with fingerprint, history, techniques, about) wired to the API as plumbing; vitest and a Playwright journey at three widths. Screens wait for the design pass.
+- US-049: CI jobs Frontend and End to end.
+- US-048 (part one): backend and frontend images, `compose.yaml`, the Images workflow to GHCR with smoke tests. The PostgreSQL driver is pg8000 (BSD-3); psycopg was LGPL.
+- Fix: the sandbox tests broke on every platform after the backend tests changed the import mode; the backend tests now live in `tests/backend/`.
+
+Handover (22 Sep 2026): the next step is the owner's yes to create the Railway services (US-048 part two) and the design pass with Fable for the screens; nothing in `src/pages/` is styled on purpose.
+
 ## v0.1.0 (unreleased): UC1 Scan and Verdict
 
 What you get: `pip install paperglass`, then `paperglass scan file.pdf` (or a `.docx`, `.txt`, `.md`, or a whole directory) prints a verdict of clean, benign-hidden, suspicious or malicious, with every finding's technique in plain words, the page and region, the hidden text, the exact object that hid it, and a `paperglass show` command that prints those bytes so you can check without trusting the tool. `paperglass fingerprint` tells you which of your installed PDF extractors would hand the hidden text to a model. The Python API (`paperglass.scan`, `paperglass.fingerprint`) returns the same as typed models with a versioned JSON schema.
