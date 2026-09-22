@@ -30,3 +30,6 @@ report.html
 
 # Benchmark corpora are downloaded, never committed (see docs/08-benchmark/CORPUS_INDEX.md)
 bench/corpus/
+
+# coverage data files (parallel mode)
+.coverage.*
