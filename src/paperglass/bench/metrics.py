@@ -8,7 +8,7 @@ from statistics import median
 from pydantic import BaseModel, ConfigDict, Field
 
 from paperglass.bench.adapter import AdapterResult
-from paperglass.bench.index import Sample
+from paperglass.bench.index import WILDCARD, Sample
 
 VERDICT_DRIVING: frozenset[str] = frozenset({"medium", "high", "critical"})
 
@@ -38,6 +38,10 @@ class SampleOutcome(BaseModel):
 def outcome(sample: Sample, result: AdapterResult, latency_ms: float) -> SampleOutcome:
     named = {f.technique_id for f in result.findings}
     confirmed = {f.technique_id for f in result.findings if f.status == "confirmed"}
+    if named:
+        named.add(WILDCARD)
+    if confirmed:
+        confirmed.add(WILDCARD)
     return SampleOutcome(
         sample_id=sample.sample_id,
         positive=sample.positive,
