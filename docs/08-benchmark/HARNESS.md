@@ -15,7 +15,7 @@ Paperglass's own adapter maps its `Report` to that shape. Baselines wrap their C
 
 ## Commands
 
-`paperglass bench fetch --corpus v1` downloads or generates every sample the index names and verifies hashes (`--force` rebuilds a generated index, dropping its split).
+`paperglass bench fetch --corpus v1 [--source crackedpdfs|phantomlint|phantomtext] [--limit N] [--seed S]` downloads or generates the samples of each source (`CORPUS_INDEX.md`), merges them into the index (a refetched source replaces its own rows) and verifies every hash; `--force` rebuilds from nothing, dropping the split. `fixtures` needs no network.
 `paperglass bench run --corpus v1 --detector paperglass` (or `--detector module:scan`) writes `results/<detector>/<version>/<corpus>.json`.
 `paperglass bench report --corpus v1` renders the tables in `BENCHMARK.md` from `results/`.
 `paperglass bench split --corpus v1 [--test-share 0.3] [--seed 1] [--held-out-source redkit]` writes a hard-provenance split into the index: whole base documents per side, a held-out source in full as `unseen_generator`; refuses a split where a base document straddles (US-053).

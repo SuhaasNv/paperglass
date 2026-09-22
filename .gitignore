@@ -32,8 +32,9 @@ htmlcov/
 report.html
 .paperglass-cache/
 
-# Benchmark corpora are downloaded, never committed (see docs/08-benchmark/CORPUS_INDEX.md)
-bench/corpus/
+# Benchmark corpus files are downloaded, never committed; the indexes are (docs/08-benchmark/CORPUS_INDEX.md)
+bench/corpus/*/files/
+bench/corpus/*/cache/
 
 # coverage data files (parallel mode)
 .coverage.*

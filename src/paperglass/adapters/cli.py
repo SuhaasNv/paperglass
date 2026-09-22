@@ -364,18 +364,60 @@ def bench_fetch(
     force: Annotated[
         bool, typer.Option("--force", help="Rebuild a generated index, dropping its split.")
     ] = False,
+    source: Annotated[
+        list[str] | None,
+        typer.Option(help="For v1: only these sources (crackedpdfs, phantomlint, phantomtext)."),
+    ] = None,
+    limit: Annotated[
+        int | None, typer.Option(help="For v1: at most this many base documents per source.")
+    ] = None,
+    seed: Annotated[int, typer.Option(help="For v1: the seed of the sample.")] = 1,
 ) -> None:
-    """Build or fetch a corpus and verify every hash against its index."""
+    """Build or fetch a corpus and verify every hash against its index. Only `v1` uses the
+    network, and only when this command is run by hand."""
     from paperglass import __version__  # noqa: PLC0415
-    from paperglass.bench import fixtures_corpus, read_index, write_index  # noqa: PLC0415
+    from paperglass.bench import (  # noqa: PLC0415
+        Corpus,
+        Sample,
+        fixtures_corpus,
+        read_index,
+        write_index,
+    )
     from paperglass.bench.run import verify_hashes  # noqa: PLC0415
 
     root = _repo_root()
     index = _corpus_index(corpus, root)
     if corpus == "fixtures" and (force or not index.is_file()):
         built = fixtures_corpus(root / "tests" / "fixtures", version=__version__)
-        write_index(built, index)
+        write_index(built, index, repo_root=root)
         typer.echo(f"wrote {index} with {len(built.samples)} samples (synthetic)")
+    if corpus == "v1":
+        from paperglass.bench.sources import fetch_all  # noqa: PLC0415
+
+        corpus_root = index.parent
+        fetched = fetch_all(corpus_root, limit=limit, seed=seed, only=tuple(source or ()))
+        refreshed: set[str] = set()
+        new_rows: list[Sample] = []
+        for result in fetched:
+            if result.skipped:
+                typer.echo(f"{result.source}: skipped, {result.skipped}")
+                continue
+            typer.echo(
+                f"{result.source}: {len(result.samples)} samples; " + "; ".join(result.notes)
+            )
+            refreshed.add(result.source)
+            new_rows.extend(result.samples)
+        existing = read_index(index, root).samples if index.is_file() and not force else ()
+        kept = [s for s in existing if s.source not in refreshed]
+        built = Corpus(
+            name="v1",
+            version="1",
+            root=str(corpus_root),
+            synthetic=False,
+            samples=(*kept, *new_rows),
+        )
+        write_index(built, index, repo_root=root)
+        typer.echo(f"wrote {index} with {len(built.samples)} samples")
     if not index.is_file():
         typer.echo(f"error: no index at {index}; external corpora arrive with US-050", err=True)
         raise typer.Exit(3)
@@ -485,7 +527,7 @@ def bench_split(
     if straddling:
         typer.echo(f"error: base documents straddle the split: {straddling[:5]}", err=True)
         raise typer.Exit(3)
-    write_index(split, index)
+    write_index(split, index, repo_root=root)
     for side, row in sorted(counts(split).items()):
         typer.echo(f"{side}: {row['samples']} samples, {row['positives']} positives")
 

@@ -9,7 +9,14 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
-Family = Literal["visual", "structural", "semantic-override", "unicode", "metadata", "none"]
+Family = Literal[
+    "visual", "structural", "semantic-override", "unicode", "metadata", "visible", "none"
+]
+"""`visible`: an injection in plainly visible text, which Paperglass defers by contract; the
+row stays in the index so the boundary is measured, never hidden."""
+WILDCARD = "*"
+"""A label for hidden text whose technique the source does not name: detected when the
+detector names any technique at all."""
 InjectionKind = Literal["instruction", "data", "none"]
 Split = Literal["train", "test", "unseen_generator"]
 
@@ -76,27 +83,39 @@ def sha256_file(path: pathlib.Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def write_index(corpus: Corpus, target: pathlib.Path) -> None:
+def write_index(
+    corpus: Corpus, target: pathlib.Path, *, repo_root: pathlib.Path | None = None
+) -> None:
+    """The head line records the corpus root relative to the repository, so a clean clone
+    resolves every path: `.` for the fixtures corpus, `bench/corpus/v1` for a fetched one."""
     target.parent.mkdir(parents=True, exist_ok=True)
+    root = pathlib.Path(corpus.root)
+    base = repo_root or pathlib.Path.cwd()
+    try:
+        root_rel = str(root.resolve().relative_to(base.resolve())) or "."
+    except ValueError:
+        root_rel = str(root)
     head = {
         "name": corpus.name,
         "version": corpus.version,
         "synthetic": corpus.synthetic,
         "samples": len(corpus.samples),
+        "root": root_rel,
     }
     lines = [json.dumps(head, sort_keys=True)]
     lines += [json.dumps(s.model_dump(mode="json"), sort_keys=True) for s in corpus.samples]
     target.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def read_index(target: pathlib.Path, root: pathlib.Path) -> Corpus:
+def read_index(target: pathlib.Path, repo_root: pathlib.Path) -> Corpus:
+    """`repo_root` is the repository; the head's `root` (default `.`) is joined to it."""
     lines = [line for line in target.read_text(encoding="utf-8").splitlines() if line.strip()]
     head = json.loads(lines[0])
     samples = tuple(Sample.model_validate(json.loads(line)) for line in lines[1:])
     return Corpus(
         name=head["name"],
         version=head["version"],
-        root=str(root),
+        root=str(repo_root / head.get("root", ".")),
         synthetic=bool(head["synthetic"]),
         samples=samples,
     )

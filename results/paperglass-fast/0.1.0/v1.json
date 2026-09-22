@@ -1,0 +1,2465 @@
+{
+  "command": "paperglass bench run --corpus v1 --detector paperglass --tier fast --profile default",
+  "corpus": "v1",
+  "corpus_version": "1",
+  "date": "2026-09-22",
+  "detector": "paperglass-fast",
+  "detector_version": "0.1.0",
+  "hardware": "arm64 Darwin Python 3.12.7",
+  "metrics": {
+    "benign_hidden_called_malicious": 0,
+    "detection_recall": 1.0,
+    "errors": 0,
+    "f1": 0.9725,
+    "false_positive_rate_informational": 0.6667,
+    "false_positive_rate_verdict_driving": 1.0,
+    "latency_p50_ms": 1924.225,
+    "latency_p50_per_page_ms": null,
+    "latency_p95_ms": 26192.901,
+    "negatives": 6,
+    "positives": 106,
+    "precision": 0.9464,
+    "recall": 1.0,
+    "recall_data": null,
+    "recall_instruction": 1.0,
+    "recall_per_family": {
+      "none": 1.0
+    },
+    "recall_per_technique": {
+      "*": 1.0
+    },
+    "samples": 112
+  },
+  "metrics_per_split": {},
+  "per_sample": [
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 930,
+      "flagged": true,
+      "informational_findings": 800,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 29751.869,
+      "positive": true,
+      "sample_id": "phantomlint-bad-12122_GL_LowPopArt_A_Nearly_In",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 130
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 369,
+      "flagged": true,
+      "informational_findings": 130,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 12942.257,
+      "positive": true,
+      "sample_id": "phantomlint-bad-2212.08983v2",
+      "verdict": "malicious",
+      "verdict_driving_findings": 239
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 252,
+      "flagged": true,
+      "informational_findings": 199,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 9541.696,
+      "positive": true,
+      "sample_id": "phantomlint-bad-2403.08142v2",
+      "verdict": "malicious",
+      "verdict_driving_findings": 53
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 79,
+      "flagged": true,
+      "informational_findings": 45,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 3669.314,
+      "positive": true,
+      "sample_id": "phantomlint-bad-2406.17241v3",
+      "verdict": "malicious",
+      "verdict_driving_findings": 34
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 529,
+      "flagged": true,
+      "informational_findings": 54,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 12354.864,
+      "positive": true,
+      "sample_id": "phantomlint-bad-2406.17253v2",
+      "verdict": "malicious",
+      "verdict_driving_findings": 475
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 222,
+      "flagged": true,
+      "informational_findings": 169,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 8514.087,
+      "positive": true,
+      "sample_id": "phantomlint-bad-2407.16803v3",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 53
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 118,
+      "flagged": true,
+      "informational_findings": 92,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 7327.1,
+      "positive": true,
+      "sample_id": "phantomlint-bad-2408.13940v3",
+      "verdict": "malicious",
+      "verdict_driving_findings": 26
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 151,
+      "flagged": true,
+      "informational_findings": 136,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 5111.275,
+      "positive": true,
+      "sample_id": "phantomlint-bad-2501.08667v1",
+      "verdict": "malicious",
+      "verdict_driving_findings": 15
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 91,
+      "flagged": true,
+      "informational_findings": 60,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 4546.501,
+      "positive": true,
+      "sample_id": "phantomlint-bad-2501.13461v1",
+      "verdict": "malicious",
+      "verdict_driving_findings": 31
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 121,
+      "flagged": true,
+      "informational_findings": 72,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 5118.621,
+      "positive": true,
+      "sample_id": "phantomlint-bad-2502.19918v2",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 49
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 87,
+      "flagged": true,
+      "informational_findings": 58,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 4137.043,
+      "positive": true,
+      "sample_id": "phantomlint-bad-2505.11718v1",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 29
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 173,
+      "flagged": true,
+      "informational_findings": 99,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 7867.633,
+      "positive": true,
+      "sample_id": "phantomlint-bad-2505.12864v1",
+      "verdict": "malicious",
+      "verdict_driving_findings": 74
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 128,
+      "flagged": true,
+      "informational_findings": 97,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 5358.901,
+      "positive": true,
+      "sample_id": "phantomlint-bad-2505.15075v1",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 31
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 801,
+      "flagged": true,
+      "informational_findings": 247,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 28856.238,
+      "positive": true,
+      "sample_id": "phantomlint-bad-2505.16211v1",
+      "verdict": "malicious",
+      "verdict_driving_findings": 554
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 149,
+      "flagged": true,
+      "informational_findings": 122,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 6580.739,
+      "positive": true,
+      "sample_id": "phantomlint-bad-2506.00418v1",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 27
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 568,
+      "flagged": true,
+      "informational_findings": 461,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 18412.472,
+      "positive": true,
+      "sample_id": "phantomlint-bad-2506.01324v1",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 107
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 932,
+      "flagged": true,
+      "informational_findings": 800,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 29574.682,
+      "positive": true,
+      "sample_id": "phantomlint-bad-2506.03074v1",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 132
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 932,
+      "flagged": true,
+      "informational_findings": 800,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 27221.034,
+      "positive": true,
+      "sample_id": "phantomlint-bad-2506.03074v2",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 132
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 640,
+      "flagged": true,
+      "informational_findings": 173,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 15310.706,
+      "positive": true,
+      "sample_id": "phantomlint-bad-2506.11111v1",
+      "verdict": "malicious",
+      "verdict_driving_findings": 467
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 508,
+      "flagged": true,
+      "informational_findings": 468,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 20299.068,
+      "positive": true,
+      "sample_id": "phantomlint-bad-2506.13901v1",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 40
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 557,
+      "flagged": true,
+      "informational_findings": 87,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 13430.439,
+      "positive": true,
+      "sample_id": "phantomlint-bad-2507.01234v1",
+      "verdict": "malicious",
+      "verdict_driving_findings": 470
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 1370,
+      "flagged": true,
+      "informational_findings": 73,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 26192.901,
+      "positive": true,
+      "sample_id": "phantomlint-bad-5318_ThinknCheck_Advancing_Cla",
+      "verdict": "malicious",
+      "verdict_driving_findings": 1297
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 85,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 3385.779,
+      "positive": true,
+      "sample_id": "phantomlint-bad-669eee56df27ae159197a7b7_Resume_Rui_Zhao",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 85
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 88,
+      "flagged": true,
+      "informational_findings": 2,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 2341.3,
+      "positive": true,
+      "sample_id": "phantomlint-bad-679567ffa7cca0c519ea7378_15bdb6c1f56651791fdebfc4a097a0b7_ShojiU_resume_2025",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 86
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 31,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 1264.367,
+      "positive": true,
+      "sample_id": "phantomlint-bad-67a4e981fdda3c5ea2635a45_Laura_Adamson_Resume_2025",
+      "verdict": "malicious",
+      "verdict_driving_findings": 31
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 87,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 3605.655,
+      "positive": true,
+      "sample_id": "phantomlint-bad-Amanda+Ross+-+Resume2024",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 87
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 93,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 2129.8,
+      "positive": true,
+      "sample_id": "phantomlint-bad-AndrewVos",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 93
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 22,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 847.476,
+      "positive": true,
+      "sample_id": "phantomlint-bad-AnjunJia_Resume_June2025",
+      "verdict": "malicious",
+      "verdict_driving_findings": 22
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 270,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 8630.119,
+      "positive": true,
+      "sample_id": "phantomlint-bad-CV-Filip-Korus",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 270
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 646,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 12768.544,
+      "positive": true,
+      "sample_id": "phantomlint-bad-CV-MB-EN",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 646
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 24,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 708.966,
+      "positive": true,
+      "sample_id": "phantomlint-bad-CV_Erick-Kassab_EN_2025-egN1GlLf0hqTe6L4UC3Gww",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 24
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 12,
+      "flagged": true,
+      "informational_findings": 4,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 700.203,
+      "positive": true,
+      "sample_id": "phantomlint-bad-CV_en_",
+      "verdict": "malicious",
+      "verdict_driving_findings": 8
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 421,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 3202.935,
+      "positive": true,
+      "sample_id": "phantomlint-bad-CV_tmorg",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 421
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 27,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 587.829,
+      "positive": true,
+      "sample_id": "phantomlint-bad-Cover-letter-Alexandro-Tellez",
+      "verdict": "malicious",
+      "verdict_driving_findings": 27
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 40,
+      "flagged": true,
+      "informational_findings": 3,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 1890.667,
+      "positive": true,
+      "sample_id": "phantomlint-bad-Daniel_Mascali__Dev_Resume",
+      "verdict": "malicious",
+      "verdict_driving_findings": 37
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 438,
+      "flagged": true,
+      "informational_findings": 354,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 13491.457,
+      "positive": true,
+      "sample_id": "phantomlint-bad-Differential_Privacy_for_Microdata_Streams__Adversarial_Approache",
+      "verdict": "malicious",
+      "verdict_driving_findings": 84
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 401,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 11589.311,
+      "positive": true,
+      "sample_id": "phantomlint-bad-EricBrownResume",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 401
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 95,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 1933.269,
+      "positive": true,
+      "sample_id": "phantomlint-bad-EricWeger_resume",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 95
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 33,
+      "flagged": true,
+      "informational_findings": 16,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 913.572,
+      "positive": true,
+      "sample_id": "phantomlint-bad-FRANCESCO_VIGNI_PHD",
+      "verdict": "malicious",
+      "verdict_driving_findings": 17
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 85,
+      "flagged": true,
+      "informational_findings": 61,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 12406.847,
+      "positive": true,
+      "sample_id": "phantomlint-bad-FULLTEXT01",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 24
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 274,
+      "flagged": true,
+      "informational_findings": 9,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 5517.363,
+      "positive": true,
+      "sample_id": "phantomlint-bad-GeorgexWang_CV",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 265
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 1,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 495.353,
+      "positive": true,
+      "sample_id": "phantomlint-bad-Gergana_Gergova_CV_2024_ENG",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 1
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 528,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 7836.478,
+      "positive": true,
+      "sample_id": "phantomlint-bad-Huanli_Gong_-_Resume",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 528
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 90,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 1598.128,
+      "positive": true,
+      "sample_id": "phantomlint-bad-J_Nelson_Resume_2024",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 90
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 13,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 5323.349,
+      "positive": true,
+      "sample_id": "phantomlint-bad-Jeremy_R_Bird",
+      "verdict": "malicious",
+      "verdict_driving_findings": 13
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 48,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 2032.19,
+      "positive": true,
+      "sample_id": "phantomlint-bad-Jon_Saunders_(Twisk)_Resume_(April_25_2025)",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 48
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 87,
+      "flagged": true,
+      "informational_findings": 2,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 871.16,
+      "positive": true,
+      "sample_id": "phantomlint-bad-JuneResume",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 85
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 8,
+      "flagged": true,
+      "informational_findings": 1,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 317.824,
+      "positive": true,
+      "sample_id": "phantomlint-bad-Kevin-Maines-resume-062524",
+      "verdict": "malicious",
+      "verdict_driving_findings": 7
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 2,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 387.86,
+      "positive": true,
+      "sample_id": "phantomlint-bad-KuglerResume",
+      "verdict": "malicious",
+      "verdict_driving_findings": 2
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 514,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 9167.85,
+      "positive": true,
+      "sample_id": "phantomlint-bad-Leggiero-Resume_2025-04-28",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 514
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 133,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 2093.238,
+      "positive": true,
+      "sample_id": "phantomlint-bad-Lim_ChaeWoo_Curriculum-Vitae_2025_1_15",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 133
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 107,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 1960.276,
+      "positive": true,
+      "sample_id": "phantomlint-bad-Luka_Brown_Resume",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 107
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 193,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 3796.471,
+      "positive": true,
+      "sample_id": "phantomlint-bad-MollyOwen_Resume_2025",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 193
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 128,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 3347.032,
+      "positive": true,
+      "sample_id": "phantomlint-bad-MrAdib-Resume-v1630",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 128
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 19,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 2005.333,
+      "positive": true,
+      "sample_id": "phantomlint-bad-Onkar_Kirpan",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 19
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 38,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 708.304,
+      "positive": true,
+      "sample_id": "phantomlint-bad-Resume.4329e33d2d071a5c9136",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 38
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 94,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 1099.173,
+      "positive": true,
+      "sample_id": "phantomlint-bad-Resume_No_Phone",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 94
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 15,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 584.671,
+      "positive": true,
+      "sample_id": "phantomlint-bad-Shpetim-Selaci-Resume",
+      "verdict": "malicious",
+      "verdict_driving_findings": 15
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 1636,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 27708.303,
+      "positive": true,
+      "sample_id": "phantomlint-bad-Zanchetta_Giulio_CV_IT",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 1636
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 24,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 988.414,
+      "positive": true,
+      "sample_id": "phantomlint-bad-andrew_resume",
+      "verdict": "malicious",
+      "verdict_driving_findings": 24
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 11,
+      "flagged": true,
+      "informational_findings": 1,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 614.747,
+      "positive": true,
+      "sample_id": "phantomlint-bad-cv-1",
+      "verdict": "malicious",
+      "verdict_driving_findings": 10
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 71,
+      "flagged": true,
+      "informational_findings": 10,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 780.403,
+      "positive": true,
+      "sample_id": "phantomlint-bad-cv-2",
+      "verdict": "malicious",
+      "verdict_driving_findings": 61
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 65,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 758.4,
+      "positive": true,
+      "sample_id": "phantomlint-bad-cv-3",
+      "verdict": "malicious",
+      "verdict_driving_findings": 65
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 61,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 5487.99,
+      "positive": true,
+      "sample_id": "phantomlint-bad-cv-4",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 61
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 94,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 2436.602,
+      "positive": true,
+      "sample_id": "phantomlint-bad-cv-5",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 94
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 35,
+      "flagged": true,
+      "informational_findings": 1,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 457.166,
+      "positive": true,
+      "sample_id": "phantomlint-bad-cv-6",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 34
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 357,
+      "flagged": true,
+      "informational_findings": 2,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 5190.037,
+      "positive": true,
+      "sample_id": "phantomlint-bad-cv-7",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 355
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 34,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 3993.1,
+      "positive": true,
+      "sample_id": "phantomlint-bad-cv-samrosecruz",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 34
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 88,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 1847.168,
+      "positive": true,
+      "sample_id": "phantomlint-bad-cv-tellef-s-raabe-english",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 88
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 26,
+      "flagged": true,
+      "informational_findings": 1,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 893.765,
+      "positive": true,
+      "sample_id": "phantomlint-bad-cv-zhongtang-luo",
+      "verdict": "malicious",
+      "verdict_driving_findings": 25
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 572,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 6615.149,
+      "positive": true,
+      "sample_id": "phantomlint-bad-cv",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 572
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 16,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 3175.562,
+      "positive": true,
+      "sample_id": "phantomlint-bad-edison-mooers-resume-2025-m7V3VbMvawiKgBnO",
+      "verdict": "malicious",
+      "verdict_driving_findings": 16
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 69,
+      "flagged": true,
+      "informational_findings": 1,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 1349.039,
+      "positive": true,
+      "sample_id": "phantomlint-bad-eng_CV",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 68
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 38,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 1979.281,
+      "positive": true,
+      "sample_id": "phantomlint-bad-fail",
+      "verdict": "malicious",
+      "verdict_driving_findings": 38
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 2,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 210.831,
+      "positive": true,
+      "sample_id": "phantomlint-bad-fake_hello_world-clip",
+      "verdict": "malicious",
+      "verdict_driving_findings": 2
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 1,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 48.77,
+      "positive": true,
+      "sample_id": "phantomlint-bad-fake_hello_world-invisible_text_ocg",
+      "verdict": "malicious",
+      "verdict_driving_findings": 1
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 1,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 53.848,
+      "positive": true,
+      "sample_id": "phantomlint-bad-fake_hello_world-malicious_font",
+      "verdict": "malicious",
+      "verdict_driving_findings": 1
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 39,
+      "flagged": true,
+      "informational_findings": 38,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 940.993,
+      "positive": true,
+      "sample_id": "phantomlint-bad-fake_snail_paper_single_column-alpha0_text",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 1
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 40,
+      "flagged": true,
+      "informational_findings": 38,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 862.037,
+      "positive": true,
+      "sample_id": "phantomlint-bad-fake_snail_paper_single_column-invisible_text",
+      "verdict": "malicious",
+      "verdict_driving_findings": 2
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 40,
+      "flagged": true,
+      "informational_findings": 38,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 1011.237,
+      "positive": true,
+      "sample_id": "phantomlint-bad-fake_snail_paper_single_column-obscured_text",
+      "verdict": "malicious",
+      "verdict_driving_findings": 2
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 40,
+      "flagged": true,
+      "informational_findings": 19,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 1915.181,
+      "positive": true,
+      "sample_id": "phantomlint-bad-fake_snail_paper_single_column-offpage-mediabox",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 21
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 39,
+      "flagged": true,
+      "informational_findings": 38,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 856.76,
+      "positive": true,
+      "sample_id": "phantomlint-bad-fake_snail_paper_single_column-offpage",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 1
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 39,
+      "flagged": true,
+      "informational_findings": 38,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 851.734,
+      "positive": true,
+      "sample_id": "phantomlint-bad-fake_snail_paper_single_column-rotated_text",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 1
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 40,
+      "flagged": true,
+      "informational_findings": 38,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 978.444,
+      "positive": true,
+      "sample_id": "phantomlint-bad-fake_snail_paper_single_column-tiny_text",
+      "verdict": "malicious",
+      "verdict_driving_findings": 2
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 40,
+      "flagged": true,
+      "informational_findings": 38,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 843.224,
+      "positive": true,
+      "sample_id": "phantomlint-bad-fake_snail_paper_single_column-white_text",
+      "verdict": "malicious",
+      "verdict_driving_findings": 2
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 32,
+      "flagged": true,
+      "informational_findings": 31,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 833.887,
+      "positive": true,
+      "sample_id": "phantomlint-bad-fake_snail_paper_two_column-alpha0_text",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 1
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 33,
+      "flagged": true,
+      "informational_findings": 31,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 803.034,
+      "positive": true,
+      "sample_id": "phantomlint-bad-fake_snail_paper_two_column-invisible_text",
+      "verdict": "malicious",
+      "verdict_driving_findings": 2
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 33,
+      "flagged": true,
+      "informational_findings": 31,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 807.023,
+      "positive": true,
+      "sample_id": "phantomlint-bad-fake_snail_paper_two_column-obscured_text",
+      "verdict": "malicious",
+      "verdict_driving_findings": 2
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 32,
+      "flagged": true,
+      "informational_findings": 31,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 791.368,
+      "positive": true,
+      "sample_id": "phantomlint-bad-fake_snail_paper_two_column-rotated_text",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 1
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 33,
+      "flagged": true,
+      "informational_findings": 31,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 782.427,
+      "positive": true,
+      "sample_id": "phantomlint-bad-fake_snail_paper_two_column-tiny_text",
+      "verdict": "malicious",
+      "verdict_driving_findings": 2
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 33,
+      "flagged": true,
+      "informational_findings": 31,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 783.843,
+      "positive": true,
+      "sample_id": "phantomlint-bad-fake_snail_paper_two_column-white_text",
+      "verdict": "malicious",
+      "verdict_driving_findings": 2
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 16,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 331.191,
+      "positive": true,
+      "sample_id": "phantomlint-bad-ic",
+      "verdict": "malicious",
+      "verdict_driving_findings": 16
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 41,
+      "flagged": true,
+      "informational_findings": 21,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 903.317,
+      "positive": true,
+      "sample_id": "phantomlint-bad-maxbothe-cv",
+      "verdict": "malicious",
+      "verdict_driving_findings": 20
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 14,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 1123.832,
+      "positive": true,
+      "sample_id": "phantomlint-bad-mjm_resume.pdf",
+      "verdict": "malicious",
+      "verdict_driving_findings": 14
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 8,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 468.387,
+      "positive": true,
+      "sample_id": "phantomlint-bad-oskar_bernberg_profile",
+      "verdict": "malicious",
+      "verdict_driving_findings": 8
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 111,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 2276.223,
+      "positive": true,
+      "sample_id": "phantomlint-bad-paul-wang-resume",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 111
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 5,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 450.686,
+      "positive": true,
+      "sample_id": "phantomlint-bad-resume-1",
+      "verdict": "malicious",
+      "verdict_driving_findings": 5
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 82,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 2164.615,
+      "positive": true,
+      "sample_id": "phantomlint-bad-resume-2",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 82
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 67,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 1067.997,
+      "positive": true,
+      "sample_id": "phantomlint-bad-resume-3",
+      "verdict": "malicious",
+      "verdict_driving_findings": 67
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 14,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 771.137,
+      "positive": true,
+      "sample_id": "phantomlint-bad-resume-4",
+      "verdict": "malicious",
+      "verdict_driving_findings": 14
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 63,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 814.961,
+      "positive": true,
+      "sample_id": "phantomlint-bad-resume-waleed-rawasia-2025",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 63
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 39,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 886.313,
+      "positive": true,
+      "sample_id": "phantomlint-bad-resume",
+      "verdict": "malicious",
+      "verdict_driving_findings": 39
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 138,
+      "flagged": true,
+      "informational_findings": 1,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 2951.71,
+      "positive": true,
+      "sample_id": "phantomlint-bad-tim-hordern-resume",
+      "verdict": "malicious",
+      "verdict_driving_findings": 137
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 98,
+      "flagged": true,
+      "informational_findings": 8,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 1083.251,
+      "positive": true,
+      "sample_id": "phantomlint-bad-trinca_eng",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 90
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 76,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 1312.788,
+      "positive": true,
+      "sample_id": "phantomlint-bad-using-jsSyntaxTree",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 76
+    },
+    {
+      "confirmed": [
+        "*"
+      ],
+      "detected": [
+        "*"
+      ],
+      "error": null,
+      "family": "none",
+      "findings": 33,
+      "flagged": true,
+      "informational_findings": 7,
+      "injection_kind": "instruction",
+      "labels": [
+        "*"
+      ],
+      "latency_ms": 457.746,
+      "positive": true,
+      "sample_id": "phantomlint-bad-xiangli_cv",
+      "verdict": "malicious",
+      "verdict_driving_findings": 26
+    },
+    {
+      "confirmed": [],
+      "detected": [],
+      "error": null,
+      "family": "none",
+      "findings": 52,
+      "flagged": true,
+      "informational_findings": 51,
+      "injection_kind": "none",
+      "labels": [],
+      "latency_ms": 2272.212,
+      "positive": false,
+      "sample_id": "phantomlint-good-2006.03257v1",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 1
+    },
+    {
+      "confirmed": [],
+      "detected": [],
+      "error": null,
+      "family": "none",
+      "findings": 106,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "none",
+      "labels": [],
+      "latency_ms": 1894.896,
+      "positive": false,
+      "sample_id": "phantomlint-good-2507.06185v1",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 106
+    },
+    {
+      "confirmed": [],
+      "detected": [],
+      "error": null,
+      "family": "none",
+      "findings": 3,
+      "flagged": true,
+      "informational_findings": 2,
+      "injection_kind": "none",
+      "labels": [],
+      "latency_ms": 168.464,
+      "positive": false,
+      "sample_id": "phantomlint-good-alexander-fenster",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 1
+    },
+    {
+      "confirmed": [],
+      "detected": [],
+      "error": null,
+      "family": "none",
+      "findings": 39,
+      "flagged": true,
+      "informational_findings": 38,
+      "injection_kind": "none",
+      "labels": [],
+      "latency_ms": 841.216,
+      "positive": false,
+      "sample_id": "phantomlint-good-fake_snail_paper_single_column",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 1
+    },
+    {
+      "confirmed": [],
+      "detected": [],
+      "error": null,
+      "family": "none",
+      "findings": 32,
+      "flagged": true,
+      "informational_findings": 31,
+      "injection_kind": "none",
+      "labels": [],
+      "latency_ms": 792.443,
+      "positive": false,
+      "sample_id": "phantomlint-good-fake_snail_paper_two_column",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 1
+    },
+    {
+      "confirmed": [],
+      "detected": [],
+      "error": null,
+      "family": "none",
+      "findings": 822,
+      "flagged": true,
+      "informational_findings": 0,
+      "injection_kind": "none",
+      "labels": [],
+      "latency_ms": 111691.841,
+      "positive": false,
+      "sample_id": "phantomlint-good-jon-hobbs-smith-cv",
+      "verdict": "suspicious",
+      "verdict_driving_findings": 822
+    }
+  ],
+  "synthetic": false
+}
