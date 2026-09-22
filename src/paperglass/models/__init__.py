@@ -1,6 +1,7 @@
 """Shared schema models (Finding, Report, CleanResult, Receipt). Importable by every package."""
 
 from paperglass.models.document import DocumentText, PageText, TextRun
+from paperglass.models.raster import InkResult, OcrResult, PageRaster
 from paperglass.models.schema import (
     PARSE_FAILURE_TECHNIQUE,
     SCHEMA_VERSION,
@@ -43,6 +44,9 @@ __all__ = [
     "DocumentText",
     "Finding",
     "FindingStatus",
+    "InkResult",
+    "OcrResult",
+    "PageRaster",
     "PageStructure",
     "PageText",
     "ParseFailure",

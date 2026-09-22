@@ -12,6 +12,8 @@ Built at US-006 (22 Sep 2026): `paperglass.views.extract` exposes `EXTRACTORS` (
 
 ## View B: what a person sees, as a cascade
 
+Built at US-030 (22 Sep 2026): `paperglass.views.render` provides `choose_dpi`, `render_document` (pypdfium2 in the sandbox, PNG per page), `ink_check` (stage 1, numpy on the luminance raster: ink fraction against a ring-sampled local background, contrast, variance, classification visible, invisible or uncertain), `crop_data_uri` (evidence crops), and `ocr_crop` plus `agreement` (stage 2, RapidOCR behind the `ocr` extra, rapidfuzz partial ratio). OCR runs in-process on rasters Paperglass produced, never on the input file. Stage 3 (glyph arbiter) is US-087; stage 4 is opt-in.
+
 Render once per page with pypdfium2 at 150 dpi, or 200 dpi when any font on the page is under 6 pt; the dpi is in the report.
 
 - Stage 1, ink check, no OCR. For every extracted run, sample the raster inside its bbox: ink density (threshold 1.5 percent), contrast against the local background (24/255), pixel variance, bbox inside the media box and the current clip. Classify visible, invisible, uncertain. This alone catches white-on-white, render modes 3 and 7, tiny text, near-zero alpha, off-page, clipped, OCG-off and covered-by-shape, with the stage 0 mechanism attached. Milliseconds. This is the fast tier, and it is why 100 ms per page is honest.
