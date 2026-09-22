@@ -316,7 +316,7 @@ COMMENT_REL = (
 )
 CORE_PART = (
     '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
-    '<cp:coreProperties '
+    "<cp:coreProperties "
     'xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" '
     'xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:title>{title}</dc:title>'
     "<dc:creator>A. Person</dc:creator></cp:coreProperties>"

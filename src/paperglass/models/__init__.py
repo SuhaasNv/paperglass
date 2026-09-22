@@ -2,6 +2,7 @@
 
 from paperglass.models.document import DocumentText, PageText, TextRun
 from paperglass.models.docx import DocxPart, DocxRun, DocxStructure
+from paperglass.models.fingerprint import ExtractorVerdict, Fingerprint, FingerprintRow
 from paperglass.models.raster import InkResult, OcrResult, PageRaster
 from paperglass.models.schema import (
     PARSE_FAILURE_TECHNIQUE,
@@ -46,8 +47,11 @@ __all__ = [
     "DocxPart",
     "DocxRun",
     "DocxStructure",
+    "ExtractorVerdict",
     "Finding",
     "FindingStatus",
+    "Fingerprint",
+    "FingerprintRow",
     "InkResult",
     "OcrResult",
     "PageRaster",

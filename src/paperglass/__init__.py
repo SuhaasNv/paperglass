@@ -29,4 +29,11 @@ def scan(data: bytes, **options: object) -> object:
     return scan_bytes(data, **options)  # type: ignore[arg-type]  # options mirror scan_bytes
 
 
-__all__ = ["__version__", "scan"]
+def fingerprint(data: bytes, **options: object) -> object:
+    """Which installed extractors hand the hidden text to a model. Returns a Fingerprint."""
+    from paperglass.engine import fingerprint_bytes  # noqa: PLC0415
+
+    return fingerprint_bytes(data, **options)  # type: ignore[arg-type]  # options mirror it
+
+
+__all__ = ["__version__", "fingerprint", "scan"]
