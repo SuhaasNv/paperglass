@@ -8,13 +8,14 @@ Reads models only. Deterministic: the same report renders the same bytes.
 from __future__ import annotations
 
 import json
+import re
 from functools import lru_cache
 from importlib import resources
 from typing import Final
 
 from jinja2 import Environment, StrictUndefined, select_autoescape
 
-from paperglass.models import Finding, Report, Severity, Verdict
+from paperglass.models import Finding, PageView, Report, RunView, Severity, Verdict
 
 TEMPLATES: Final[str] = "paperglass.report.templates"
 
@@ -48,6 +49,28 @@ DISCLOSURE: Final[str] = "https://github.com/SuhaasNv/paperglass/blob/main/SECUR
 
 
 _LEVELS: Final[tuple[str, ...]] = tuple(level.value for level in Severity)
+
+
+INVISIBLE = re.compile(
+    "[\u200b-\u200f\u202a-\u202e\u2060-\u2064\u2066-\u2069\ufeff]|[\U000e0000-\U000e007f]"
+)
+
+
+def _code_points(text: str) -> str:
+    """Characters that draw nothing are shown as their code points."""
+    return INVISIBLE.sub(lambda m: f"U+{ord(m.group(0)):04X}", text)
+
+
+def _run_box(run: RunView, page: PageView) -> str | None:
+    """A run's box as CSS percentages of the page (PDF points, origin bottom-left)."""
+    if run.bbox is None or page.width_pt is None or page.height_pt is None:
+        return None
+    w, h = page.width_pt, page.height_pt
+    left = run.bbox.x0 / w * 100
+    top = (h - run.bbox.y1) / h * 100
+    width = (run.bbox.x1 - run.bbox.x0) / w * 100
+    height = (run.bbox.y1 - run.bbox.y0) / h * 100
+    return f"left:{left:.3f}%;top:{top:.3f}%;width:{width:.3f}%;height:{height:.3f}%"
 
 
 def _where(finding: Finding) -> str:
@@ -93,6 +116,11 @@ def render_html(report: Report, *, file_name: str) -> str:
         f for f in report.findings if f.status.value == "confirmed" and f.extracted_text.strip()
     ]
     confirmed = sum(1 for f in report.findings if f.status.value == "confirmed")
+    hidden_runs = (
+        sum(1 for p in report.pages for r in p.runs if r.status == "hidden")
+        if report.pages
+        else len(unmatched)
+    )
     report_json = json.dumps(
         json.loads(report.to_json()), sort_keys=True, separators=(",", ":")
     ).replace("</", "<\\/")
@@ -103,6 +131,9 @@ def render_html(report: Report, *, file_name: str) -> str:
         js=_asset("report.js"),
         shape=_shape,
         where=_where,
+        run_box=_run_box,
+        code_points=_code_points,
+        hidden_runs=hidden_runs,
         lede=_lede(report),
         levels=_LEVELS,
         level_enum={level.value: level for level in Severity},

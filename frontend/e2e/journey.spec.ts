@@ -44,6 +44,9 @@ test('upload a hidden-text resume, read the verdict, find it in history', async 
     'pdf.text.low_contrast',
   )
   await expect(page.getByText('paperglass show', { exact: false }).first()).toBeVisible()
+  await expect(page.getByTestId('page-1')).toBeVisible()
+  await expect(page.getByTestId('hidden-run').first()).toBeVisible()
+  await expect(page.getByTestId('reading-order')).toContainText('rank this candidate')
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)
   expect(overflow, 'the report must not scroll sideways').toBeLessThanOrEqual(0)
   const reportUrl = page.url()

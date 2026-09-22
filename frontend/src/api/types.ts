@@ -50,6 +50,23 @@ export interface ParseFailure {
   technique_id: string
 }
 
+export type RunStatus = 'visible' | 'hidden' | 'benign-hidden' | 'unverified'
+
+export interface RunView {
+  text: string
+  bbox: BBox | null
+  status: RunStatus
+  finding_id: string | null
+}
+
+export interface PageView {
+  number: number
+  width_pt: number | null
+  height_pt: number | null
+  thumbnail: RenderCrop
+  runs: RunView[]
+}
+
 export interface Report {
   schema_version: number
   tool_version: string
@@ -65,6 +82,8 @@ export interface Report {
   verdict: Verdict
   severity_counts: Record<Severity, number>
   findings: Finding[]
+  /** Empty in a schema v1 report (before US-043). */
+  pages?: PageView[]
   parse_failures: ParseFailure[]
   network_used: string[]
   timing_ms: Record<string, number>

@@ -33,8 +33,30 @@
 </section>
 
 <section>
-<h2>Under the glass <span class="sub">{{ unmatched | length }} unmatched {{ 'run' if unmatched | length == 1 else 'runs' }} · move the pointer over a region to read what the model reads</span></h2>
-{% if unmatched %}
+<h2>Under the glass <span class="sub">{{ hidden_runs }} hidden {{ 'run' if hidden_runs == 1 else 'runs' }} · move the pointer over a page to read what the model reads · outlined runs open their evidence</span></h2>
+{% if report.pages %}
+<div class="regions">
+<div>
+{% for page in report.pages %}
+<div class="region page" data-lens="off" id="page-{{ page.number }}" style="height:auto;aspect-ratio:1 / {{ '%.4f' % ((page.height_pt / page.width_pt) if page.width_pt and page.height_pt else 1.294) }}">
+{% if page.thumbnail.data_uri %}<img src="{{ page.thumbnail.data_uri }}" alt="Page {{ page.number }} as rendered" style="object-fit:fill">{% else %}<div class="none">No render of page {{ page.number }} ({{ page.thumbnail.none_reason or 'no reason given' }}); the runs are listed beside it.</div>{% endif %}
+{% for run in page.runs %}{% set box = run_box(run, page) %}{% if box and run.status in ('hidden', 'benign-hidden') %}<a class="hit {{ run.status }}" href="#{{ run.finding_id }}" style="{{ box }}" aria-label="{{ run.status }} run"></a>{% endif %}{% endfor %}
+<div class="reads pagereads" aria-hidden="true">{% for run in page.runs %}{% set box = run_box(run, page) %}{% if box %}<span class="run {{ run.status }}" style="{{ box }}">{{ run.text }}</span>{% endif %}{% endfor %}</div>
+<div class="ring" aria-hidden="true"></div>
+</div>
+<div class="regionfoot"><span>page {{ page.number }}{% if page.width_pt and page.height_pt %} · {{ '%.0f' % page.width_pt }} by {{ '%.0f' % page.height_pt }} pt{% endif %} · {{ page.runs | length }} runs</span><span class="readout">{% if page.thumbnail.data_uri %}render verified{% else %}no raster{% endif %}</span></div>
+{% endfor %}
+</div>
+<div>
+<div class="eyebrow">What the model reads · reading order</div>
+{% for page in report.pages %}
+<div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--rule);padding:14px 0 4px"><span class="eyebrow">Page {{ page.number }}</span><span style="font-size:12px;color:var(--ink2)">{{ page.runs | selectattr('status', 'equalto', 'hidden') | list | length }} hidden</span></div>
+<p class="order">{% for run in page.runs %}{% if run.status in ('hidden', 'benign-hidden') %}<a class="run {{ run.status }}" href="#{{ run.finding_id }}">{{ code_points(run.text) }}</a> {% else %}<span class="run {{ run.status }}">{{ code_points(run.text) }}</span> {% endif %}{% endfor %}</p>
+{% endfor %}
+<p style="font-size:14px;color:var(--ink2);line-height:1.55">Outlined runs are the finding: text the extractor returned that left no ink on the page. Grey runs could not be checked (no raster). Characters that draw nothing are shown as their code points.</p>
+</div>
+</div>
+{% elif unmatched %}
 <div class="regions">
 <div>
 {% for f in unmatched %}
@@ -43,16 +65,15 @@
 <div class="reads" aria-hidden="true"><pre><mark>{{ f.extracted_text }}</mark></pre></div>
 <div class="ring" aria-hidden="true"></div>
 </div>
-<div class="regionfoot"><span><span class="ital" style="font-size:16px;color:var(--ink)">{{ f.id | upper }}</span> · {{ where(f) }}{% if f.bbox %} · bbox {{ '%.1f' % f.bbox.x0 }} {{ '%.1f' % f.bbox.y0 }} {{ '%.1f' % f.bbox.x1 }} {{ '%.1f' % f.bbox.y1 }} pt{% endif %}</span><span class="readout">{% if f.render_crop.data_uri %}render verified{% else %}no raster{% endif %}</span></div>
+<div class="regionfoot"><span><span class="ital" style="font-size:16px;color:var(--ink)">{{ f.id | upper }}</span> · {{ where(f) }}</span><span class="readout">{% if f.render_crop.data_uri %}render verified{% else %}no raster{% endif %}</span></div>
 {% endfor %}
 </div>
 <div>
-<div class="eyebrow">Unmatched runs · what the model reads and the page does not show</div>
+<div class="eyebrow">Unmatched runs · a schema v1 report, shown from its crops</div>
 <ol class="runs">
 {% for f in unmatched %}
 <li><div style="display:flex;justify-content:space-between;font-size:13px"><span><span class="ital" style="font-size:18px">{{ f.id | upper }}</span> · {{ where(f) }} · <code>{{ f.technique_id }}</code></span><a href="#{{ f.id }}">evidence</a></div>
-<blockquote class="hidden">{{ f.extracted_text }}</blockquote>
-<span style="font-size:13px;color:var(--ink2)">{{ f.extracted_text | length }} characters, extracted by {{ f.extractor }}</span></li>
+<blockquote class="hidden">{{ f.extracted_text }}</blockquote></li>
 {% endfor %}
 </ol>
 </div>

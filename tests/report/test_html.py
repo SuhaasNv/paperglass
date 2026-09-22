@@ -44,6 +44,10 @@ def test_report_carries_the_evidence_and_the_verdict() -> None:
     embedded = html.split('id="paperglass-report">', 1)[1].split("</script>", 1)[0]
     assert json.loads(embedded.replace("<\\/", "</"))["verdict"] == "malicious"
     assert "fraud" not in html.lower() and "cheat" not in html.lower()
+    # Schema v2: the page under the glass with its runs, hidden ones linked to their finding.
+    assert 'id="page-1"' in html and "data:image/jpeg;base64," in html
+    assert f'class="hit hidden" href="#{finding.id}"' in html
+    assert "What the model reads · reading order" in html
 
 
 def test_report_is_deterministic_and_handles_a_clean_document() -> None:
@@ -52,4 +56,4 @@ def test_report_is_deterministic_and_handles_a_clean_document() -> None:
     clean = scan_bytes(build([Page(text("Visible", y=700))]), limits=LIMITS, tier=Tier.FAST)
     html = render_html(clean, file_name="clean.pdf")
     assert "CLEAN" in html and "No findings." in html
-    assert "nothing to put under the glass" in html
+    assert "0 hidden runs" in html and 'id="page-1"' in html

@@ -2,9 +2,11 @@ import { useState } from 'react'
 import { useParams } from 'react-router'
 
 import { useFingerprintScan, useScan } from '../api/queries'
-import type { Finding, ScanDetail, Severity } from '../api/types'
+import type { Finding, RunView, ScanDetail, Severity } from '../api/types'
 import { CopyButton } from '../components/CopyButton'
 import { Lens } from '../components/Lens'
+import { PageUnderGlass } from '../components/PageUnderGlass'
+import { ReadingOrder } from '../components/ReadingOrder'
 import { SeverityMark, SeverityShape } from '../components/SeverityMark'
 import { errorMessage } from './errorMessage'
 
@@ -39,6 +41,12 @@ function Report({ scan }: { scan: ScanDetail }) {
   const { report } = scan
   const unmatched = report.findings.filter((f) => f.status === 'confirmed' && f.extracted_text.trim())
   const confirmed = report.findings.filter((f) => f.status === 'confirmed').length
+  const pages = report.pages ?? []
+  const hiddenRuns = pages.length > 0 ? pages.reduce((n, p) => n + p.runs.filter((r) => r.status === 'hidden').length, 0) : unmatched.length
+  const goToEvidence = (run: RunView) => {
+    if (run.finding_id === null) return
+    document.getElementById(run.finding_id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
   const shareUrl = typeof window !== 'undefined' ? window.location.href : ''
   return (
     <article aria-labelledby="results-heading" className="flex flex-col gap-14 px-5 pt-8 pb-14 md:px-14 md:pt-12">
@@ -81,10 +89,21 @@ function Report({ scan }: { scan: ScanDetail }) {
         <div className="flex flex-col gap-2 border-b border-ink pb-3 md:col-span-12 md:flex-row md:items-baseline md:justify-between">
           <h2 id="glass-heading" className="text-[32px] md:text-[44px]">Under the glass</h2>
           <div className="text-[13px] text-ink-2">
-            {unmatched.length} unmatched {unmatched.length === 1 ? 'run' : 'runs'} · <span className="hidden md:inline">hover a region to read what the model reads</span><span className="md:hidden">press and hold a region to read what the model reads</span>
+            {hiddenRuns} hidden {hiddenRuns === 1 ? 'run' : 'runs'} · <span className="hidden md:inline">hover the page to read what the model reads</span><span className="md:hidden">press and hold the page to read what the model reads</span> · outlined runs open their evidence
           </div>
         </div>
-        {unmatched.length === 0 ? (
+        {pages.length > 0 ? (
+          <>
+            <div className="flex flex-col gap-8 md:col-span-7">
+              {pages.map((page) => <PageUnderGlass key={page.number} page={page} onRun={goToEvidence} />)}
+            </div>
+            <div className="flex flex-col gap-4 md:col-span-5">
+              <span className="eyebrow">What the model reads · reading order</span>
+              <ReadingOrder pages={pages} onRun={goToEvidence} />
+              <p className="text-[14px] leading-[1.55] text-ink-2">Outlined runs are the finding: text the extractor returned that left no ink on the page. Grey runs could not be checked (no raster). Characters that draw nothing are shown as their code points.</p>
+            </div>
+          </>
+        ) : unmatched.length === 0 ? (
           <p className="text-[15px] text-ink-2 md:col-span-12">No confirmed hidden text on any page: there is nothing to put under the glass.</p>
         ) : (
           <>
@@ -101,11 +120,10 @@ function Report({ scan }: { scan: ScanDetail }) {
                       <a href={`#${f.id}`} className="text-[13px]">evidence</a>
                     </div>
                     <blockquote className="serif m-0 border-l-2 border-glass bg-glass-2 px-3.5 py-2.5 text-[17px] leading-[1.35]">{f.extracted_text}</blockquote>
-                    <span className="text-[13px] text-ink-2">{f.extracted_text.length} characters, extracted by {f.extractor}{f.bbox ? ` · bbox ${f.bbox.x0.toFixed(1)} ${f.bbox.y0.toFixed(1)} ${f.bbox.x1.toFixed(1)} ${f.bbox.y1.toFixed(1)} pt` : ''}</span>
                   </li>
                 ))}
               </ol>
-              <p className="text-[14px] leading-[1.55] text-ink-2">The lens shows View A in place: the same region, the extractor's text instead of ink. What you cannot see outside the ring and can read inside it is the finding.</p>
+              <p className="text-[14px] leading-[1.55] text-ink-2">This report predates page views (schema v1): each confirmed region is shown from its crop.</p>
             </div>
           </>
         )}

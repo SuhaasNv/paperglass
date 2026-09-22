@@ -20,7 +20,9 @@ def thumbnail_data_uri(raster: PageRaster, width_px: int = THUMBNAIL_WIDTH_PX) -
     image = Image.open(io.BytesIO(raster.png)).convert("RGB")
     if image.width > width_px:
         ratio = width_px / image.width
-        image = image.resize((width_px, max(1, round(image.height * ratio))), Image.Resampling.LANCZOS)
+        image = image.resize(
+            (width_px, max(1, round(image.height * ratio))), Image.Resampling.LANCZOS
+        )
     buffer = io.BytesIO()
     image.save(buffer, format="JPEG", quality=THUMBNAIL_QUALITY, optimize=True)
     encoded = base64.b64encode(buffer.getvalue()).decode("ascii")
