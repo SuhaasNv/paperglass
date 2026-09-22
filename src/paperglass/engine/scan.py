@@ -12,6 +12,7 @@ from dataclasses import dataclass, field
 import paperglass.detectors  # noqa: F401  # registration
 from paperglass import __version__
 from paperglass.detectors import REGISTRY, Candidate, SeverityDefault
+from paperglass.engine.hints import hints_for
 from paperglass.engine.profile import Profile, load_profile
 from paperglass.engine.promote import ocr_layer_is_benign, promote
 from paperglass.engine.severity import classify
@@ -21,6 +22,7 @@ from paperglass.models import (
     FindingStatus,
     PageRaster,
     ParseFailure,
+    RenderCrop,
     Report,
     Severity,
     SeverityClass,
@@ -85,9 +87,13 @@ def scan_bytes(  # noqa: PLR0913  # the public entry point takes one keyword per
     verdict = _verdict(confirmed, failures, prof)
     timer.lap("verdict")
 
+    rule_versions = REGISTRY.rule_versions()
+    for hint in hints_for(prof):
+        rule_versions[f"hint.{hint.name}"] = hint.version
+
     return Report(
         tool_version=__version__,
-        rule_versions=REGISTRY.rule_versions(),
+        rule_versions=rule_versions,
         input_sha256=sha256_of(data),
         input_type=stage0.input_type.value,
         extractor=stage0.extractor,
@@ -202,10 +208,12 @@ def _verdict(confirmed: list[Finding], failures: list[ParseFailure], profile: Pr
 
 
 def _redacted(finding: Finding) -> Finding:
+    """--redact: shorten the text and drop the crop, so a report carries the least content."""
     text = finding.extracted_text
     if len(text) > 80:
         text = text[:77] + "..."
-    return finding.model_copy(update={"extracted_text": text})
+    crop = RenderCrop(none_reason="redacted")
+    return finding.model_copy(update={"extracted_text": text, "render_crop": crop})
 
 
 _SEVERITY_RANK = {level: index for index, level in enumerate(Severity)}

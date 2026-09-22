@@ -14,6 +14,8 @@ More than 90 percent of real injections are hidden data, not instructions (UNITE
 
 ## Plug-in interface
 
+Built at US-038 (22 Sep 2026): `paperglass.engine.hints` defines the `SeverityHint` protocol, the built-in `PhraseHint` over the profile's phrase list, entry-point discovery under `paperglass.hints`, and `instruction_score`, which the severity classifier uses (a score at or above 0.5 makes a hidden run an instruction). Every hint that ran is named in the report under `rule_versions` as `hint.<name>`. A broken plug-in is skipped, never a scan failure.
+
 ```python
 class SeverityHint(Protocol):
     name: str

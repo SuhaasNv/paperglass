@@ -40,9 +40,9 @@ The REST service exposes `/metrics` behind a token; Prometheus and Grafana run u
 
 Dataset card for the corpus index (CC BY 4.0), updated at each benchmark version with its DOI.
 
-## Retention and personal data (planned, US-025)
+## Retention and personal data (US-025, 22 Sep 2026)
 
-The library keeps nothing. The REST service keeps no documents and no reports by default; the receipt cache (hash, verdict, versions) is in memory and cleared on restart. Guidance for operators who add persistence: store reports with `--redact`, set a retention period, never log content.
+`--redact` (or `redact=True`) shortens extracted text to 80 characters and drops every crop, so a stored report carries the least content that still names the finding. There is no telemetry: the library, the CLI and the future service never call home. The library keeps nothing. The REST service keeps no documents and no reports by default; the receipt cache (hash, verdict, versions) is in memory and cleared on restart. Guidance for operators who add persistence: store reports with `--redact`, set a retention period, never log content.
 
 ## Rollback
 
