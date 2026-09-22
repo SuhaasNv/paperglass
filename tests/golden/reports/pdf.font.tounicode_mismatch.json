@@ -37,6 +37,41 @@
   "input_type": "pdf",
   "network_used": [],
   "page_count": 1,
+  "pages": [
+    {
+      "height_pt": 792.0,
+      "number": 1,
+      "runs": [
+        {
+          "bbox": {
+            "x0": 72,
+            "x1": 319,
+            "y0": 697,
+            "y1": 709
+          },
+          "finding_id": null,
+          "status": "visible",
+          "text": "Three years of experience in data engineering."
+        },
+        {
+          "bbox": {
+            "x0": 73,
+            "x1": 109,
+            "y0": 597,
+            "y1": 609
+          },
+          "finding_id": null,
+          "status": "visible",
+          "text": "Rustlg"
+        }
+      ],
+      "thumbnail": {
+        "data_uri": "<jpeg True>",
+        "none_reason": null
+      },
+      "width_pt": 612.0
+    }
+  ],
   "pages_render_verified": 1,
   "parse_failures": [],
   "profile": "default",
@@ -61,7 +96,7 @@
     "pdf.text.tiny": "1",
     "text.unicode.invisible": "1"
   },
-  "schema_version": 1,
+  "schema_version": 2,
   "severity_counts": {
     "critical": 0,
     "high": 0,

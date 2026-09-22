@@ -6,7 +6,7 @@ Brief: `docs/00-brief/PROJECT_BRIEF.md` (version 0.2, 22 Sep 2026). Board: Notio
 
 ## Route note (22 Sep 2026)
 
-The web app's landing page takes `/` and the scanner lives at `/scan` (decided with the design, US-037). The share link `/scans/:id` is a contract and did not move. The one-file HTML report download and the word-aligned OCR diff (US-043) are still to come; the results page shows each confirmed region under the lens from the report's crops, which is what the report carries today.
+The web app's landing page takes `/` and the scanner lives at `/scan` (decided with the design, US-037). The share link `/scans/:id` is a contract and did not move. The one-file HTML report download (US-037) and the diff (US-043, report schema v2 with page thumbnails and every run's status) are built; the diff aligns runs by the stage 1 ink check, not by OCR, because full-page OCR is the deep tier by contract.
 
 ## Why this scope
 

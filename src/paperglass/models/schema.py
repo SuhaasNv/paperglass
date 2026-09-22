@@ -18,7 +18,8 @@ from typing import Final, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
-SCHEMA_VERSION: Final = 1
+SCHEMA_VERSION: Final = 2
+"""v2 (22 Sep 2026, US-043) adds `pages`; a v2 reader accepts a v1 report, whose pages are empty."""
 
 # The technique id under which a parser crash, timeout or limit hit is reported.
 PARSE_FAILURE_TECHNIQUE: Final = "parse.failure"
@@ -152,10 +153,35 @@ class ParseFailure(_Frozen):
     message: str = ""
 
 
+RunStatus = Literal["visible", "hidden", "benign-hidden", "unverified"]
+
+
+class RunView(_Frozen):
+    """One extracted run as the diff shows it: text, place, and whether the page shows it."""
+
+    text: str
+    bbox: BBox | None = None
+    status: RunStatus
+    """visible: ink where the run is; hidden: a confirmed finding; benign-hidden: allowed by a
+    public rule; unverified: no raster, no position, or the ink check could not decide."""
+    finding_id: str | None = Field(default=None, pattern=r"^f-\d+$")
+
+
+class PageView(_Frozen):
+    """One page as the report shows it: size, a thumbnail of what a person sees, every run."""
+
+    number: int = Field(ge=1)
+    width_pt: float | None = Field(default=None, gt=0)
+    height_pt: float | None = Field(default=None, gt=0)
+    thumbnail: RenderCrop
+    """A JPEG data URI of the rendered page, or none with a reason (no raster, redact, cap)."""
+    runs: tuple[RunView, ...]
+
+
 class Report(_Frozen):
     """The scan result. JSON output is deterministic for the same input and tool version."""
 
-    schema_version: Literal[1] = SCHEMA_VERSION
+    schema_version: Literal[1, 2] = SCHEMA_VERSION
     tool_version: str = Field(min_length=1)
     rule_versions: dict[str, str]
     input_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
@@ -169,6 +195,8 @@ class Report(_Frozen):
     verdict: Verdict
     severity_counts: dict[Severity, int]
     findings: tuple[Finding, ...]
+    pages: tuple[PageView, ...] = ()
+    """Empty in a v1 report and for a document with no pages."""
     parse_failures: tuple[ParseFailure, ...] = ()
     network_used: tuple[str, ...] = ()
     timing_ms: dict[str, float]

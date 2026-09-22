@@ -1,6 +1,6 @@
 # Architecture decision records
 
-Six decisions so far, each in the same shape: Context, Constraints, Options with pros and cons, Decision, Rationale, Consequences (positive, negative), Validation, and dated amendments as the code changes. Each line below is the decision in one breath: chose X over Y because Z.
+Seven decisions so far, each in the same shape: Context, Constraints, Options with pros and cons, Decision, Rationale, Consequences (positive, negative), Validation, and dated amendments as the code changes. Each line below is the decision in one breath: chose X over Y because Z.
 
 | ADR | Chose | Over | Because |
 |-----|-------|------|---------|
@@ -14,3 +14,4 @@ Six decisions so far, each in the same shape: Context, Constraints, Options with
 ## Amendments as built
 
 None yet.
+| [007 The report carries its pages](ADR-007-pages-in-the-report.md) | `pages` in the report: thumbnail, every run with a box and a status | Recomputing the diff from the file, or full-page OCR | The web app never keeps the file, so the report must carry what the diff needs; the ink check already classifies every run |

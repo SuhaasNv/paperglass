@@ -78,9 +78,14 @@ def report(findings: tuple[Finding, ...], parse_failures: tuple[ParseFailure, ..
     )
 
 
-def test_schema_version_is_one() -> None:
-    assert SCHEMA_VERSION == 1
-    assert report(()).schema_version == 1
+def test_schema_version_is_two_and_reads_one() -> None:
+    assert SCHEMA_VERSION == 2
+    assert report(()).schema_version == 2
+    assert report(()).pages == ()
+    old = json.loads(report(()).to_json())
+    old["schema_version"] = 1
+    del old["pages"]
+    assert Report.model_validate(old).schema_version == 1
 
 
 def test_views_are_sorted_and_unique() -> None:
@@ -166,7 +171,7 @@ def test_json_round_trip_is_byte_identical() -> None:
     text = original.to_json()
     assert Report.from_json(text).to_json() == text
     assert text.endswith("\n")
-    assert json.loads(text)["schema_version"] == 1
+    assert json.loads(text)["schema_version"] == 2
 
 
 def test_golden_report_matches() -> None:

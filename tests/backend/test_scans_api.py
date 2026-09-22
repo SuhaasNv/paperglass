@@ -30,7 +30,7 @@ def test_upload_returns_the_report_and_sets_a_session_cookie(client: TestClient)
     assert body["verdict"] == "malicious"
     assert body["file_name"] == "resume.pdf"
     report = body["report"]
-    assert isinstance(report, dict) and report["schema_version"] == 1
+    assert isinstance(report, dict) and report["schema_version"] == 2
     assert "pg_session" in client.cookies
     assert len(str(body["id"])) >= 20
 

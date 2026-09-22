@@ -1,6 +1,6 @@
 # Finding schema
 
-Schema version 1, designed and built 22 Sep 2026 (US-001) in `src/paperglass/report/schema.py`. Any field added, removed or re-typed bumps `SCHEMA_VERSION`, amends this file, regenerates the golden files under `tests/golden/reports/`, re-exports `schemas/report-v1.json` (`uv run python scripts/export_schema.py`) and records the reason in the commit body. Models are frozen pydantic models with `extra="forbid"`; `Report.to_json()` is canonical (sorted keys, two-space indent, trailing newline) so the same input gives the same bytes; a test compares the exported JSON schema with the live one.
+Schema version 2 (22 Sep 2026, US-043: `pages` added; a v2 reader accepts a v1 report, whose pages are empty). Version 1 was designed and built the same day (US-001). Models live in `src/paperglass/models/schema.py`. Any field added, removed or re-typed bumps `SCHEMA_VERSION`, amends this file, regenerates the golden files under `tests/golden/reports/`, re-exports `schemas/report-v<N>.json` (`uv run python scripts/export_schema.py`) and records the reason in the commit body. Models are frozen pydantic models with `extra="forbid"`; `Report.to_json()` is canonical (sorted keys, two-space indent, trailing newline) so the same input gives the same bytes; a test compares the exported JSON schema with the live one.
 
 ## Finding
 
@@ -28,7 +28,7 @@ Schema version 1, designed and built 22 Sep 2026 (US-001) in `src/paperglass/rep
 
 | Field | Meaning |
 |-------|---------|
-| `schema_version` | 1 |
+| `schema_version` | 2 (1 accepted on read) |
 | `tool_version` | `paperglass` version |
 | `rule_versions` | map of technique id to rule version |
 | `input_sha256` | hash of the input bytes |
@@ -43,6 +43,23 @@ Schema version 1, designed and built 22 Sep 2026 (US-001) in `src/paperglass/rep
 | `parse_failures` | list of `ParseFailure` (stage, parser, reason in crash, timeout, memory, cpu, size, pages, zip_ratio, recursion, message); a parser crash is reported, never raised |
 | `network_used` | list of named network features used (empty by default) |
 | `timing_ms` | per stage |
+
+## Pages (v2)
+
+`pages` is one entry per page, in order, so a reader can show what a person sees beside what the model reads without the original file.
+
+| Field | Type | Meaning |
+|-------|------|---------|
+| `number` | int | 1-based page number |
+| `width_pt`, `height_pt` | float or null | page size in PDF points (null for DOCX and text, which have no layout before rendering) |
+| `thumbnail` | data URI or `{ "none_reason": "..." }` | a JPEG of the rendered page at most 720 px wide; absent with a reason under `--redact`, when no raster exists (fast tier for DOCX and text), or beyond the 20-page cap |
+| `runs[]` | list | every extracted run in reading order |
+| `runs[].text` | string | the run's text (shortened to 80 characters under `--redact`) |
+| `runs[].bbox` | BBox or null | the run's box in PDF points, origin bottom-left, as View A returned it |
+| `runs[].status` | `visible`, `hidden`, `benign-hidden`, `unverified` | `hidden`: a confirmed finding covers the run (at least half of its box inside the finding's, or its text inside the finding's text); `benign-hidden`: a benign-hidden finding does; `visible`: the stage 1 ink check found ink at the box; `unverified`: no raster, no position, or an undecided check |
+| `runs[].finding_id` | string or null | the finding the run belongs to |
+
+The engine builds this after promotion (`engine/pageviews.py`) with the profile's ink thresholds, so a run's status uses the same rule as the finding that hid it. The diff in the web app and the HTML report is these runs: the left column in reading order with hidden runs marked, the right the thumbnail with the same runs overlaid at their boxes.
 
 ## Verdict rules (default profile; `paperglass/profiles/default.toml`)
 

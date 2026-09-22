@@ -61,3 +61,15 @@ figcaption{font-size:13px;color:var(--ink2);line-height:1.5}
 @media(min-width:900px){.two{grid-template-columns:1fr 1fr;column-gap:48px}}
 footer{margin-top:56px;border-top:1px solid var(--ink);padding-top:20px;font-size:13px;color:var(--ink2);display:flex;flex-direction:column;gap:8px}
 @media print{body{padding:0}.region{cursor:auto}.ring{display:none!important}h1.file{font-size:48px}.verdict .word{font-size:40px}}
+
+.region.page .ring{width:192px;height:192px;margin:-96px 0 0 -96px}
+.region .hit{position:absolute;display:block;background:rgba(217,230,238,.6);outline:1px solid var(--glass);outline-offset:2px}
+.region .hit.benign-hidden{background:transparent;outline:1px dashed var(--ink2)}
+.region .pagereads{padding:0}
+.region .pagereads .run{position:absolute;overflow:hidden;white-space:nowrap;line-height:1;font-family:"Geist Mono",ui-monospace,monospace;color:var(--ink);font-size:10px}
+.region .pagereads .run.hidden{background:var(--glass2);outline:1px solid var(--glass)}
+.region .pagereads .run.benign-hidden{outline:1px dashed var(--ink2)}
+p.order{margin:8px 0 0;font-family:"Geist Mono",ui-monospace,monospace;font-size:12.5px;line-height:1.8}
+p.order .run.hidden{background:var(--glass2);outline:1px solid var(--glass);outline-offset:2px;text-decoration:none;color:var(--ink)}
+p.order .run.benign-hidden{outline:1px dashed var(--ink2);outline-offset:2px;text-decoration:none;color:var(--ink)}
+p.order .run.unverified{color:var(--ink2)}

@@ -48,6 +48,9 @@ describe('upload', () => {
     await waitFor(() => expect(router.state.location.pathname).toBe('/scans/xyz'))
     expect(await screen.findByTestId('verdict')).toHaveTextContent('MALICIOUS')
     expect(screen.getByTestId('findings').querySelectorAll(':scope > li')).toHaveLength(1)
+    expect(screen.getByTestId('page-1')).toBeInTheDocument()
+    expect(screen.getAllByTestId('hidden-run')).toHaveLength(1)
+    expect(screen.getByTestId('reading-order')).toHaveTextContent('Visible words')
     expect(screen.getAllByText(/paperglass show --page 1 --instruction 9 resume.pdf/).length).toBeGreaterThan(0)
     // The report came back from the mutation; the results page did not fetch it again.
     expect(scans).toHaveBeenCalledTimes(1)
