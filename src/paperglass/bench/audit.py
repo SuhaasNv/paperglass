@@ -103,6 +103,15 @@ def view_a_text(path: str) -> str:
 
 def shortcut_audit(corpus: Corpus, *, texts: dict[str, str] | None = None) -> ShortcutAudit:
     """A TF-IDF logistic regression on View A text, fit on train, scored on test."""
+    train_side = [s for s in corpus.samples if s.split == "train"]
+    test_side = [s for s in corpus.samples if s.split == "test"]
+    if len({s.positive for s in train_side}) < 2 or not test_side:
+        return ShortcutAudit(
+            ran=False,
+            reason="the split leaves no train side with both classes, or no test side; split first",
+            train_samples=len(train_side),
+            test_samples=len(test_side),
+        )
     try:
         from sklearn.feature_extraction.text import TfidfVectorizer  # noqa: PLC0415
         from sklearn.linear_model import LogisticRegression  # noqa: PLC0415
@@ -110,10 +119,13 @@ def shortcut_audit(corpus: Corpus, *, texts: dict[str, str] | None = None) -> Sh
         from sklearn.pipeline import make_pipeline  # noqa: PLC0415
     except ImportError:
         return ShortcutAudit(
-            ran=False, reason="scikit-learn is not installed: pip install 'paperglass[bench]'"
+            ran=False,
+            reason="scikit-learn is not installed: pip install 'paperglass[bench]'",
+            train_samples=len(train_side),
+            test_samples=len(test_side),
         )
     rows: list[TextSample] = []
-    for sample in corpus.samples:
+    for sample in train_side + test_side:
         text = (
             texts[sample.sample_id]
             if texts is not None and sample.sample_id in texts
@@ -122,13 +134,6 @@ def shortcut_audit(corpus: Corpus, *, texts: dict[str, str] | None = None) -> Sh
         rows.append(TextSample(text=text, positive=sample.positive, split=sample.split))
     train = [r for r in rows if r.split == "train"]
     test = [r for r in rows if r.split == "test"]
-    if len({r.positive for r in train}) < 2 or not test:
-        return ShortcutAudit(
-            ran=False,
-            reason="the split leaves no train side with both classes, or no test side; split first",
-            train_samples=len(train),
-            test_samples=len(test),
-        )
     model = make_pipeline(
         TfidfVectorizer(min_df=1, ngram_range=(1, 2)), LogisticRegression(max_iter=1000)
     )
