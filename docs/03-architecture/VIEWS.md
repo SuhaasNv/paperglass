@@ -8,7 +8,7 @@ Would a human reviewer have seen everything the model is about to read? Three vi
 
 ## View A: what extractors return
 
-Positioned text runs: text, bbox, font reference, content-stream offset (PDF) or part and run index (OOXML). The backend is pluggable: pypdfium2 by default; pdfplumber, pypdf and pdfminer.six always available; Docling and OpenDataLoader when importable. The report names the extractor. `paperglass fingerprint` runs stages 0 and 1 per backend and prints which backends return each invisible run, because the victim pipeline's parser may not be ours and 9 to 22 of 25 known gaps depend on the parser.
+Built at US-006 (22 Sep 2026): `paperglass.views.extract` exposes `EXTRACTORS` (pypdfium2 default; pdfplumber, pypdf, pdfminer.six), `available()`, `get()`, and each `Extractor.extract(data, limits=)` runs its parser function from `paperglass.parsers.pdf_text` inside the sandbox and returns a `DocumentText` (pages of `TextRun`: text, bbox in PDF points, font, size, offset) or a `ParseFailure`. pypdfium2 groups characters into runs at line breaks, font changes and wide gaps; pdfplumber returns words; pdfminer.six returns lines; pypdf has no glyph widths, so its bbox is the text-matrix point. Docling and OpenDataLoader are added at US-023 (`fingerprint`). The report names the extractor. `paperglass fingerprint` runs stages 0 and 1 per backend and prints which backends return each invisible run, because the victim pipeline's parser may not be ours and 9 to 22 of 25 known gaps depend on the parser.
 
 ## View B: what a person sees, as a cascade
 

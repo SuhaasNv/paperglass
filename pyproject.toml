@@ -120,6 +120,10 @@ markers = [
 source = ["paperglass"]
 branch = true
 omit = ["*/adapters/cli.py"]
+# Parsers run in sandboxed child processes; measure them too.
+concurrency = ["multiprocessing"]
+parallel = true
+sigterm = true
 
 [tool.coverage.report]
 fail_under = 90

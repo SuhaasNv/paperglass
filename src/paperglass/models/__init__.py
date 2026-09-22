@@ -1,5 +1,6 @@
 """Shared schema models (Finding, Report, CleanResult, Receipt). Importable by every package."""
 
+from paperglass.models.document import DocumentText, PageText, TextRun
 from paperglass.models.schema import (
     PARSE_FAILURE_TECHNIQUE,
     SCHEMA_VERSION,
@@ -29,8 +30,10 @@ __all__ = [
     "SEVERITY_ORDER",
     "BBox",
     "CleanResult",
+    "DocumentText",
     "Finding",
     "FindingStatus",
+    "PageText",
     "ParseFailure",
     "Receipt",
     "RenderCrop",
@@ -38,6 +41,7 @@ __all__ = [
     "Run",
     "Severity",
     "SeverityClass",
+    "TextRun",
     "Tier",
     "Verdict",
     "json_schema",
