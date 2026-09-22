@@ -7,6 +7,7 @@ import sys
 import pytest
 
 from paperglass.ingest import Limits, run_sandboxed
+from paperglass.ingest.pool import SandboxPool
 from tests.unit import sandbox_targets as targets
 
 FAST = Limits(wall_seconds=2.0, cpu_seconds=1, memory_mb=256)
@@ -48,3 +49,31 @@ def test_memory_limit_is_reported() -> None:
     result = run_sandboxed(targets.allocate, (1024,), limits=Limits(memory_mb=128), parser="test")
     assert result.failure is not None
     assert result.failure.reason in {"memory", "crash"}
+
+
+def test_pool_reuses_one_worker_and_survives_a_timeout() -> None:
+    pool = SandboxPool(FAST)
+    try:
+        first = pool.call(targets.add, (1, 2), limits=FAST, parser="test")
+        assert first.value == 3
+        pid = pool._process.pid if pool._process else None  # test peeks
+        second = pool.call(targets.add, (2, 2), limits=FAST, parser="test")
+        assert second.value == 4
+        assert pool._process is not None and pool._process.pid == pid
+        timed_out = pool.call(targets.sleep_forever, limits=Limits(wall_seconds=0.5), parser="test")
+        assert timed_out.failure is not None and timed_out.failure.reason == "timeout"
+        third = pool.call(targets.add, (5, 5), limits=FAST, parser="test")
+        assert third.value == 10
+        assert pool._process is not None and pool._process.pid != pid
+        crashed = pool.call(targets.raise_value_error, limits=FAST, parser="test")
+        assert crashed.failure is not None and crashed.failure.reason == "crash"
+    finally:
+        pool.close()
+
+
+def test_run_sandboxed_without_the_pool(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("PAPERGLASS_SANDBOX_POOL", "0")
+    result = run_sandboxed(targets.add, (4, 5), limits=FAST, parser="test")
+    assert result.value == 9
+    timed_out = run_sandboxed(targets.sleep_forever, limits=Limits(wall_seconds=0.5), parser="test")
+    assert timed_out.failure is not None and timed_out.failure.reason == "timeout"

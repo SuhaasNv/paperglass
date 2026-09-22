@@ -99,6 +99,9 @@ ignore = [
 "src/paperglass/detectors/**" = ["E501"]
 # OOXML boilerplate strings are long by nature.
 "src/paperglass/redkit/minidocx.py" = ["E501"]
+# Console output strings read better unbroken.
+"src/paperglass/adapters/cli.py" = ["E501", "PLR0917"]
+"bench/**" = ["E501", "S101"]
 "scripts/**" = ["S603", "S607"]
 
 [tool.mypy]

@@ -90,6 +90,14 @@ def run_sandboxed(  # noqa: PLR0913  # func, args, kwargs plus three named budge
     func must be importable by name (module level) because the child is spawned, and its
     arguments and return value must be picklable.
     """
+    from paperglass.ingest import pool as _pool  # noqa: PLC0415  # avoids an import cycle
+
+    if _pool.pool_enabled():
+        result = _pool.get_pool(limits).call(
+            func, args, kwargs, limits=limits, parser=parser, stage=stage
+        )
+        return SandboxResult(value=result.value, failure=result.failure)  # type: ignore[arg-type]  # R is func's return
+
     parent, child = _CONTEXT.Pipe(duplex=False)
     process = _CONTEXT.Process(
         target=_child,
