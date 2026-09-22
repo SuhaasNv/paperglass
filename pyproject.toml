@@ -106,7 +106,17 @@ mypy_path = "src"
 files = ["src", "tests", "scripts"]
 
 [[tool.mypy.overrides]]
-module = ["pypdfium2.*", "pikepdf.*", "fontTools.*", "pdfplumber.*", "pdfminer.*", "docx.*", "puremagic.*", "rapidfuzz.*"]
+module = [
+  "pypdfium2.*",
+  "pikepdf.*",
+  "fontTools.*",
+  "pdfplumber.*",
+  "pdfminer.*",
+  "docx.*",
+  "puremagic.*",
+  "rapidfuzz.*",
+  "rapidocr_onnxruntime.*",
+]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
