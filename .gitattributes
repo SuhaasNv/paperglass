@@ -1,0 +1,9 @@
+# Fixtures and golden files must be byte-identical on every platform (their SHA-256 is in the report).
+tests/fixtures/** -text
+tests/fuzz/corpus/** -text
+tests/golden/** text eol=lf
+*.pdf binary
+*.docx binary
+*.png binary
+schemas/*.json text eol=lf
+* text=auto eol=lf
