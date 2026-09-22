@@ -28,9 +28,9 @@ Runs on push to `main` and `dev`, tags `v*`, and pull requests to either. `permi
 
 `BRANCHING.md` rule 5. On a `v*` tag: the tag must equal `pyproject.toml`'s version; `uv build`; publish to PyPI through trusted publishing from the GitHub environment `pypi` (no token in the repository; the owner registers the pending publisher on PyPI once: project `paperglass`, owner `SuhaasNv`, repository `paperglass`, workflow `release.yml`, environment `pypi`); a GitHub release whose body is the `## vX.Y.Z` section of `CHANGELOG.md`, with the wheel and sdist attached.
 
-## Railway (created 22 Sep 2026; deploy planned at US-067)
+## Railway (project created 22 Sep 2026; wiring at US-048, v0.2.0)
 
-One project, `paperglass`, two environments that share nothing: `development` deploys the REST image from `dev` automatically after a green CI; `production` deploys from `main` only, by hand, behind a GitHub environment approval, pinned to a `sha-<commit>` image, with a health gate on `/healthz`. Secrets are set by the owner from the Railway CLI or dashboard, never through the assistant. Rollback is the previous pin and the same deploy job. Cost stays within the free allowance; anything beyond is asked for first.
+One project, `paperglass`, two environments that share nothing, each with its own Postgres and the `backend` and `frontend` services from GHCR images: `development` deploys from `dev` automatically after a green CI; `production` deploys from `main` only, by hand, behind a GitHub environment approval, pinned to a `sha-<commit>` image, with a health gate on `/healthz` and the frontend's runtime config. Secrets are set by the owner from the Railway CLI or dashboard, never through the assistant. Rollback is the previous pin and the same deploy job. Cost stays within the free allowance; anything beyond is asked for first.
 
 ## Observability (planned, US-089)
 

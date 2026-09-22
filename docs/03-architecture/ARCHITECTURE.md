@@ -39,6 +39,20 @@ src/paperglass/
   profiles/      resume.toml, peer_review.toml, rag_ingest.toml, default.toml
 ```
 
+## Web tier (v0.2.0, decided 22 Sep 2026)
+
+```
+backend/            FastAPI + SQLAlchemy 2 + Alembic + PostgreSQL; imports the library through paperglass.engine only
+  app/api/          routers: scans, techniques, health, metrics
+  app/services/     scan service (in-memory scan, report storage, retention), fingerprint service
+  app/models/       Scan (id, session_id, created_at, expires_at, file_name, sha256, verdict, report_json, fingerprint_json)
+  app/repositories/ SQLAlchemy access
+  alembic/          migrations
+frontend/           React 19 + TypeScript strict + Vite + Tailwind + TanStack Query + React Router; one static image served by nginx with runtime config
+```
+
+The backend is an adapter in the layering sense (it sits above `engine`); the frontend talks to it over `/api/v1`. Uploaded bytes are scanned in memory and discarded; the stored report is the `Report` JSON plus the fingerprint when requested; an anonymous signed session cookie scopes the history; reports expire after 7 days. No accounts in v0.2.0.
+
 ## Layering rule (enforced by `tests/unit/test_layering.py`)
 
 `adapters -> engine -> views / detectors -> parsers`. Detectors never import adapters. `engine` never imports `report`. `report` reads models only. Nothing imports a network client except `adapters`, and only behind `allow_network=True`. `models` and `profiles` are shared and importable by every package. The exact allowed edges are the `ALLOWED` table in `tests/unit/test_layering.py`.
@@ -53,7 +67,7 @@ src/paperglass/
 | LlamaIndex | `PaperglassPostprocessor`, `PaperglassReader` | same keys | v0.4.0 | `../11-integrations/LLAMAINDEX.md` |
 | Docling | pipeline step | same keys; Docling also usable as a View A extractor | v0.4.0 | `../11-integrations/DOCLING.md` |
 | MCP | `paperglass-mcp` | `scan_document` (receipt), `read_document` (gated), `clean_document` | v0.4.0 | `../11-integrations/MCP.md` |
-| REST | `paperglass-server` (fastapi) | `/v1/scan`, `/v1/clean`, `/healthz`; error body `{ "error": { "code", "message", "details"? } }` | v0.4.0 | `../11-integrations/REST.md` |
+| REST (web backend) | `backend/` (fastapi) | `/api/v1/scans` (create, read, list, fingerprint, report.html), `/api/v1/techniques`, `/healthz`, `/metrics`; error body `{ "error": { "code", "message", "details"? } }`; API keys for pipelines in v0.4.0 | v0.2.0 | `../11-integrations/REST.md` |
 | GitHub Action | `action.yml` | scans a directory, fails on malicious, uploads SARIF if present | v0.4.0 | `../11-integrations/GITHUB_ACTION.md` |
 | pre-commit | `.pre-commit-hooks.yaml` | fast tier over repository documents | v0.4.0 | `../11-integrations/GITHUB_ACTION.md` |
 

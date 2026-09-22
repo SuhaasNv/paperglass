@@ -1,6 +1,6 @@
 # SCOPE.md: Paperglass
 
-**Decision in one line:** build a document trust scanner whose verdict is a proven discrepancy between what a parser extracts and what a person sees, ship it as five use-case releases over 12 weeks, and publish a benchmark other detectors can run. Cutting is allowed; silence is not. This file is the record and changes the moment scope changes.
+**Decision in one line:** build a document trust scanner whose verdict is a proven discrepancy between what a parser extracts and what a person sees, ship it as a full-stack product (web app, API, library, CLI) in five use-case releases over 12 weeks, and publish a benchmark other detectors can run. Cutting is allowed; silence is not. This file is the record and changes the moment scope changes.
 
 Brief: `docs/00-brief/PROJECT_BRIEF.md` (version 0.2, 22 Sep 2026). Board: Notion "Paperglass", mirrored in `docs/05-planning/ISSUES.md`. Roadmap and cut order: `docs/05-planning/ROADMAP.md`.
 
@@ -15,15 +15,15 @@ The brief (v0.1) had four use cases. On 22 Sep 2026 the owner chose five, so tha
 | Release | Use case | Week | What ships |
 |---------|----------|------|------------|
 | v0.1.0 | UC1 Scan and Verdict (plus E0 Foundation) | 4 | PDF and DOCX; views A, B (cascade), C; possible and confirmed findings with mechanism and reproduce; MUST techniques; JSON report; `paperglass scan`, `fingerprint`, `show`; `--redact`; Python API; quiet PyPI release |
-| v0.2.0 | UC2 Human-Readable Report | 5 | One-file offline HTML report with the word-aligned diff as centrepiece; profiles; the 30-second demo; Show HN |
+| v0.2.0 | UC2 Web app and report | 5 | Full-stack web app: upload, verdict, the word-aligned diff, finding cards with crops, fingerprint tab, history, techniques page; FastAPI backend with PostgreSQL; React frontend; downloadable one-file HTML report; profiles; Railway development and production; the 30-second demo; Show HN |
 | v0.3.0 | UC3 Benchmark and Leaderboard | 6 | Corpus index, benign corpus of at least 5,000 documents, hard-provenance and unseen-generator splits, shortcut audit, `paperglass bench`, baselines, `BENCHMARK.md`, dataset card and DOI, `results/` accepting pull requests, false-positive fixtures with credit |
-| v0.4.0 | UC4 Pipeline Guard and Sanitise | 8 | LangChain, LlamaIndex, Docling adapters; HTML and Markdown; repository docs scan with pre-commit hook and GitHub Action; subtractive `clean()` with fidelity and Policy; MCP receipt gate; hardened Docker REST on Railway with Prometheus and Grafana; ATR ids and scan-target proposal; SARIF if cheap |
+| v0.4.0 | UC4 Pipeline Guard and Sanitise | 8 | LangChain, LlamaIndex, Docling adapters; HTML and Markdown; repository docs scan with pre-commit hook and GitHub Action; subtractive `clean()` with fidelity and Policy; MCP receipt gate; API keys and rate limits on the REST service, hardened image, Prometheus and Grafana; ATR ids and scan-target proposal; SARIF if cheap |
 | v0.5.0 | UC5 Red Kit and Breadth | 10 | Red Kit for PDF and DOCX; PPTX; images and scans; glyph-level arbiter; stable technique ids with disclosure; benchmark v2 |
 | v1.0.0 | E6 Community and Release | 12 | Security review and fuzzing pass, benchmark v1 frozen, docs site, ten good-first-issues, announcements |
 
 ## Stack and architecture (short)
 
-One Python 3.11+ package, `paperglass`, with a sandboxed ingest, three view builders (A extract, B raster and OCR cascade, C structure), a discrepancy engine that promotes View C candidates from possible to confirmed, a report builder (JSON, HTML, SARIF) and adapters (CLI, Python API, LangChain, LlamaIndex, Docling, MCP, REST, GitHub Action). Layering `adapters -> engine -> views / detectors -> parsers` is enforced by a test. Dependencies are MIT, BSD, Apache-2.0 or MPL-2.0 only; PyMuPDF (AGPL) is banned; pypdfium2 renders and extracts. Full architecture: `docs/03-architecture/ARCHITECTURE.md`; the views: `docs/03-architecture/VIEWS.md`.
+A full-stack product. Backend: one Python 3.11+ package, `paperglass`, with a sandboxed ingest, three view builders (A extract, B raster and OCR cascade, C structure), a discrepancy engine that promotes View C candidates from possible to confirmed, a report builder (JSON, HTML, SARIF) and adapters (CLI, Python API, LangChain, LlamaIndex, Docling, MCP, REST, GitHub Action). Layering `adapters -> engine -> views / detectors -> parsers` is enforced by a test. Web tier (v0.2.0): FastAPI + SQLAlchemy 2 + Alembic + PostgreSQL serving `/api/v1/scans`, and a React 19 + TypeScript strict + Vite + Tailwind + TanStack Query frontend, each a Docker image on GHCR, deployed on Railway `development` (from `dev`) and `production` (from `main`) with their own Postgres. Uploaded files are scanned in memory and never stored; reports are stored under an unguessable id for 7 days; no accounts (an anonymous session cookie gives a browser its history); no telemetry. Dependencies are MIT, BSD, Apache-2.0 or MPL-2.0 only; PyMuPDF (AGPL) is banned; pypdfium2 renders and extracts. Full architecture: `docs/03-architecture/ARCHITECTURE.md`; the views: `docs/03-architecture/VIEWS.md`.
 
 ## MUST (v0.1.0 to v1.0.0)
 
@@ -39,8 +39,11 @@ One Python 3.11+ package, `paperglass`, with a sandboxed ingest, three view buil
 | M8 | CLI `scan`, `fingerprint`, `show --object`, exit codes 0, 1, 2, 3; `--redact`; `--tier`; no telemetry | v0.1.0 | UC1 output |
 | M9 | Fast tier at or below 100 ms per page (stages 0 and 1); standard tier p50 at or below 300 ms, p95 at or below 1 s on a 4-core CPU (plus stages 2 and 3) | v0.1.0 measured, v1.0.0 gated | section 11 |
 | M10 | One positive and one negative fixture per technique; detector coverage at or above 90 percent; golden files; fuzz corpus green; layering test | v0.1.0 | section 11 |
-| M11 | HTML report: one file, offline, no external requests, word-aligned diff of what the model reads and what a person sees, thumbnails with overlays, hidden text beside each, plain-language sentence per technique, mechanism per finding, label plus shape per severity, PDF export via the browser | v0.2.0 | UC2 (brief UC4) |
-| M12 | Profiles resume, peer-review, rag-ingest | v0.2.0 | added 22 Sep |
+| M11 | Web app: upload page, results page with the word-aligned diff of what the model reads and what a person sees, finding cards with crops, mechanism and reproduce, fingerprint tab, per-browser history, techniques page from `THREATS.md`, about page; label plus shape per severity; copy says hidden text found, never fraud | v0.2.0 | UC2, decided 22 Sep |
+| M11a | Backend: FastAPI + SQLAlchemy 2 + Alembic + PostgreSQL; `/api/v1/scans` (create from upload, read, fingerprint, HTML report download), `/healthz`, `/metrics`; files scanned in memory and never stored; reports stored 7 days under an unguessable id; anonymous session cookie; standard error body; request ids | v0.2.0 | UC2, decided 22 Sep |
+| M11b | Downloadable one-file offline HTML report with the same diff, overlays and cards; PDF export via the browser | v0.2.0 | UC2 (brief UC4) |
+| M11c | Docker images for backend and frontend on GHCR; Railway development (auto from `dev`) and production (from `main`, approval gate) with their own Postgres; health gate; frontend tests (vitest) and a Playwright journey in CI at 375, 768 and 1280 px | v0.2.0 | decided 22 Sep |
+| M12 | Profiles resume, peer-review, rag-ingest, selectable in the web app and the CLI | v0.2.0 | added 22 Sep |
 | M13 | Unified corpus index (CrackedPDFs, PhantomText, Semantic Integrity canaries, PhantomLint fixtures, Red Kit) with labels, format, source, licence and hash; benign corpus at least 5,000 real documents with accessibility samples | v0.3.0 | UC3 corpus |
 | M14 | Hard-provenance split by base document, unseen-generator split, shortcut audit, per-family reporting, data-injection recall separate from instruction recall | v0.3.0 | UC3 (as amended) |
 | M15 | `paperglass bench` with the two-function adapter (scan, version); precision, recall, F1, per-technique recall, false-positive rate split into verdict-driving and informational, latency, fidelity column | v0.3.0 | UC3 harness |
@@ -49,7 +52,7 @@ One Python 3.11+ package, `paperglass`, with a sandboxed ingest, three view buil
 | M18 | LangChain document transformer, LlamaIndex node postprocessor and reader, Docling step, all with the metadata contract and tests against pinned versions | v0.4.0 | UC4 (brief UC2) |
 | M19 | HTML and Markdown inputs; `paperglass scan ./docs` for repository documents; pre-commit hook; GitHub Action that fails on malicious | v0.4.0 | UC4, added 22 Sep |
 | M20 | Subtractive `clean()` with provenance tags and a fidelity number (at least 99.9 percent benign words retained on the benign corpus); Policy pass, clean, block | v0.4.0 | UC4 sanitise (as amended) |
-| M21 | MCP server with a scan receipt and a read gate; hardened Docker REST (network none, read-only, non-root) on Railway development and production | v0.4.0 | UC4 |
+| M21 | MCP server with a scan receipt and a read gate; API keys and rate limits on the REST service for pipelines; hardened image (network none for the scanner worker, read-only, non-root) | v0.4.0 | UC4 |
 | M21a | Observability: Prometheus metrics from the REST service, Grafana dashboard and alert rules generated from scripts, Prometheus and Grafana as Railway services | v0.4.0 | added 22 Sep |
 | M22 | ATR rule ids on findings where a rule fits; proposal for an ATR document-structure scan target | v0.4.0 | section 4 item 7 (as amended) |
 | M23 | Red Kit generator for PDF and DOCX, seeded and deterministic, matched controls, one file plus a fixture pair adds a technique; benchmark v2 | v0.5.0 | UC5 (brief UC3 Red Kit) |
@@ -73,7 +76,7 @@ One Python 3.11+ package, `paperglass`, with a sandboxed ingest, three view buil
 |---|---------|
 | C1 | Leaderboard Space on Hugging Face with a reviewed submission workflow (after v1.0.0; `results/` pull requests cover v0.3.0 to v1.0.0) |
 | C2 | Deep tier with Florence-2 (MIT) or SmolVLM2 (Apache-2.0) for scans, opt-in, never default |
-| C3 | Drag-and-drop web demo on the Railway REST service |
+| C3 | Accounts and team workspaces on the web app (no accounts in v0.2.0 by decision; API keys for pipelines come in v0.4.0) |
 | C4 | SIEM export (JSON lines) and signed reports (sigstore) |
 | C5 | Steganographic acrostics and microglyph patterns (statistical, research-grade) |
 | C6 | Signed provenance record per scan |
@@ -93,7 +96,7 @@ One Python 3.11+ package, `paperglass`, with a sandboxed ingest, three view buil
 | Multilingual instruction-phrase packs | Phrase lists are DocFirewall's strategy; phrase matching only raises severity here | community, after v1.0.0 |
 | Image Red Kit generators | PDF and DOCX first | after v1.0.0 |
 | A 0 to 100 trust score | A number invites ranking people and contradicts "never decides for a person"; verdict plus severity counts say everything the findings say | removed 22 Sep 2026 |
-| Browser extension | A third platform for one maintainer; the offline HTML report covers the need | not planned |
+| Browser extension | A third platform for one maintainer; the web app and the offline HTML report cover the need | not planned |
 | Trust-score history for repeated submitters | Needs identity and storage; turns a scanner into surveillance of applicants | not planned |
 | Audio and video | Out of scope | not planned |
 
@@ -111,3 +114,5 @@ One Python 3.11+ package, `paperglass`, with a sandboxed ingest, three view buil
 **22 Sep 2026, planning.** Brief v0.1 reviewed against the landscape (verified) and three research groups' method sections. Five use cases adopted; View B made a cascade; findings gained possible and confirmed; score removed; subtractive `clean()` with fidelity; fingerprint, mechanism and reproduce, profiles, MCP receipt gate, repository docs scan, false-positive bounty, glyph arbiter, technique disclosure added; leaderboard Space, Unstructured, Haystack, arXiv report, deep tier, multilingual packs, XLSX, EML, image Red Kit deferred; images moved from MUST to SHOULD. Show HN moves from v0.1.0 (week 4) to v0.2.0 (week 5). No code yet.
 
 **22 Sep 2026, week 1 close.** v0.1.0 code complete on `dev`: PDF and DOCX inputs, 18 techniques with fixture pairs, views A, B (cascade) and C, the engine, the CLI and the API, the sandbox worker, fuzzing, CI. M1 to M10 built (M9 measured on a laptop, gated at v1.0.0); M26 documents current. No scope change. US-019 moved to week 5 alongside the corpus index.
+
+**22 Sep 2026, scope change.** The owner wants Paperglass as a full-stack product from the start, not a library with a static report. UC2 becomes the web app (upload, results with the diff, fingerprint, history, techniques) on a FastAPI + PostgreSQL backend and a React + Vite frontend, deployed on Railway from v0.2.0; the backend that UC4 planned moves forward; UC4 keeps adapters, MCP, API keys and hardening. Decisions: React + Vite (no server rendering needed, one static image); no accounts for now (anonymous session cookie, shareable report links, 7-day retention); files never stored. Stories US-046 to US-049 added; US-037, US-041, US-066, US-067 re-scoped.

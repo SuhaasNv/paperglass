@@ -21,21 +21,21 @@ Acceptance criteria:
 
 Stories: US-000 to US-025, US-030 to US-039 (E0 and UC1).
 
-## UC2 Human-Readable Report (v0.2.0, week 5)
+## UC2 Web app and report (v0.2.0, week 5)
 
-**Background.** Recruiters, journal editors, loan officers and licensing officers are the people who sign. They need to see the trick, not a JSON file, and they must not be handed a number to rank people by.
+**Background.** Recruiters, journal editors, loan officers and licensing officers are the people who sign. They need to see the trick, not a JSON file, and they must not be handed a number to rank people by. Developers evaluating the scanner want to drop a file in a browser before they install anything. Both need the same screen.
 
-*As a reviewer, I want a report that shows me the page, highlights what was hidden, tells me what it said and how it was hidden, so that I can decide with my own eyes.*
+*As a reviewer or a curious developer, I want to upload a document in the browser and see the page, what was hidden, what it said and how it was hidden, so that I can decide with my own eyes and share the result with a link.*
 
 Acceptance criteria:
-- One HTML file, no external requests, opens offline; verdict and severity counts on top; the word-aligned diff of what the model reads against what a person sees as the centrepiece, every unmatched run highlighted and clickable to its crop; page thumbnails with overlays as a tab; the hidden text beside each region; code points shown for invisible Unicode.
-- Plain-language sentence per technique from the single source shared with `THREATS.md`; the mechanism and the reproduce command shown per finding.
-- Every severity uses a label plus a shape; no em dashes, no emoji; copy says "hidden text found", never "fraud" or "cheating"; benign-hidden is never labelled an attack.
-- Profiles resume, peer-review and rag-ingest set thresholds, phrase packs and expected benign-hidden content; the profile is named in the report.
-- PDF export via the browser; opens at 375, 768 and 1280 px without horizontal scroll.
-- The 30-second demo is recorded from the demo documents in `../13-demo/` and Show HN goes out with this release.
+- Backend: FastAPI + SQLAlchemy 2 + Alembic + PostgreSQL. `POST /api/v1/scans` (multipart upload, tier, profile) scans in memory through `paperglass.engine.scan_bytes` and stores the report under an unguessable id; `GET /api/v1/scans/{id}` returns the report; `GET /api/v1/scans/{id}/fingerprint` runs and caches the fingerprint; `GET /api/v1/scans/{id}/report.html` returns the one-file offline HTML report; `GET /api/v1/scans` lists the current browser's scans (anonymous session cookie); `GET /healthz`; `GET /metrics` behind a token (US-089). Files are never written to disk or the database; reports expire after 7 days; standard error body; request id on every log line; size cap; no accounts.
+- Frontend: React 19 + TypeScript strict + Vite + Tailwind + TanStack Query. Screens: upload (drag and drop, tier and profile), results (verdict and severity counts on top; the word-aligned diff of what the model reads against what a person sees as the centrepiece, every unmatched run highlighted and clickable to its crop; finding cards with the plain sentence, mechanism, reproduce command and crop; a pages tab with overlays; a fingerprint tab), history (this browser's scans), techniques (every `THREATS.md` row in plain language), about. Every severity uses a label plus a shape; copy says "hidden text found", never "fraud" or "cheating"; benign-hidden is never labelled an attack; no em dashes, no emoji. Screens are built to the design the owner settles with Fable.
+- Downloadable one-file HTML report: no external requests, opens offline, the same diff and cards, PDF export via the browser.
+- Profiles resume, peer-review and rag-ingest set thresholds, phrase packs and expected benign-hidden content; selectable in the app and the CLI; the profile is named in the report.
+- Delivery: Docker images for backend and frontend on GHCR; Railway `development` (auto from `dev`) and `production` (from `main`, approval gate) each with its own Postgres; health gate; CI adds frontend lint, typecheck, vitest, the Playwright journey at 375, 768 and 1280 px, and the image build.
+- The 30-second demo is recorded in the web app from the demo documents in `../13-demo/` and Show HN goes out with this release.
 
-Stories: US-037, US-040 (if cheap), US-041 to US-045.
+Stories: US-037, US-040 (if cheap), US-041 to US-049.
 
 ## UC3 Benchmark and Leaderboard (v0.3.0, week 6)
 
@@ -66,7 +66,7 @@ Acceptance criteria:
 - HTML and Markdown inputs; `paperglass scan <dir>` checks repository documents (README, SKILL.md, CLAUDE.md, MCP tool descriptions) for invisible Unicode, hidden DOM and comments; pre-commit hook; GitHub Action that fails on malicious; this repository runs it on itself.
 - `clean()` is subtractive: it takes the caller's extractor output, removes only confirmed-invisible runs, keeps structure, tags every run visible-confirmed, benign-hidden, structure-only or removed, and reports words kept, words removed and fidelity; at least 99.9 percent of benign words retained on the benign corpus. Policy pass, clean, block acts on verdict and severity counts; defaults documented.
 - MCP server: `scan_document` returns a receipt (hash, verdict, rule versions, pages verified); `read_document` returns text only for a hash with a clean or benign-hidden receipt; passes the conformance suite.
-- Docker REST with the same JSON contract, the standard error body and request ids, shipped as a hardened image (network none recommended, read-only, non-root), deployed on Railway development (from `dev`) and production (from `main`, approval gate) with a health gate; no latency commitment until after v1.0.0.
+- The REST service (built in UC2) gains API keys and rate limits for pipelines, a hardened image (the scanner worker with network none, read-only, non-root); no latency commitment until after v1.0.0.
 - Observability: `/metrics` in Prometheus format behind a token; Prometheus and Grafana as Railway services and under a local compose profile; dashboard and alert rules generated from scripts.
 - Findings carry ATR rule ids where a phrase-level rule fits; a document-structure scan target is proposed to the ATR registry with Paperglass as reference implementation.
 - SARIF output if the docs-scan Action makes it a two-hour job.
