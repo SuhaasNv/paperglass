@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     session_secret: str = Field(default="dev-only-change-me-dev-only-change-me")
     cors_origins: str = Field(default="http://localhost:5173,http://localhost:3000")
     retention_days: int = Field(default=7, ge=1)
+    purge_interval_minutes: int = Field(default=60, ge=1)
     max_upload_mb: int = Field(default=25, ge=1)
     metrics_token: str | None = None
     log_level: str = "info"

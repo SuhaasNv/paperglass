@@ -26,27 +26,46 @@ OVERLAP = 0.5
 """A run belongs to a finding when this share of its box, at least, lies inside the finding's."""
 
 
+def _area(box: BBox) -> float:
+    return max(0.0, box.x1 - box.x0) * max(0.0, box.y1 - box.y0)
+
+
+def _intersection(a: BBox, b: BBox) -> float:
+    width = min(a.x1, b.x1) - max(a.x0, b.x0)
+    height = min(a.y1, b.y1) - max(a.y0, b.y0)
+    return width * height if width > 0 and height > 0 else 0.0
+
+
 def _overlap(run: BBox, finding: BBox) -> float:
-    width = min(run.x1, finding.x1) - max(run.x0, finding.x0)
-    height = min(run.y1, finding.y1) - max(run.y0, finding.y0)
-    if width <= 0 or height <= 0:
-        return 0.0
-    area = (run.x1 - run.x0) * (run.y1 - run.y0)
-    return (width * height) / area if area > 0 else 0.0
+    """The share of the run's box inside the finding's: the gate."""
+    area = _area(run)
+    return _intersection(run, finding) / area if area > 0 else 0.0
+
+
+def _closeness(run: BBox, finding: BBox) -> float:
+    """Intersection over union: the tie-break, so the finding that fits the run best wins."""
+    union = _area(run) + _area(finding) - _intersection(run, finding)
+    return _intersection(run, finding) / union if union > 0 else 0.0
 
 
 def _finding_for(
     text: str, bbox: BBox | None, page: int, findings: list[Finding]
 ) -> Finding | None:
+    best: Finding | None = None
+    best_overlap = 0.0
+    by_text: Finding | None = None
     for finding in findings:
         if finding.page != page or finding.status is not FindingStatus.CONFIRMED:
             continue
         if bbox is not None and finding.bbox is not None:
-            if _overlap(bbox, finding.bbox) >= OVERLAP:
-                return finding
-        elif text.strip() and text.strip() in finding.extracted_text:
-            return finding
-    return None
+            if _overlap(bbox, finding.bbox) < OVERLAP:
+                continue
+            fit = _closeness(bbox, finding.bbox)
+            if fit > best_overlap:
+                best, best_overlap = finding, fit
+        elif by_text is None and text.strip() and text.strip() in finding.extracted_text:
+            by_text = finding
+    return best or by_text
 
 
 def _status(finding: Finding | None, ink: str | None) -> RunStatus:

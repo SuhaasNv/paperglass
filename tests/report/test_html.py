@@ -57,3 +57,24 @@ def test_report_is_deterministic_and_handles_a_clean_document() -> None:
     html = render_html(clean, file_name="clean.pdf")
     assert "CLEAN" in html and "No findings." in html
     assert "0 hidden runs" in html and 'id="page-1"' in html
+
+
+def test_document_content_and_file_name_are_escaped() -> None:
+    """Report content is attacker-controlled; the file must never carry it as markup."""
+    report = _low_contrast()
+    payload = '"><script>alert(1)</script>'
+    finding = report.findings[0].model_copy(
+        update={"extracted_text": payload, "mechanism": payload, "why_hidden": payload}
+    )
+    poisoned = report.model_copy(update={"findings": (finding, *report.findings[1:])})
+    html = render_html(poisoned, file_name=payload + ".pdf")
+    assert "<script>alert(1)</script>" not in html
+    assert "&lt;script&gt;alert(1)&lt;/script&gt;" in html
+
+
+def test_clean_verdict_uses_the_outlined_circle() -> None:
+    """ACCESSIBILITY.md: clean is an outlined circle, the info shape, never a filled one."""
+    clean = scan_bytes(build([Page(text("Visible", y=700))]), limits=LIMITS, tier=Tier.FAST)
+    html = render_html(clean, file_name="clean.pdf")
+    verdict_block = html.split('<div class="verdict">', 1)[1].split("</div>", 1)[0]
+    assert 'fill="none"' in verdict_block and "<circle" in verdict_block

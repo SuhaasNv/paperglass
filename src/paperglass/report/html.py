@@ -39,7 +39,7 @@ VERDICT_SHAPE: Final[dict[Verdict, str]] = {
     Verdict.MALICIOUS: "critical",
     Verdict.SUSPICIOUS: "medium",
     Verdict.BENIGN_HIDDEN: "benign-hidden",
-    Verdict.CLEAN: "low",
+    Verdict.CLEAN: "info",
 }
 DEFERRED: Final[str] = (
     "semantic injection in visible text, malware and macros (presence flagged, never analysed), "

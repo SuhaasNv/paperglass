@@ -21,7 +21,8 @@ None are required to scan a file. `.env.example` documents every variable; each 
 | `PAPERGLASS_DATABASE_URL` | sqlite file | backend | PostgreSQL in every deployed environment |
 | `PAPERGLASS_SESSION_SECRET` | placeholder | backend | signs the anonymous session cookie; at least 32 characters outside development |
 | `PAPERGLASS_CORS_ORIGINS` | localhost | backend | the frontend origins, comma separated |
-| `PAPERGLASS_RETENTION_DAYS` | 7 | backend | reports older than this are invisible and purged at startup |
+| `PAPERGLASS_RETENTION_DAYS` | 7 | backend | reports older than this are invisible and deleted by the sweep |
+| `PAPERGLASS_PURGE_INTERVAL_MINUTES` | 60 | backend | the retention sweep runs at startup and then on this interval (UC2 review, finding 1) |
 | `PAPERGLASS_MAX_UPLOAD_MB` | 25 | backend | 413 above it |
 | `PAPERGLASS_METRICS_TOKEN` | none | backend (v0.4.0) | metrics endpoint off without it |
 | `PAPERGLASS_LOG_LEVEL` | info | backend | |
@@ -48,7 +49,7 @@ One project (`7954aa45-01bb-43e4-bf5e-ca608f1b3127`), two environments that shar
 | `backend` | this repository, `backend/Dockerfile`, watch `/src/**`, `/backend/**`, `/pyproject.toml`, `/uv.lock`; health `/healthz`; private only | branch `dev` | branch `main` |
 | `frontend` | this repository, root `/frontend`, its Dockerfile; health `/`; the only public service | branch `dev`, https://frontend-development-341b.up.railway.app | branch `main`, https://frontend-production-ae91.up.railway.app |
 
-Both environments wait for the GitHub check suites before deploying ("wait for CI" on every trigger), so a red CI never reaches a server. `production` changes only when `main` does, which is a release pull request. Variables: backend `APP_ENV` (`staging` in development, `production` in production), `PORT=8000`, `PAPERGLASS_DATABASE_URL=${{Postgres.DATABASE_URL}}` (the backend rewrites the scheme for pg8000), `PAPERGLASS_CORS_ORIGINS=https://${{frontend.RAILWAY_PUBLIC_DOMAIN}}`, retention and upload defaults; frontend `PORT=8080`, `BACKEND_URL=http://${{backend.RAILWAY_PRIVATE_DOMAIN}}:8000`. `PAPERGLASS_SESSION_SECRET` is set by the owner in each environment (`railway variable set PAPERGLASS_SESSION_SECRET=$(openssl rand -hex 32) --service backend --environment <name>`); the backend refuses to start without it outside development. Rollback is Railway's redeploy of the previous deployment. Cost stays within the free allowance; anything beyond is asked for first.
+Both environments wait for the GitHub check suites before deploying ("wait for CI" on every trigger), so a red CI never reaches a server. `production` changes only when `main` does, which is a release pull request. Variables: backend `APP_ENV` (`staging` in development, `production` in production), `PORT=8000`, `PAPERGLASS_DATABASE_URL=${{Postgres.DATABASE_URL}}` (the backend rewrites the scheme for pg8000), `PAPERGLASS_CORS_ORIGINS=https://${{frontend.RAILWAY_PUBLIC_DOMAIN}}`, retention and upload defaults; frontend `PORT=8080`, `BACKEND_URL=http://${{backend.RAILWAY_PRIVATE_DOMAIN}}:8000`. `PAPERGLASS_SESSION_SECRET` is set by the owner in each environment (`railway variable set PAPERGLASS_SESSION_SECRET=$(openssl rand -hex 32) --service backend --environment <name>`); the backend refuses to start without it outside development. Rollback is Railway's redeploy of the previous deployment. The backend trusts `X-Forwarded-*` from any address (`--forwarded-allow-ips='*'`), which is fine while nothing reads the client address; US-066 (rate limits) must pin it to Railway's edge first (UC2 review, finding 4). Cost stays within the free allowance; anything beyond is asked for first.
 
 ## Observability (planned, US-089)
 
