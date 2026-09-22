@@ -41,7 +41,10 @@
   "profile": "default",
   "rule_versions": {
     "pdf.active.content": "1",
+    "pdf.actualtext.override": "1",
     "pdf.annotation.hidden": "1",
+    "pdf.font.decoding_fallback": "1",
+    "pdf.font.tounicode_mismatch": "1",
     "pdf.layer.hidden": "1",
     "pdf.metadata.payload": "1",
     "pdf.render.mode": "1",

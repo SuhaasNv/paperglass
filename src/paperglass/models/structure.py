@@ -62,6 +62,11 @@ class PdfFontInfo(_Frozen):
     is_type0: bool = False
     encoding: str | None = None
     object_number: int | None = None
+    to_unicode_map: dict[int, str] = Field(default_factory=dict)
+    """Code to text from the ToUnicode CMap, capped at 512 entries."""
+    differences: dict[int, str] = Field(default_factory=dict)
+    """Code to glyph name from /Encoding /Differences (simple fonts)."""
+    symbolic: bool = False
 
 
 class PdfAnnotation(_Frozen):

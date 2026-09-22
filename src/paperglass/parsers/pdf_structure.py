@@ -231,6 +231,15 @@ def _fonts(page: object) -> tuple[dict[str, PdfFontInfo], dict[str, dict[int, st
         )
         to_unicode = font.get("/ToUnicode")
         encoding = font.get("/Encoding")
+        cmap: dict[int, str] = {}
+        if to_unicode is not None:
+            try:
+                cmap = _parse_to_unicode(to_unicode.read_bytes())
+            except Exception:  # noqa: BLE001  # a broken CMap is a finding for US-014, not a crash
+                cmap = {}
+        flags = 0
+        if descriptor is not None and "/Flags" in descriptor:
+            flags = int(_num(descriptor["/Flags"]))
         fonts[resource] = PdfFontInfo(
             resource=resource,
             base_font=str(font.get("/BaseFont", "")).lstrip("/") or None,
@@ -243,13 +252,31 @@ def _fonts(page: object) -> tuple[dict[str, PdfFontInfo], dict[str, dict[int, st
             if encoding is not None and not _is_dictionary(encoding)
             else None,
             object_number=font.objgen[0] if font.is_indirect else None,
+            to_unicode_map=dict(list(cmap.items())[:512]),
+            differences=_differences(encoding),
+            symbolic=bool(flags & 4) and not bool(flags & 32),
         )
-        if to_unicode is not None:
-            try:
-                cmaps[resource] = _parse_to_unicode(to_unicode.read_bytes())
-            except Exception:  # noqa: BLE001  # a broken CMap is a finding for US-014, not a crash
-                cmaps[resource] = {}
+        if cmap:
+            cmaps[resource] = cmap
     return fonts, cmaps
+
+
+def _differences(encoding: object) -> dict[int, str]:
+    """Code to glyph name from an /Encoding dictionary's /Differences array."""
+    if encoding is None or not _is_dictionary(encoding):
+        return {}
+    array = encoding.get("/Differences")  # type: ignore[attr-defined]
+    if array is None:
+        return {}
+    out: dict[int, str] = {}
+    code = 0
+    for item in array:
+        if _is_number(item):
+            code = int(_num(item))
+        else:
+            out[code] = str(item).lstrip("/")
+            code += 1
+    return out
 
 
 def _parse_to_unicode(data: bytes) -> dict[int, str]:
