@@ -3,7 +3,7 @@
 adapters -> engine -> views / detectors -> parsers
 
 A package may import from itself, from the packages below it, and from the
-shared data packages (report models, profiles). Nothing below adapters may
+shared data packages (models, profiles). Nothing below adapters may
 import a network client.
 """
 
@@ -15,29 +15,24 @@ from pathlib import Path
 SRC = Path(__file__).resolve().parents[2] / "src" / "paperglass"
 
 # Which top-level paperglass packages each package may import from.
+SHARED = frozenset({"models", "profiles"})
 ALLOWED: dict[str, frozenset[str]] = {
-    "adapters": frozenset(
-        {
-            "adapters",
-            "engine",
-            "views",
-            "detectors",
-            "report",
-            "profiles",
-            "ingest",
-            "bench",
-            "redkit",
-        }
-    ),
-    "engine": frozenset({"engine", "views", "detectors", "profiles", "ingest"}),
-    "views": frozenset({"views", "parsers", "ingest", "profiles"}),
-    "detectors": frozenset({"detectors", "views", "parsers", "profiles"}),
-    "parsers": frozenset({"parsers"}),
-    "ingest": frozenset({"ingest", "parsers"}),
-    "report": frozenset({"report", "profiles"}),
-    "bench": frozenset({"bench", "adapters", "engine", "report", "profiles"}),
-    "redkit": frozenset({"redkit"}),
-    "profiles": frozenset({"profiles"}),
+    package: allowed | SHARED
+    for package, allowed in {
+        "adapters": frozenset(
+            {"adapters", "engine", "views", "detectors", "report", "ingest", "bench", "redkit"}
+        ),
+        "engine": frozenset({"engine", "views", "detectors", "ingest"}),
+        "views": frozenset({"views", "parsers", "ingest"}),
+        "detectors": frozenset({"detectors", "views", "parsers"}),
+        "parsers": frozenset({"parsers"}),
+        "ingest": frozenset({"ingest", "parsers"}),
+        "report": frozenset({"report"}),
+        "bench": frozenset({"bench", "adapters", "engine", "report"}),
+        "redkit": frozenset({"redkit"}),
+        "models": frozenset(),
+        "profiles": frozenset(),
+    }.items()
 }
 
 # Modules that talk to the network. Importable only from adapters.

@@ -31,7 +31,8 @@ src/paperglass/
     structure/   View C probes per format
   detectors/     one module per technique id, @technique registration, Finding emission
   engine/        alignment, promotion, severity classes, allowlist constraints, verdict, clean()
-  report/        schema models, JSON, HTML (jinja2), SARIF, explanations
+  models/        the shared schema (Finding, Report, CleanResult, Receipt); importable by every package
+  report/        JSON, HTML (jinja2) and SARIF writers; reads models only
   adapters/      cli, api, langchain, llamaindex, docling, mcp, rest, action
   bench/         corpus index, harness, metrics, baselines
   redkit/        generators
@@ -40,7 +41,7 @@ src/paperglass/
 
 ## Layering rule (enforced by `tests/unit/test_layering.py`)
 
-`adapters -> engine -> views / detectors -> parsers`. Detectors never import adapters. `engine` never imports `report`. `report` reads models only. Nothing imports a network client except `adapters`, and only behind `allow_network=True`. `profiles` and `report/explanations` are data, importable by anyone.
+`adapters -> engine -> views / detectors -> parsers`. Detectors never import adapters. `engine` never imports `report`. `report` reads models only. Nothing imports a network client except `adapters`, and only behind `allow_network=True`. `models` and `profiles` are shared and importable by every package. The exact allowed edges are the `ALLOWED` table in `tests/unit/test_layering.py`.
 
 ## Adapter table
 

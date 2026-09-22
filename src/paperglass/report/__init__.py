@@ -1,47 +1,5 @@
-"""Schema models and the JSON, HTML and SARIF writers. Reads models only."""
+"""The JSON, HTML and SARIF writers. Reads models only.
 
-from paperglass.report.schema import (
-    PARSE_FAILURE_TECHNIQUE,
-    SCHEMA_VERSION,
-    SEVERITY_ORDER,
-    BBox,
-    CleanResult,
-    Finding,
-    FindingStatus,
-    ParseFailure,
-    Receipt,
-    RenderCrop,
-    Report,
-    Run,
-    Severity,
-    SeverityClass,
-    Tier,
-    Verdict,
-    json_schema,
-    severity_counts_of,
-    sha256_of,
-    verdict_of,
-)
-
-__all__ = [
-    "PARSE_FAILURE_TECHNIQUE",
-    "SCHEMA_VERSION",
-    "SEVERITY_ORDER",
-    "BBox",
-    "CleanResult",
-    "Finding",
-    "FindingStatus",
-    "ParseFailure",
-    "Receipt",
-    "RenderCrop",
-    "Report",
-    "Run",
-    "Severity",
-    "SeverityClass",
-    "Tier",
-    "Verdict",
-    "json_schema",
-    "severity_counts_of",
-    "sha256_of",
-    "verdict_of",
-]
+Writers land at US-036 (JSON on the CLI), US-037 (HTML) and US-040 (SARIF). Models live in
+paperglass.models.
+"""
