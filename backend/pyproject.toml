@@ -20,6 +20,10 @@ dependencies = [
   "itsdangerous>=2.2",
 ]
 
+[project.optional-dependencies]
+# The image installs OCR so the standard tier runs in the web app.
+ocr = ["paperglass[ocr]"]
+
 [project.scripts]
 paperglass-backend = "app.main:run"
 

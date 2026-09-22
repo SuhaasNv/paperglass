@@ -1,0 +1,15 @@
+.git
+.venv
+**/node_modules
+**/dist
+**/__pycache__
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
+**/.hypothesis
+frontend
+docs
+tests
+bench
+.github
+*.sqlite3*

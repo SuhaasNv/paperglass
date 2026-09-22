@@ -26,7 +26,7 @@ uv sync --all-extras
 uv run paperglass version
 ```
 
-After the release: `pip install paperglass` gives the fast tier with no binary dependencies; `pip install "paperglass[ocr]"` adds OCR on crops (View B stage 2). Python 3.11 or newer.
+The whole web app: `docker compose up --build`, then http://localhost:8080 (PostgreSQL, the backend and the app; files are scanned in memory and never stored). After the release: `pip install paperglass` gives the fast tier with no binary dependencies; `pip install "paperglass[ocr]"` adds OCR on crops (View B stage 2). Python 3.11 or newer.
 
 ## CLI
 
