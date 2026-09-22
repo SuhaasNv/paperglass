@@ -52,6 +52,38 @@ jobs:
           python-version: ${{ matrix.python }}
       - run: uv sync --frozen --dev
       - run: uv run pytest -q --cov --cov-report=term --cov-report=xml
+
+  backend-postgres:
+    name: Backend on PostgreSQL
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: paperglass
+          POSTGRES_PASSWORD: paperglass
+          POSTGRES_DB: paperglass_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U paperglass -d paperglass_test"
+          --health-interval 5s --health-timeout 3s --health-retries 10
+    env:
+      APP_ENV: test
+      PAPERGLASS_SESSION_SECRET: ci-only-secret-that-is-at-least-32-characters-long
+      PAPERGLASS_DATABASE_URL: postgresql+psycopg://paperglass:paperglass@localhost:5432/paperglass_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv sync --frozen --dev
+      - name: Migrate up and down and up again
+        working-directory: backend
+        run: |
+          uv run alembic upgrade head
+          uv run alembic downgrade base
+          uv run alembic upgrade head
+      - run: uv run pytest -q backend/tests
       - name: Coverage summary
         if: always()
         run: |

@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "paperglass-backend"
+version = "0.2.0.dev0"
+description = "The Paperglass web backend: scans an upload in memory, keeps the report 7 days."
+requires-python = ">=3.11"
+license = "Apache-2.0"
+dependencies = [
+  "paperglass",
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.32",
+  "python-multipart>=0.0.20",
+  "sqlalchemy>=2.0",
+  "alembic>=1.14",
+  "psycopg[binary]>=3.2",
+  "pydantic-settings>=2.6",
+  "itsdangerous>=2.2",
+]
+
+[project.scripts]
+paperglass-backend = "app.main:run"
+
+[tool.uv.sources]
+paperglass = { workspace = true }
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[dependency-groups]
+dev = ["httpx>=0.28", "pytest>=8.3", "pytest-cov>=6.0"]

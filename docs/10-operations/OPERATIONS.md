@@ -2,9 +2,9 @@
 
 Describes what exists. Sections are filled as the stories that create them land; until then they say "planned".
 
-## Local setup (planned, US-000)
+## Local setup
 
-`uv sync` creates the environment with every extra; `uv run paperglass --help`. Python 3.11+. No system packages for the fast tier; `paperglass[ocr]` pulls RapidOCR and onnxruntime wheels.
+`uv sync --all-extras --dev` creates one environment for the library and the backend (a uv workspace); `uv run paperglass --help`. Python 3.11+. No system packages for the fast tier; `paperglass[ocr]` pulls RapidOCR and onnxruntime wheels. Backend (US-046): `docker compose up postgres` (compose file lands with US-048) or any PostgreSQL 16, then in `backend/`: `uv run alembic upgrade head` and `uv run paperglass-backend`, or `uv run uvicorn app.main:app --reload`; with `PAPERGLASS_DATABASE_URL` unset the backend uses a local SQLite file and creates the table itself, which is for local play and tests only. API docs at `/api/docs`.
 
 ## Environment variables
 
@@ -17,12 +17,18 @@ None are required to scan a file. `.env.example` documents every variable; each 
 | `PAPERGLASS_SANDBOX_MEMORY_MB` | 512 | ingest | |
 | `PAPERGLASS_MAX_FILE_MB` | 50 | ingest | |
 | `PAPERGLASS_MAX_PAGES` | 500 | ingest | |
-| `PAPERGLASS_METRICS_TOKEN` | none | REST (v0.4.0) | metrics endpoint off without it |
-| `PAPERGLASS_LOG_LEVEL` | info | REST | |
+| `APP_ENV` | development | backend | anything else refuses the placeholder session secret |
+| `PAPERGLASS_DATABASE_URL` | sqlite file | backend | PostgreSQL in every deployed environment |
+| `PAPERGLASS_SESSION_SECRET` | placeholder | backend | signs the anonymous session cookie; at least 32 characters outside development |
+| `PAPERGLASS_CORS_ORIGINS` | localhost | backend | the frontend origins, comma separated |
+| `PAPERGLASS_RETENTION_DAYS` | 7 | backend | reports older than this are invisible and purged at startup |
+| `PAPERGLASS_MAX_UPLOAD_MB` | 25 | backend | 413 above it |
+| `PAPERGLASS_METRICS_TOKEN` | none | backend (v0.4.0) | metrics endpoint off without it |
+| `PAPERGLASS_LOG_LEVEL` | info | backend | |
 
 ## CI (built at US-004, 22 Sep 2026; `.github/workflows/ci.yml`)
 
-Runs on push to `main` and `dev`, tags `v*`, and pull requests to either. `permissions: contents: read`, `shell: bash` (pipefail), one concurrent run per ref. Jobs: **Lint and types** (ruff check, ruff format, mypy strict, `scripts/check_copy.py`); **Tests** on Linux, macOS and Windows for Python 3.11 and 3.12 (pytest with the coverage gate at 90 percent over the package, switching to detectors and engine at US-008; layering; golden; fuzz corpus from US-021); **Install** (build the wheel, install it into a fresh environment on the three systems, run `paperglass version`); **Secret scan** (gitleaks over the full history, fixtures allowlisted in `.gitleaks.toml`); **Dependency audit** (pip-audit strict on the exported runtime requirements; pip-licenses blocks AGPL and GPL and prints the full table to the summary). Planned additions: Docs scan (v0.4.0), Adapters (one job per extra, v0.4.0), Image (v0.4.0, GHCR, `sha-<commit>` and branch tags, `vX.Y.Z` only on a tag). Required checks on `main` are the five job names above once the first run has produced them.
+Runs on push to `main` and `dev`, tags `v*`, and pull requests to either. `permissions: contents: read`, `shell: bash` (pipefail), one concurrent run per ref. Jobs: **Lint and types** (ruff check, ruff format, mypy strict, `scripts/check_copy.py`); **Tests** on Linux, macOS and Windows for Python 3.11 and 3.12 (pytest with the coverage gate at 90 percent over the package, switching to detectors and engine at US-008; layering; golden; fuzz corpus from US-021); **Backend on PostgreSQL** (a Postgres 16 service, Alembic up, down and up again, the backend tests); **Install** (build the wheel, install it into a fresh environment on the three systems, run `paperglass version`); **Secret scan** (gitleaks over the full history, fixtures allowlisted in `.gitleaks.toml`); **Dependency audit** (pip-audit strict on the exported runtime requirements; pip-licenses blocks AGPL and GPL and prints the full table to the summary). Planned additions: Docs scan (v0.4.0), Adapters (one job per extra, v0.4.0), Image (v0.4.0, GHCR, `sha-<commit>` and branch tags, `vX.Y.Z` only on a tag). Required checks on `main` are the five job names above once the first run has produced them.
 
 ## Release (`.github/workflows/release.yml`, US-039)
 
