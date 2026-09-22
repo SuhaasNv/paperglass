@@ -4,6 +4,10 @@
 
 Brief: `docs/00-brief/PROJECT_BRIEF.md` (version 0.2, 22 Sep 2026). Board: Notion "Paperglass", mirrored in `docs/05-planning/ISSUES.md`. Roadmap and cut order: `docs/05-planning/ROADMAP.md`.
 
+## Route note (22 Sep 2026)
+
+The web app's landing page takes `/` and the scanner lives at `/scan` (decided with the design, US-037). The share link `/scans/:id` is a contract and did not move. The one-file HTML report download and the word-aligned OCR diff (US-043) are still to come; the results page shows each confirmed region under the lens from the report's crops, which is what the report carries today.
+
 ## Why this scope
 
 Three 2026 studies agree: hidden-document injection is in production (1 to 10 percent of resumes), every extractor is fooled by some subset of 25 known gaps, and phrase classifiers miss most of it because more than 90 percent of real injections are hidden data, not instructions. Nothing maintained, packaged, benchmarked and permissively licensed sits on the defence side. The scanner and the benchmark are two halves of one claim: to get past View B an attacker has to make the text visible, which is the one thing the attack cannot afford.

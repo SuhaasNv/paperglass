@@ -1,2 +1,316 @@
-/* Plumbing only. The design pass (docs/04-report-design/DESIGN_DIRECTION.md) sets the tokens, the type and the layout. */
+/*
+ * Paperglass design system: direction 1, "the Lens" (docs/04-report-design/DESIGN_DIRECTION.md).
+ * Paper, ink, grain, glass. Fonts are self-hosted through fontsource; the app makes no external request.
+ */
+@import "@fontsource/instrument-serif/400.css";
+@import "@fontsource/instrument-serif/400-italic.css";
+@import "@fontsource-variable/hanken-grotesk/wght.css";
+@import "@fontsource-variable/geist-mono/wght.css";
 @import "tailwindcss";
+
+@theme {
+  --color-paper: #f3efe6;
+  --color-paper-2: #eae4d6;
+  --color-ink: #17160f;
+  --color-ink-2: #5b5850;
+  --color-ink-3: #a8a395;
+  --color-rule: #cfc9ba;
+  --color-rule-dark: #3a3830;
+  --color-glass: #2f5d7c;
+  --color-glass-2: #d9e6ee;
+  --color-critical: #7a2e1f;
+  --color-high: #9a4a1c;
+  --color-medium: #8a6a1e;
+  --color-low: #4f6a3a;
+  --font-serif: "Instrument Serif", Georgia, serif;
+  --font-sans: "Hanken Grotesk Variable", system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
+  --ease-out-settle: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@layer base {
+  html {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-wrap: pretty;
+  }
+  body {
+    margin: 0;
+    min-height: 100dvh;
+  }
+  h1, h2, h3 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    line-height: 1.02;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+  code, pre, kbd {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  a {
+    color: var(--color-glass);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+  a:hover {
+    color: #1f4257;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-glass);
+    outline-offset: 2px;
+  }
+  button, select, input {
+    font: inherit;
+    color: inherit;
+    border-radius: 0;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  th {
+    text-align: left;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-ink-2);
+    padding: 0 16px 10px 0;
+    border-bottom: 1px solid var(--color-ink);
+  }
+  td {
+    padding: 12px 16px 12px 0;
+    border-bottom: 1px solid var(--color-rule);
+    vertical-align: top;
+    font-size: 15px;
+  }
+}
+
+@utility eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-ink-2);
+}
+@utility readout {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ink-2);
+}
+@utility serif {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+@utility ital {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+}
+@utility btn {
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 26px;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 1px solid var(--color-ink);
+}
+@utility btn-ghost {
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 22px;
+  background: transparent;
+  color: var(--color-ink);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 1px solid var(--color-ink);
+}
+@utility field {
+  height: 46px;
+  padding: 0 12px;
+  background: var(--color-paper);
+  border: 1px solid var(--color-ink);
+  font-size: 15px;
+  width: 100%;
+}
+
+/* Grain: an SVG turbulence filter multiplied over the page at low opacity. */
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 40;
+  opacity: 0.32;
+  mix-blend-mode: multiply;
+  background: #000;
+  filter: url(#grain);
+}
+
+/* Motion. Everything here is off under prefers-reduced-motion; state changes stay instant. */
+.progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 1px;
+  width: 100%;
+  background: var(--color-glass);
+  transform-origin: left;
+  transform: scaleX(var(--progress, 0));
+  z-index: 50;
+}
+[data-reveal] {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .rise {
+    opacity: 0;
+    transform: translateY(12px);
+    animation: rise 0.7s var(--ease-out-settle) forwards;
+  }
+  .d1 { animation-delay: 0.05s; }
+  .d2 { animation-delay: 0.16s; }
+  .d3 { animation-delay: 0.27s; }
+  .d4 { animation-delay: 0.38s; }
+  .d5 { animation-delay: 0.49s; }
+  .d6 { animation-delay: 0.6s; }
+  .rule-draw {
+    transform-origin: left;
+    transform: scaleX(0);
+    animation: draw 0.8s var(--ease-out-settle) 0.1s forwards;
+  }
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.7s var(--ease-out-settle), transform 0.7s var(--ease-out-settle);
+  }
+  [data-reveal="in"] {
+    opacity: 1;
+    transform: none;
+  }
+  [data-reveal="rule"] {
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: transform 0.9s var(--ease-out-settle);
+  }
+  [data-reveal="rule"][data-reveal-in] {
+    transform: scaleX(1);
+  }
+  [data-reveal="settle"] {
+    transform: translateY(28px) rotate(-0.8deg);
+    transition: opacity 0.9s var(--ease-out-settle), transform 1s var(--ease-out-settle);
+  }
+  [data-reveal="numeral"] {
+    opacity: 0.15;
+    transform: none;
+    transition: opacity 0.9s linear;
+  }
+  [data-reveal="numeral"][data-reveal-in],
+  [data-reveal="settle"][data-reveal-in] {
+    opacity: 1;
+    transform: none;
+  }
+  .lift {
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  .lift:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 40px -24px rgba(23, 22, 15, 0.45);
+  }
+  .scanline {
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    height: 1px;
+    background: var(--color-glass);
+    top: 18px;
+    animation: scan 2.6s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+  }
+  .outline-in {
+    animation: outl 0.5s var(--ease-out-settle) 0.9s both;
+  }
+  .fade-swap {
+    transition: opacity 0.15s ease;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scanline {
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    top: 50%;
+    height: 1px;
+    background: var(--color-glass);
+  }
+}
+@keyframes rise { to { opacity: 1; transform: none; } }
+@keyframes draw { to { transform: scaleX(1); } }
+@keyframes scan { from { top: 18px; } to { top: calc(100% - 19px); } }
+@keyframes outl {
+  from { outline-color: transparent; background: transparent; }
+  to { outline-color: var(--color-glass); background: var(--color-glass-2); }
+}
+
+/* The lens: the cursor is hidden only inside a document, where the ring replaces it. */
+.lens-surface {
+  cursor: none;
+  touch-action: pan-y;
+}
+.lens-ring {
+  position: absolute;
+  width: 224px;
+  height: 224px;
+  margin: -112px 0 0 -112px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-glass);
+  box-shadow: 0 0 0 6px rgba(243, 239, 230, 0.75), 0 30px 60px -20px rgba(23, 22, 15, 0.5), inset 0 0 40px rgba(47, 93, 124, 0.08);
+  pointer-events: none;
+}
+.lens-handle {
+  position: absolute;
+  margin: 92px 0 0 92px;
+  width: 96px;
+  height: 2px;
+  background: var(--color-glass);
+  transform: rotate(45deg);
+  transform-origin: left center;
+  pointer-events: none;
+}
+.doc-line {
+  height: 7px;
+  background: var(--color-ink);
+  margin: 8px 0;
+}
+
+@media print {
+  .grain, .progress, header nav, .lens-ring, .lens-handle { display: none !important; }
+  html { background: #fff; }
+}

@@ -48,10 +48,13 @@ backend/            FastAPI + SQLAlchemy 2 + Alembic + PostgreSQL; imports the l
   app/models/       Scan (id, session_id, created_at, expires_at, file_name, sha256, verdict, report_json, fingerprint_json)
   app/repositories/ SQLAlchemy access
   alembic/          migrations
-frontend/           React 19 + TypeScript strict + Vite + Tailwind + TanStack Query + React Router (US-047)
+frontend/           React 19 + TypeScript strict + Vite + Tailwind + TanStack Query + React Router (US-047, screens at US-037)
   src/api/          types mirrored from backend/app/api/schemas.py and schemas/report-v1.json, the fetch client, TanStack hooks
-  src/app/          route table, layout frame, query client
-  src/pages/        upload, results, history, techniques, about: plumbing until the design pass
+  src/app/          route table (/ landing, /scan, /scans/:id, /history, /techniques, /about), layout frame, query client
+  src/components/   Lens (pointer on the document only, clip-path over View A), SeverityMark, BrandMark, Grain, CopyButton
+  src/hooks/        useReveal (scroll-linked reveals), useScrollProgress
+  src/pages/        landing, upload, results, history, techniques, about, not found: built to docs/04-report-design/DESIGN_DIRECTION.md
+  src/index.css     the design tokens, self-hosted fonts (fontsource), motion
   e2e/              Playwright journey at 375, 768 and 1280 px against the real backend
   Dockerfile        static build behind nginx, /api proxied to the backend on the same origin (US-048)
 backend/Dockerfile  library with the ocr extra plus the backend, non-root, migrates then serves

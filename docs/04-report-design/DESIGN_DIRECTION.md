@@ -1,4 +1,17 @@
-# Design direction for the web app (brief for the design pass)
+# Design direction for the web app
+
+Decided 22 Sep 2026: direction 1, "the Lens", chosen by the owner from three researched directions (the Lens, the Bench, the Broadsheet) on the design canvas, after a first pass was judged bland. Built at US-037 in `frontend/`. The record of the decision:
+
+- **Signature**: the magnifying glass is a real object. It exists only while the pointer is over a document (landing specimen, results regions); a 224 px ring with a paper halo follows the cursor and clips View A (the extractor's text) into view at the same place on the page. On touch, a long press opens it. Nowhere else does the cursor change.
+- **Type**: Instrument Serif (display, titles, evidence sentences, verdict; italics for numerals and asides), Hanken Grotesk (interface), Geist Mono (mechanism, reproduce, readouts). Self-hosted through fontsource; all SIL OFL. The scale runs from 132 px (landing headline) to 10 px (readouts); the contrast between the ends is the point. Bodoni Moda was tried and dropped: hairlines went spindly on screen. Fraunces was dropped as an over-used face.
+- **Atmosphere**: warm paper `#F3EFE6` with an SVG grain overlay at 32 percent; one dark ink passage per page at most (landing section ii); rendered pages tilted a degree and overlapping the headline column; no drop shadows except under the lens and a lifted crop.
+- **Structure**: five numbered landing sections with italic roman numerals that darken as they reach mid-view; rules that draw; hairlines, not cards; square corners; 44 px targets.
+- **Routes**: the landing takes `/` and the scanner moved to `/scan`; `/scans/:id` (the share link) did not move.
+- **Motion**: page-load choreography (rule draws, blocks rise in reading order), scroll-linked reveals (IntersectionObserver), a scroll progress hairline, the scanning line on the intake surface, the crop lift, the copy swap; everything off under `prefers-reduced-motion` except the lens, which is a pointer, not an animation.
+
+The original brief follows; where it and the record above differ, the record wins.
+
+---
 
 Written 22 Sep 2026 as input for the owner's design session. It states what the product is, who reads it, and what to avoid. It does not draw the screens; that is the design pass. The one rule that carries into code: nothing in the palette or the type carries meaning that a label plus a shape does not also carry (`ACCESSIBILITY.md`).
 
