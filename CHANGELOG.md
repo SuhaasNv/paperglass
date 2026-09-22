@@ -11,8 +11,9 @@ All notable milestones. One section per weekly close plus in-week milestones. St
 - Fix: the sandbox tests broke on every platform after the backend tests changed the import mode; the backend tests now live in `tests/backend/`.
 - US-044: profiles `resume`, `peer-review` and `rag-ingest`; every threshold and benign-hidden limit now comes from the profile file, none from code; `GET /api/v1/profiles`.
 - US-041: closed; the registry already feeds THREATS.md, the report and the techniques page.
+- US-037 (screens): the web app built to direction 1, "the Lens": landing at `/`, scanner at `/scan`, results with every confirmed region under the glass, history, techniques, about; self-hosted Instrument Serif, Hanken Grotesk and Geist Mono; grain, one signal colour, scroll-linked motion; Playwright checks the lens and sideways scroll at three widths. The design record is in `docs/04-report-design/DESIGN_DIRECTION.md`.
 
-Handover (22 Sep 2026): the web app runs at https://frontend-development-341b.up.railway.app (dev) and https://frontend-production-ae91.up.railway.app (main). What remains in v0.2.0 is the design pass with Fable for the screens (US-037, US-043 presentation; nothing in `frontend/src/pages/` is styled on purpose), then US-042 release (version bump, tag, PyPI) and US-045 demo.
+Handover (22 Sep 2026): the web app runs at https://frontend-development-341b.up.railway.app (dev) and https://frontend-production-ae91.up.railway.app (main). What remains in v0.2.0: the one-file HTML report download (US-037 part two), the word-aligned OCR diff (US-043), then US-042 release (version bump, tag, PyPI) and US-045 demo.
 
 ## v0.1.0 (unreleased): UC1 Scan and Verdict
 

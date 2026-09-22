@@ -6,7 +6,7 @@ Paperglass is an open-source document trust scanner and benchmark for AI pipelin
 
 To get past Paperglass an attacker has to make the text visible, which is the one thing the attack cannot afford.
 
-**Status (22 Sep 2026):** v0.1.0 (UC1 Scan and Verdict) is built on the `dev` branch and waits for its release pull request. PDF and DOCX inputs, 18 techniques, the CLI and the Python API exist and are tested on Linux, macOS and Windows. The web app (v0.2.0: a FastAPI backend and a React shell run at https://frontend-production-ae91.up.railway.app as plumbing; the screens await the design pass), the benchmark (v0.3.0), the adapters (v0.4.0) and the Red Kit (v0.5.0) follow; `SCOPE.md` says what is built and what is not.
+**Status (22 Sep 2026):** v0.1.0 (UC1 Scan and Verdict) is built on the `dev` branch and waits for its release pull request. PDF and DOCX inputs, 18 techniques, the CLI and the Python API exist and are tested on Linux, macOS and Windows. The web app (v0.2.0: a FastAPI backend and the React app at https://frontend-production-ae91.up.railway.app; the screens follow the chosen design, the downloadable HTML report and the OCR word diff are still to come), the benchmark (v0.3.0), the adapters (v0.4.0) and the Red Kit (v0.5.0) follow; `SCOPE.md` says what is built and what is not.
 
 ## The problem
 

@@ -46,6 +46,9 @@ Every runtime dependency, its licence and why it is used. Permissive only: MIT, 
 | @tanstack/react-query | 5.103.2 | MIT | server state |
 | react-router | 8.4.0 | MIT | routes |
 | tailwindcss | 4.3.3 | MIT | styles (build time) |
+| @fontsource/instrument-serif | 5.3.0 | MIT (packaging); the font is SIL OFL 1.1 | display face, self-hosted |
+| @fontsource-variable/hanken-grotesk | 5.3.0 | MIT (packaging); the font is SIL OFL 1.1 | interface face, self-hosted |
+| @fontsource-variable/geist-mono | 5.3.0 | MIT (packaging); the font is SIL OFL 1.1 | mono face, self-hosted |
 
 Frontend development dependencies (Vite, TypeScript, vitest, Playwright, Testing Library, oxlint) are MIT or Apache-2.0 and ship nothing to the browser; CI checks the production tree against a permissive allowlist.
 

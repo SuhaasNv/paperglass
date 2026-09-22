@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react'
+import { cleanup, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
@@ -9,20 +9,23 @@ afterEach(() => {
 })
 
 describe('routes', () => {
-  it('renders the upload form at the root', () => {
+  it('renders the landing at the root and the upload form at /scan', () => {
     renderAt('/')
-    expect(screen.getByRole('heading', { name: 'Scan a document' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Scan' })).toBeDisabled()
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('See exactly what the model reads.')
+    cleanup()
+    renderAt('/scan')
+    expect(screen.getByRole('heading', { name: 'Put a document under the glass.' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Scan document' })).toBeDisabled()
   })
 
   it('renders about without the network', () => {
     renderAt('/about')
-    expect(screen.getByRole('heading', { name: 'About Paperglass' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'A magnifying glass over paper.' })).toBeInTheDocument()
   })
 
   it('renders not found for an unknown path', () => {
     renderAt('/nowhere')
-    expect(screen.getByRole('heading', { name: 'Not found' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'This page is not in the document.' })).toBeInTheDocument()
   })
 })
 
@@ -33,19 +36,19 @@ describe('upload', () => {
     const fetchMock = vi.fn().mockImplementation(fetchWithProfiles(scans))
     vi.stubGlobal('fetch', fetchMock)
     const user = userEvent.setup()
-    const { router } = renderAt('/')
+    const { router } = renderAt('/scan')
 
     const file = new File(['%PDF-1.4'], 'resume.pdf', { type: 'application/pdf' })
-    await user.upload(screen.getByLabelText('File'), file)
-    await user.selectOptions(screen.getByLabelText('Tier'), 'fast')
+    await user.upload(screen.getByLabelText('Choose a file'), file)
+    await user.selectOptions(screen.getByLabelText('Scan tier'), 'fast')
     await screen.findByRole('option', { name: 'resume' })
     await user.selectOptions(screen.getByLabelText('Profile'), 'resume')
-    await user.click(screen.getByRole('button', { name: 'Scan' }))
+    await user.click(screen.getByRole('button', { name: 'Scan document' }))
 
     await waitFor(() => expect(router.state.location.pathname).toBe('/scans/xyz'))
-    expect(await screen.findByTestId('verdict')).toHaveTextContent('malicious')
-    expect(screen.getByTestId('findings').querySelectorAll('li')).toHaveLength(1)
-    expect(screen.getByText(/paperglass show --page 1 --instruction 9 resume.pdf/)).toBeInTheDocument()
+    expect(await screen.findByTestId('verdict')).toHaveTextContent('MALICIOUS')
+    expect(screen.getByTestId('findings').querySelectorAll(':scope > li')).toHaveLength(1)
+    expect(screen.getAllByText(/paperglass show --page 1 --instruction 9 resume.pdf/).length).toBeGreaterThan(0)
     // The report came back from the mutation; the results page did not fetch it again.
     expect(scans).toHaveBeenCalledTimes(1)
     const [, init] = scans.mock.calls[0] as [string, RequestInit]
@@ -64,10 +67,10 @@ describe('upload', () => {
       ),
     )
     const user = userEvent.setup()
-    renderAt('/')
+    renderAt('/scan')
 
-    await user.upload(screen.getByLabelText('File'), new File(['x'], 'big.pdf'))
-    await user.click(screen.getByRole('button', { name: 'Scan' }))
+    await user.upload(screen.getByLabelText('Choose a file'), new File(['x'], 'big.pdf'))
+    await user.click(screen.getByRole('button', { name: 'Scan document' }))
 
     expect(await screen.findByRole('alert')).toHaveTextContent('The file is 30 MB; the limit is 25 MB.')
   })
@@ -114,8 +117,7 @@ describe('results', () => {
     renderAt('/scans/abc123')
 
     await screen.findByTestId('verdict')
-    const section = screen.getByRole('region', { name: 'Fingerprint' })
-    await user.upload(section.querySelector('input[type=file]') as HTMLInputElement, new File(['x'], 'resume.pdf'))
+    await user.upload(screen.getByLabelText('Choose the same file'), new File(['x'], 'resume.pdf'))
     await user.click(screen.getByRole('button', { name: 'Fingerprint' }))
 
     const table = await screen.findByTestId('fingerprint')
@@ -141,7 +143,7 @@ describe('history and techniques', () => {
   it('says so when there is no history', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse({ scans: [] })))
     renderAt('/history')
-    expect(await screen.findByText(/No reports yet/)).toBeInTheDocument()
+    expect(await screen.findByText(/Nothing under the glass yet/)).toBeInTheDocument()
   })
 
   it('groups techniques by format', async () => {
@@ -173,6 +175,6 @@ describe('history and techniques', () => {
 
     expect(await screen.findByTestId('technique-count')).toHaveTextContent('3 techniques')
     const headings = screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent)
-    expect(headings).toEqual(['pdf', 'docx', 'text'])
+    expect(headings).toEqual(['PDF', 'DOCX', 'TEXT'])
   })
 })
