@@ -1,6 +1,6 @@
-# REST service (v0.4.0, US-066, US-067)
+# REST service (the web backend, v0.2.0 US-046; keys and hardening v0.4.0 US-066)
 
-Planned. `paperglass-server` (fastapi): `POST /v1/scan`, `POST /v1/clean`, `GET /healthz`, `GET /metrics` behind `PAPERGLASS_METRICS_TOKEN`. Same JSON contract as the library; error body `{ "error": { "code", "message", "details"? } }` everywhere; request id on every log line; no document content in logs; request size capped; no persistence by default.
+`backend/` (FastAPI + SQLAlchemy 2 + Alembic + PostgreSQL): `POST /api/v1/scans` (multipart upload, tier, profile), `GET /api/v1/scans/{id}`, `GET /api/v1/scans` (the session's list), `GET /api/v1/scans/{id}/fingerprint`, `GET /api/v1/scans/{id}/report.html`, `GET /api/v1/techniques`, `GET /healthz`, `GET /metrics` behind `PAPERGLASS_METRICS_TOKEN`. Same JSON contract as the library; error body `{ "error": { "code", "message", "details"? } }` everywhere; request id on every log line; no document content in logs; request size capped; files scanned in memory and never stored; reports stored 7 days under an unguessable id; anonymous signed session cookie; no accounts. v0.4.0 adds API keys and rate limits for callers without a browser session, and `POST /api/v1/clean`.
 
 Image: `ghcr.io/suhaasnv/paperglass:<tag>`, non-root, read-only filesystem, recommended run `docker run --network none --read-only --tmpfs /tmp ghcr.io/suhaasnv/paperglass:v0.4.0`. This is the recommended deployment for untrusted volume because a subprocess sandbox does not stop a memory-safety exploit in a native parser from reading the host.
 

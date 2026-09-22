@@ -10,10 +10,10 @@ Start: week 1 begins Monday 22 Sep 2026 (planning done the same day). One mainta
 | 2 | 29 Sep to 5 Oct | v0.1.0 | View C and ten PDF techniques, fixtures, fuzz, verdict rules, mechanism fields | US-007 to US-021, US-024 | 16, over budget: the four hardest (US-014, US-015, US-016, US-017) are the first to slip to week 3 |
 | 3 | 6 to 12 Oct | v0.1.0 | View B cascade, discrepancy engine, covered text, font fallbacks, DOCX, fingerprint | US-023, US-030 to US-034, plus week 2 slips | 6 plus slips |
 | 4 | 13 to 19 Oct | v0.1.0 | CLI, instruction hook, redact, quiet PyPI release | US-025, US-036, US-038, US-039 | 4, release week |
-| 5 | 20 to 26 Oct | v0.2.0 | HTML report with the diff, profiles, explanations, demo, Show HN; corpus index and benign corpus start | US-037, US-041 to US-045, US-050, US-051 | 8, release week |
-| 6 | 27 Oct to 2 Nov | v0.3.0 | Harness, splits, baselines, BENCHMARK.md, results/, false-positive fixtures, release and announcement | US-052 to US-059 | 7, release week; the leaderboard Space was already deferred to keep this week honest |
+| 5 | 20 to 26 Oct | v0.2.0 | The web app: backend with Postgres, React shell, results screen with the diff, profiles, techniques page, images and Railway, CI for the frontend and the journey, demo, Show HN | US-037, US-041 to US-049 | 13, release week; the corpus stories US-050 and US-051 move to week 6 |
+| 6 | 27 Oct to 2 Nov | v0.3.0 | Corpus index and benign corpus, harness, splits, baselines, BENCHMARK.md, results/, false-positive fixtures, release and announcement | US-050 to US-059 | 9, release week; the leaderboard Space was already deferred to keep this week honest |
 | 7 | 3 to 9 Nov | v0.4.0 | LangChain, LlamaIndex, Docling, GitHub Action, HTML and Markdown | US-060 to US-063, US-072 | 5 |
-| 8 | 10 to 16 Nov | v0.4.0 | Subtractive clean, MCP gate, REST on Railway with Prometheus and Grafana, docs scan and pre-commit, ATR, SARIF if cheap, release | US-040, US-064 to US-069, US-079, US-089 | 9, release week; US-089's Grafana half is the first to slip to week 9 |
+| 8 | 10 to 16 Nov | v0.4.0 | Subtractive clean, MCP gate, API keys and hardening, production runbook and domains, Prometheus and Grafana, docs scan and pre-commit, ATR, SARIF if cheap, release | US-040, US-064 to US-069, US-079, US-089 | 9, release week; US-089's Grafana half is the first to slip to week 9 |
 | 9 | 17 to 23 Nov | v0.5.0 | PPTX, images and scans, scan hardening | US-035, US-070, US-073 | 3 (glyph arbiter research starts) |
 | 10 | 24 to 30 Nov | v0.5.0 | Red Kit, glyph arbiter, reading order, disclosure ids, benchmark v2, release | US-075, US-077, US-078, US-087, US-088 | 5, release week |
 | 11 | 1 to 7 Dec | v1.0.0 | Security review and fuzzing pass, docs site, benchmark v1 frozen and baselines re-run | US-080 to US-082 | 3 |
@@ -64,7 +64,8 @@ Never cut: the MUST rows in `SCOPE.md` for UC1 and UC3, the fixture pair rule, t
 
 | Risk | Response |
 |------|----------|
-| Week 2 is overloaded | Four techniques pre-marked to slip into week 3; View C (US-007) is the only blocker |
+| Week 2 is overloaded | Four techniques pre-marked to slip into week 3; View C (US-007) is the only blocker (in fact the whole of v0.1.0 landed in week 1) |
+| Week 5 carries the web app (13 stories) | The backend, app shell, images and CI wiring start in week 2, as soon as the design pass for the screens is scheduled; only the designed screens wait |
 | Glyph arbiter harder than planned | Static probes ship informational; arbiter can slip past v1.0.0 without breaking a promise |
 | Corpus permissions (Semantic Integrity by request) | Canaries rebuilt from the paper if no reply by week 3 |
 | Benign corpus download size | Script downloads, never commits; a 500-document subset for CI, the full 5,000 for `BENCHMARK.md` |
