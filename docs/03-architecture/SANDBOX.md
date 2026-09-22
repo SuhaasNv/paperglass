@@ -1,18 +1,18 @@
 # Sandbox
 
-Every parser call runs inside `paperglass.ingest.sandbox`, a context manager that launches the parse in a subprocess with limits and turns any failure into a finding.
+Built at US-003 (22 Sep 2026): `paperglass.ingest` provides `sniff` (type from magic bytes), `guard_size`, `guard_zip`, `guard_pages`, `DepthGuard`, `Limits` (defaults below, `Limits.from_env()` reads `.env.example` variables) and `run_sandboxed(func, args, kwargs, limits=, parser=, stage=)`, which runs a module-level callable in a spawned child process under the limits and returns a `SandboxResult` holding either the value or a `ParseFailure`. Parsers (US-006 onward) are always called through it.
 
 ## Limits (defaults; `.env.example`)
 
 | Limit | Default | Enforced by |
 |-------|---------|-------------|
 | Wall clock per parser call | 5 s | parent process timeout, child killed |
-| CPU time | 5 s | `RLIMIT_CPU` (POSIX); job object on Windows |
-| Memory | 512 MB | `RLIMIT_AS` (POSIX); job object on Windows |
+| CPU time | 5 s | `RLIMIT_CPU` in the child (POSIX); on Windows best effort until a job-object implementation lands (the wall clock still holds) |
+| Memory | 512 MB | `RLIMIT_AS` in the child (Linux reliable; macOS advisory for some allocators; Windows best effort); the wall clock and the size cap are the limits that always hold |
 | File size | 50 MB | checked before launch |
 | Page count | 500 | checked at open; pages beyond the cap are not parsed and the report says so |
-| Zip ratio (OOXML) | 100:1 | entry sizes checked before extraction; no nested archives followed |
-| Recursion (object references, XObjects, nested fields) | 32 | depth counter in the probes |
+| Zip ratio (OOXML) | 100:1, at most 10,000 entries | central directory only, nothing inflated; nested archives refused (`recursion`) |
+| Recursion (object references, XObjects, nested fields) | 32 | `DepthGuard` used per level inside the probes |
 | Network | none | no socket use in parsers; `allow_network` only reaches adapters |
 
 ## Failure is a finding
@@ -28,5 +28,7 @@ PDF JavaScript, open actions, form calculations; Office macros; external referen
 `tests/fuzz/` holds a corpus of malformed PDF, DOCX (and later PPTX, HTML) files plus hypothesis strategies; CI runs it with the limits above and fails on any crash or hang. Adding a crasher: `../06-security/FUZZING.md`.
 
 ## Known limits
+
+Built at US-036: `paperglass.ingest.pool.SandboxPool`, one long-lived spawned worker reused across calls (the parent enforces the wall clock per call; the memory limit is applied at worker start; the worker is killed and respawned on a timeout, a crash or after 200 calls so memory from one document does not linger). `run_sandboxed` routes through it unless `PAPERGLASS_SANDBOX_POOL=0`, which restores one child per call. RLIMIT_CPU is cumulative over a process's life, so the pooled worker relies on the wall clock for CPU; a spinning parser is killed at the wall-clock budget either way. With the pool the fast tier measures 18 ms p50 per one-page document (`BENCHMARK.md`, Speed).
 
 A subprocess with rlimits does not stop a memory-safety exploit in a native parser from reading the host. The recommended deployment for untrusted volume is the REST image with `--network none`, a read-only filesystem and a non-root user (`../11-integrations/REST.md`); the fast tier's dependency list is kept under ten packages; `pip-audit` blocks CI; a library with an unpatched critical CVE is dropped or pinned within 30 days.

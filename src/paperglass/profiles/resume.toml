@@ -1,0 +1,23 @@
+# Resume screening. A resume has no legitimate ActualText, alt text or long properties, and
+# hidden data (skills, titles, the job posting) is the attack even when it gives no order:
+# hidden data is high, an instruction is critical. Everything not stated comes from default.
+
+extends = "default"
+name = "resume"
+version = "1"
+
+[allowlist]
+actual_text_max_chars = 0     # no ligature ActualText in a resume: any override is a finding
+alt_text_max_chars = 100
+properties_max_chars = 100
+
+[severity]
+data = "high"
+instruction_critical_verbs = ["hire", "shortlist", "interview", "advance", "prioritise", "prioritize"]
+
+[phrases]
+instruction = [
+  "top candidate", "best candidate", "ideal candidate", "perfect fit", "strong hire",
+  "shortlist", "move forward", "advance to", "years of experience", "meets all requirements",
+  "job description", "required skills", "must have", "nice to have",
+]

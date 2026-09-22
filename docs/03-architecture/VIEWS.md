@@ -8,9 +8,11 @@ Would a human reviewer have seen everything the model is about to read? Three vi
 
 ## View A: what extractors return
 
-Positioned text runs: text, bbox, font reference, content-stream offset (PDF) or part and run index (OOXML). The backend is pluggable: pypdfium2 by default; pdfplumber, pypdf and pdfminer.six always available; Docling and OpenDataLoader when importable. The report names the extractor. `paperglass fingerprint` runs stages 0 and 1 per backend and prints which backends return each invisible run, because the victim pipeline's parser may not be ours and 9 to 22 of 25 known gaps depend on the parser.
+Built at US-006 (22 Sep 2026): `paperglass.views.extract` exposes `EXTRACTORS` (pypdfium2 default; pdfplumber, pypdf, pdfminer.six), `available()`, `get()`, and each `Extractor.extract(data, limits=)` runs its parser function from `paperglass.parsers.pdf_text` inside the sandbox and returns a `DocumentText` (pages of `TextRun`: text, bbox in PDF points, font, size, offset) or a `ParseFailure`. pypdfium2 groups characters into runs at line breaks, font changes and wide gaps; pdfplumber returns words; pdfminer.six returns lines; pypdf has no glyph widths, so its bbox is the text-matrix point. Docling and OpenDataLoader are added at US-023 (`fingerprint`). The report names the extractor. `paperglass fingerprint` (built at US-023: `engine/fingerprint.py`, `models/fingerprint.py`) scans with the default extractor, then runs every installed extractor for the input type and searches its View A for each confirmed finding's text (exact or a partial ratio at or above 0.8), one row per hidden run and one column per extractor, because the victim pipeline's parser may not be ours and 9 to 22 of 25 known gaps depend on the parser. Docling and OpenDataLoader join at US-062 (they need model downloads, which are network and opt-in).
 
 ## View B: what a person sees, as a cascade
+
+Built at US-030 (22 Sep 2026): `paperglass.views.render` provides `choose_dpi`, `render_document` (pypdfium2 in the sandbox, PNG per page), `ink_check` (stage 1, numpy on the luminance raster: ink fraction against a ring-sampled local background, contrast, variance, classification visible, invisible or uncertain), `crop_data_uri` (evidence crops), and `ocr_crop` plus `agreement` (stage 2, RapidOCR behind the `ocr` extra, rapidfuzz partial ratio). OCR runs in-process on rasters Paperglass produced, never on the input file. Stage 3 (glyph arbiter) is US-087; stage 4 is opt-in.
 
 Render once per page with pypdfium2 at 150 dpi, or 200 dpi when any font on the page is under 6 pt; the dpi is in the report.
 
@@ -23,16 +25,20 @@ Full-page OCR is never in the standard tier; on CPU it costs 0.5 to 2 s a page a
 
 ## View C: structure
 
+Built for PDF at US-007 (22 Sep 2026): `paperglass.views.structure.pdf_structure(data, limits=)` runs `paperglass.parsers.pdf_structure.pikepdf_structure` inside the sandbox and returns a `DocumentStructure`: per page, every text-showing operation as a `PdfTextObject` (instruction index as the mechanism locator, decoded text through ToUnicode when present, font resource, effective size after the text matrix and CTM, render mode, fill colour reduced to a grey level, alpha and blend mode from ExtGState, the clip rectangle from `re W n`, the optional content group in force and whether it is OFF, ActualText from marked content), the font table (`PdfFontInfo`: subtype, ToUnicode, embedded, Type 3, Type 0), the annotations (`PdfAnnotation`: hidden and no-view flags, contents, field values, JavaScript actions), and at document level the OCG names and OFF set, Info and XMP metadata, JavaScript, OpenAction and additional actions, embedded files, encryption. Nothing is executed; fonts are read as dictionaries. Width estimates are 0.5 em per character until View B refines them. Detectors (US-008 onward) read this and emit candidates; the probes decide nothing.
+
 Probes per format emit candidates with a named mechanism and, where possible, a reproduce command:
 
 - PDF: text render mode, fill colour and alpha, ExtGState, clip path, optional content group state, MediaBox and CropBox, `/ActualText`, ToUnicode CMaps and font descriptors (Type 3, CID, missing ToUnicode), annotations and form fields, embedded files, `/JS` and `/OpenAction` (flag and stop), Info and XMP.
-- DOCX: `w:vanish`, run colour and shading, `w:sz`, comments, tracked changes, field codes, headers and footers, alt text, document properties.
+- DOCX (built at US-034, 22 Sep 2026: `parsers/docx_text.py`, `views/structure.docx_structure`, `models/docx.py`): `w:vanish` and `w:specVanish`, run colour against the page or shading colour, `w:sz`, comments, footnotes, endnotes, headers, footers, alt text, core properties, tracked deletions, field codes, `w:background`, a vbaProject part noted and never read. View A is python-docx paragraphs. There is no DOCX raster in v0.1.0, so the DOCX rules are self-proving; a converter for View B is a later story.
 - HTML and Markdown (v0.4.0): display none, visibility hidden, aria-hidden, zero size, off-screen positioning, comments, unused reference definitions; web-font remapping (v0.5.0).
 - PPTX and images (v0.5.0): hidden slides, off-slide shapes, notes, EXIF and XMP.
 
 Self-proving mechanisms need no View B confirmation: render mode 3 with extractable text, an OCG in the default OFF array with text, `w:vanish`. Everything else is a candidate.
 
 ## The discrepancy engine
+
+Built at US-031, US-020 and US-032 (22 Sep 2026): `paperglass.engine.scan_bytes(data, tier=, profile=, extractor=, redact=, limits=)` runs stage 0, renders (fast tier and above), runs every registered detector with the raster on the page context, promotes candidates (`engine/promote.py`: self-proving confirms at stage 0; stage 1 invisible confirms, visible drops, uncertain goes to stage 2 in the standard tier; OCR agreement below the profile threshold confirms, above it drops), classifies severity (`engine/severity.py`: class from the registration, instruction escalation from the profile phrase list, critical when an action verb is named), applies the OCR-layer allowlist for render mode 3, derives the verdict from confirmed findings only, and assembles the `Report` with per-stage timings. Thresholds live in `paperglass/profiles/default.toml` (`engine/profile.py`). `pdf.text.covered` is a stage 1 detector reading the raster. Golden reports per positive fixture live under `tests/golden/reports/` (`scripts/make_goldens.py`).
 
 1. Every View C candidate starts as `possible`.
 2. Stage 1 or 2 evidence (no ink, OCR disagreement) or a self-proving mechanism promotes it to `confirmed`, and the finding gets its crop and its why-hidden sentence.

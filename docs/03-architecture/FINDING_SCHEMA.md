@@ -1,6 +1,6 @@
 # Finding schema
 
-Schema version 1, designed 22 Sep 2026. Any field added, removed or re-typed bumps `schema_version`, amends this file, regenerates the golden files, and records the reason in the commit body. Models are pydantic; the JSON schema is exported to `schemas/report-v1.json` and validated in tests.
+Schema version 1, designed and built 22 Sep 2026 (US-001) in `src/paperglass/report/schema.py`. Any field added, removed or re-typed bumps `SCHEMA_VERSION`, amends this file, regenerates the golden files under `tests/golden/reports/`, re-exports `schemas/report-v1.json` (`uv run python scripts/export_schema.py`) and records the reason in the commit body. Models are frozen pydantic models with `extra="forbid"`; `Report.to_json()` is canonical (sorted keys, two-space indent, trailing newline) so the same input gives the same bytes; a test compares the exported JSON schema with the live one.
 
 ## Finding
 
@@ -14,8 +14,8 @@ Schema version 1, designed 22 Sep 2026. Any field added, removed or re-typed bum
 | `extracted_text` | string | what View A returned for the region (redacted to a length cap when `--redact`) |
 | `render_crop` | data URI or `{ "none": "<reason>" }` | the rendered region; reason when absent (document-level, redacted, fast tier) |
 | `why_hidden` | string | the plain-language sentence from the registry |
-| `mechanism` | string | the exact object or element: "Tr 3 at content stream byte 1214 of page 1 object 12", "w:vanish on run 7 of paragraph 3" |
-| `reproduce` | string | a one-line command: `paperglass show --object 12 file.pdf`, `qpdf --qdf --object-streams=disable file.pdf - | sed -n ...` |
+| `mechanism` | string | the exact object or element: "Tr 3 at instruction 4 of the page 1 content stream (object 4)", "w:vanish on run 7 of paragraph 3" |
+| `reproduce` | string | a one-line command: `paperglass show --page 1 --instruction 4 file.pdf`, `paperglass show --object 12 file.pdf` |
 | `severity` | `info`, `low`, `medium`, `high`, `critical` | after the severity class and profile |
 | `severity_class` | `instruction`, `data`, `benign-hidden`, `structure-only` | the class that produced the severity |
 | `confidence` | float 0 to 1 | per finding |
@@ -40,11 +40,11 @@ Schema version 1, designed 22 Sep 2026. Any field added, removed or re-typed bum
 | `verdict` | `clean`, `benign-hidden`, `suspicious`, `malicious` |
 | `severity_counts` | map of severity to count, confirmed findings only |
 | `findings` | list |
-| `parse_failures` | list of `parse.failure` findings (a parser crash is a finding, never an exception) |
+| `parse_failures` | list of `ParseFailure` (stage, parser, reason in crash, timeout, memory, cpu, size, pages, zip_ratio, recursion, message); a parser crash is reported, never raised |
 | `network_used` | list of named network features used (empty by default) |
 | `timing_ms` | per stage |
 
-## Verdict rules (default profile)
+## Verdict rules (default profile; `paperglass/profiles/default.toml`)
 
 | Condition (confirmed findings only) | Verdict |
 |-------------------------------------|---------|
@@ -52,6 +52,7 @@ Schema version 1, designed 22 Sep 2026. Any field added, removed or re-typed bum
 | any `medium` | `suspicious` |
 | only `benign-hidden` and `info` | `benign-hidden` |
 | none | `clean` |
+| any `parse_failures` and nothing above | `suspicious` (a file the scanner cannot read is a file a person could not review) |
 
 There is no numeric score. A 0 to 100 number invites ranking people and contradicts "never decides an outcome for a person". Policy objects and adapters act on the verdict and the severity counts.
 

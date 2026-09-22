@@ -14,11 +14,14 @@ More than 90 percent of real injections are hidden data, not instructions (UNITE
 
 ## Plug-in interface
 
+Built at US-038 (22 Sep 2026): `paperglass.engine.hints` defines the `SeverityHint` protocol, the built-in `PhraseHint` over the profile's phrase list, entry-point discovery under `paperglass.hints`, and `instruction_score`, which the severity classifier uses (a score at or above 0.5 makes a hidden run an instruction). Every hint that ran is named in the report under `rule_versions` as `hint.<name>`. A broken plug-in is skipped, never a scan failure.
+
 ```python
 class SeverityHint(Protocol):
     name: str
     version: str
-    def score(self, text: str) -> float: ...   # 0 to 1, instruction-likeness
+
+    def score(self, text: str) -> float: ...  # 0 to 1, instruction-likeness
 ```
 
 Registered by entry point `paperglass.hints`. Prompt Guard 2 (Llama 4 Community Licence, gated download) can be wired by the user as such a plug-in; core never imports it. Any plug-in used is named in the report under `rule_versions`.

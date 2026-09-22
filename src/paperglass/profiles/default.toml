@@ -1,0 +1,45 @@
+# Default profile. Thresholds are the ones documented in THREATS.md; profiles for resume,
+# peer-review and rag-ingest (US-044) override entries here. Everything a verdict depends
+# on lives in a file like this one, never in code (docs/03-architecture/FINDING_SCHEMA.md).
+
+name = "default"
+version = "1"
+
+[thresholds]
+contrast = 0.09412          # 24/255: fill within this of the background is invisible
+tiny_pt = 2.0               # effective font size below this is unreadable
+alpha = 0.1                 # fill alpha below this is transparent
+ink_fraction_visible = 0.015
+ink_fraction_invisible = 0.002
+ocr_agreement_hidden = 0.5  # OCR agreement below this confirms a hidden run
+ocr_agreement_benign = 0.8  # OCR agreement above this makes an OCR layer benign-hidden
+
+[allowlist]
+alt_text_max_chars = 300
+actual_text_max_chars = 4
+properties_max_chars = 200
+ocr_layer_min_agreement = 0.8
+
+[severity]
+# Class to default severity; escalation rules in engine/severity.py.
+instruction = "high"
+data = "medium"
+benign-hidden = "info"
+structure-only = "info"
+instruction_critical_verbs = ["rank", "ignore", "disregard", "override", "output", "score", "approve", "recommend", "select"]
+
+[verdict]
+malicious = ["high", "critical"]
+suspicious = ["medium"]
+# Anything confirmed below medium yields benign-hidden when the class is benign-hidden, else clean.
+parse_failure_verdict = "suspicious"
+
+[phrases]
+# Minimal instruction-likeness cues for the severity class; the phrase-pack hook (US-038)
+# replaces this with per-profile packs and the plug-in interface.
+instruction = [
+  "ignore previous", "ignore all previous", "ignore the above", "disregard",
+  "you are", "as an ai", "system prompt", "instruction", "rank this", "rank first",
+  "recommend this", "this candidate", "exceeds every requirement", "highly qualified",
+  "score this", "give a positive", "positive review", "accept this",
+]

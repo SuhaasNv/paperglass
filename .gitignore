@@ -23,6 +23,10 @@ htmlcov/
 .idea/
 .DS_Store
 
+# Local databases
+*.sqlite3
+*.sqlite3-*
+
 # Paperglass outputs
 *.paperglass.json
 report.html
@@ -30,3 +34,6 @@ report.html
 
 # Benchmark corpora are downloaded, never committed (see docs/08-benchmark/CORPUS_INDEX.md)
 bench/corpus/
+
+# coverage data files (parallel mode)
+.coverage.*

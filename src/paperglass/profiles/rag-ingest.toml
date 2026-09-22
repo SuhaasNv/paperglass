@@ -1,0 +1,20 @@
+# Documents entering a retrieval index. Scanned pages carry OCR text layers, which are
+# benign when they say what the page shows; the payloads to watch talk to the assistant
+# that will read the chunk later. Everything not stated comes from default.
+
+extends = "default"
+name = "rag-ingest"
+version = "1"
+
+[allowlist]
+ocr_layer_min_agreement = 0.7 # OCR layers on real scans are noisier than clean text
+
+[severity]
+instruction_critical_verbs = ["respond", "reply", "answer", "tell", "send", "visit", "call"]
+
+[phrases]
+instruction = [
+  "when asked", "if the user asks", "tell the user", "respond with", "reply with",
+  "the assistant", "the chatbot", "always answer", "do not mention", "instead of",
+  "visit", "click", "the following link",
+]

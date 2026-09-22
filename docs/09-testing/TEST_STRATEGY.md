@@ -12,6 +12,6 @@
 | Benchmark | the harness's own logic; a 500-document CI subset of the benign corpus for the false-positive gate | `tests/bench/` | nightly and at release |
 | Performance | fast and standard tier latency on the CI runner (informational) and on a named 4-core CPU (published) | `bench/perf/` | at release |
 
-Gates: `ruff check`, `ruff format --check`, `mypy --strict`, `pytest --cov=paperglass --cov-fail-under=90` (detectors and engine counted; adapters have their own gate), layering, golden, fuzz corpus; all on Linux, macOS and Windows (OCR jobs Linux and macOS until v1.0.0).
+Gates: `ruff check`, `ruff format --check`, `mypy --strict`, `pytest --cov` with `fail_under = 90` (the whole package until the first detector lands at US-008, then detectors and engine; the CLI module is omitted and adapters have their own gate), layering, golden, fuzz corpus; all on Linux, macOS and Windows for Python 3.11 and 3.12 (OCR jobs Linux and macOS until v1.0.0).
 
 Principles: test against real files, not mocked parsers; exhaustive enumeration over sampling for table-driven rules (every technique times every profile); one end-to-end test protects the one promise (scan the demo documents, get the expected verdict) and is not a place for edge cases; a covered line is a line that ran, so the percentage is a floor, not the goal; counts of tests and fixtures are stated exactly in `README.md` and recounted before every release.

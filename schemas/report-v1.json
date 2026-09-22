@@ -1,0 +1,427 @@
+{
+  "$defs": {
+    "BBox": {
+      "additionalProperties": false,
+      "description": "A region on a page in PDF points, origin bottom-left, x0 <= x1 and y0 <= y1.",
+      "properties": {
+        "x0": {
+          "title": "X0",
+          "type": "number"
+        },
+        "x1": {
+          "title": "X1",
+          "type": "number"
+        },
+        "y0": {
+          "title": "Y0",
+          "type": "number"
+        },
+        "y1": {
+          "title": "Y1",
+          "type": "number"
+        }
+      },
+      "required": [
+        "x0",
+        "y0",
+        "x1",
+        "y1"
+      ],
+      "title": "BBox",
+      "type": "object"
+    },
+    "Finding": {
+      "additionalProperties": false,
+      "description": "One thing the model would read that a person would not see, with its evidence.",
+      "properties": {
+        "atr_rule": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Atr Rule"
+        },
+        "bbox": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BBox"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "extracted_text": {
+          "title": "Extracted Text",
+          "type": "string"
+        },
+        "extractor": {
+          "minLength": 1,
+          "title": "Extractor",
+          "type": "string"
+        },
+        "id": {
+          "pattern": "^f-\\d+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "mechanism": {
+          "minLength": 1,
+          "title": "Mechanism",
+          "type": "string"
+        },
+        "page": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page"
+        },
+        "render_crop": {
+          "$ref": "#/$defs/RenderCrop"
+        },
+        "reproduce": {
+          "minLength": 1,
+          "title": "Reproduce",
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "severity_class": {
+          "$ref": "#/$defs/SeverityClass"
+        },
+        "stage": {
+          "maximum": 4,
+          "minimum": 0,
+          "title": "Stage",
+          "type": "integer"
+        },
+        "status": {
+          "$ref": "#/$defs/FindingStatus"
+        },
+        "technique_id": {
+          "pattern": "^[a-z]+(\\.[a-z_0-9]+)+$",
+          "title": "Technique Id",
+          "type": "string"
+        },
+        "views": {
+          "items": {
+            "enum": [
+              "A",
+              "B",
+              "C"
+            ],
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Views",
+          "type": "array"
+        },
+        "why_hidden": {
+          "minLength": 1,
+          "title": "Why Hidden",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "technique_id",
+        "status",
+        "extracted_text",
+        "render_crop",
+        "why_hidden",
+        "mechanism",
+        "reproduce",
+        "severity",
+        "severity_class",
+        "confidence",
+        "views",
+        "stage",
+        "extractor"
+      ],
+      "title": "Finding",
+      "type": "object"
+    },
+    "FindingStatus": {
+      "description": "A View C candidate is possible until View B or a self-proving mechanism confirms it.",
+      "enum": [
+        "possible",
+        "confirmed"
+      ],
+      "title": "FindingStatus",
+      "type": "string"
+    },
+    "ParseFailure": {
+      "additionalProperties": false,
+      "description": "A parser crash, timeout or limit hit. Reported, never raised (SANDBOX.md).",
+      "properties": {
+        "message": {
+          "default": "",
+          "title": "Message",
+          "type": "string"
+        },
+        "parser": {
+          "minLength": 1,
+          "title": "Parser",
+          "type": "string"
+        },
+        "reason": {
+          "enum": [
+            "crash",
+            "timeout",
+            "memory",
+            "cpu",
+            "size",
+            "pages",
+            "zip_ratio",
+            "recursion"
+          ],
+          "title": "Reason",
+          "type": "string"
+        },
+        "stage": {
+          "maximum": 4,
+          "minimum": 0,
+          "title": "Stage",
+          "type": "integer"
+        },
+        "technique_id": {
+          "const": "parse.failure",
+          "default": "parse.failure",
+          "title": "Technique Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "stage",
+        "parser",
+        "reason"
+      ],
+      "title": "ParseFailure",
+      "type": "object"
+    },
+    "RenderCrop": {
+      "additionalProperties": false,
+      "description": "The rendered region as a PNG data URI, or a reason why there is none.",
+      "properties": {
+        "data_uri": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Data Uri"
+        },
+        "none_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "None Reason"
+        }
+      },
+      "title": "RenderCrop",
+      "type": "object"
+    },
+    "Severity": {
+      "description": "Severity of a finding after the severity class and the profile have applied.",
+      "enum": [
+        "info",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "title": "Severity",
+      "type": "string"
+    },
+    "SeverityClass": {
+      "description": "Why a finding has the severity it has (docs/03-architecture/FINDING_SCHEMA.md).",
+      "enum": [
+        "instruction",
+        "data",
+        "benign-hidden",
+        "structure-only"
+      ],
+      "title": "SeverityClass",
+      "type": "string"
+    },
+    "Tier": {
+      "description": "Which cascade stages ran (docs/03-architecture/VIEWS.md).",
+      "enum": [
+        "fast",
+        "standard",
+        "deep"
+      ],
+      "title": "Tier",
+      "type": "string"
+    },
+    "Verdict": {
+      "description": "The four verdicts. There is no numeric score (ADR-004).",
+      "enum": [
+        "clean",
+        "benign-hidden",
+        "suspicious",
+        "malicious"
+      ],
+      "title": "Verdict",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "The scan result. JSON output is deterministic for the same input and tool version.",
+  "properties": {
+    "dpi": {
+      "anyOf": [
+        {
+          "minimum": 1,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Dpi"
+    },
+    "extractor": {
+      "minLength": 1,
+      "title": "Extractor",
+      "type": "string"
+    },
+    "findings": {
+      "items": {
+        "$ref": "#/$defs/Finding"
+      },
+      "title": "Findings",
+      "type": "array"
+    },
+    "input_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Input Sha256",
+      "type": "string"
+    },
+    "input_type": {
+      "minLength": 1,
+      "title": "Input Type",
+      "type": "string"
+    },
+    "network_used": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Network Used",
+      "type": "array"
+    },
+    "page_count": {
+      "minimum": 0,
+      "title": "Page Count",
+      "type": "integer"
+    },
+    "pages_render_verified": {
+      "minimum": 0,
+      "title": "Pages Render Verified",
+      "type": "integer"
+    },
+    "parse_failures": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/ParseFailure"
+      },
+      "title": "Parse Failures",
+      "type": "array"
+    },
+    "profile": {
+      "minLength": 1,
+      "title": "Profile",
+      "type": "string"
+    },
+    "rule_versions": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Rule Versions",
+      "type": "object"
+    },
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "severity_counts": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "propertyNames": {
+        "$ref": "#/$defs/Severity"
+      },
+      "title": "Severity Counts",
+      "type": "object"
+    },
+    "tier": {
+      "$ref": "#/$defs/Tier"
+    },
+    "timing_ms": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "title": "Timing Ms",
+      "type": "object"
+    },
+    "tool_version": {
+      "minLength": 1,
+      "title": "Tool Version",
+      "type": "string"
+    },
+    "verdict": {
+      "$ref": "#/$defs/Verdict"
+    }
+  },
+  "required": [
+    "tool_version",
+    "rule_versions",
+    "input_sha256",
+    "input_type",
+    "extractor",
+    "tier",
+    "profile",
+    "page_count",
+    "pages_render_verified",
+    "verdict",
+    "severity_counts",
+    "findings",
+    "timing_ms"
+  ],
+  "title": "Report",
+  "type": "object"
+}

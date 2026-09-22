@@ -1,6 +1,6 @@
 # Architecture
 
-One Python package, `paperglass`, with a pipeline of pure detectors behind one adapter surface. Status: designed 22 Sep 2026; nothing built. The package tree below is the target for US-000 and is corrected as built.
+One Python package, `paperglass`, with a pipeline of pure detectors behind one adapter surface. Status: skeleton built at US-000 (22 Sep 2026); the pipeline itself lands story by story and this file is amended as each piece exists.
 
 ## Pipeline
 
@@ -19,7 +19,7 @@ input (path | bytes | stream)
 
 Tiers: fast = stages 0 and 1; standard = plus 2 and 3; deep = plus 4. Full detail in `VIEWS.md`.
 
-## Packages (target)
+## Packages (as built at US-000, 22 Sep 2026; modules fill in per story)
 
 ```
 src/paperglass/
@@ -31,16 +31,38 @@ src/paperglass/
     structure/   View C probes per format
   detectors/     one module per technique id, @technique registration, Finding emission
   engine/        alignment, promotion, severity classes, allowlist constraints, verdict, clean()
-  report/        schema models, JSON, HTML (jinja2), SARIF, explanations
+  models/        the shared schema (Finding, Report, CleanResult, Receipt); importable by every package
+  report/        JSON, HTML (jinja2) and SARIF writers; reads models only
   adapters/      cli, api, langchain, llamaindex, docling, mcp, rest, action
   bench/         corpus index, harness, metrics, baselines
   redkit/        generators
   profiles/      resume.toml, peer_review.toml, rag_ingest.toml, default.toml
 ```
 
+## Web tier (v0.2.0, decided 22 Sep 2026; backend built at US-046 the same day)
+
+```
+backend/            FastAPI + SQLAlchemy 2 + Alembic + PostgreSQL; imports the library through paperglass.engine only
+  app/api/          routers: scans, techniques, health, metrics
+  app/services/     scan service (in-memory scan, report storage, retention), fingerprint service
+  app/models/       Scan (id, session_id, created_at, expires_at, file_name, sha256, verdict, report_json, fingerprint_json)
+  app/repositories/ SQLAlchemy access
+  alembic/          migrations
+frontend/           React 19 + TypeScript strict + Vite + Tailwind + TanStack Query + React Router (US-047)
+  src/api/          types mirrored from backend/app/api/schemas.py and schemas/report-v1.json, the fetch client, TanStack hooks
+  src/app/          route table, layout frame, query client
+  src/pages/        upload, results, history, techniques, about: plumbing until the design pass
+  e2e/              Playwright journey at 375, 768 and 1280 px against the real backend
+  Dockerfile        static build behind nginx, /api proxied to the backend on the same origin (US-048)
+backend/Dockerfile  library with the ocr extra plus the backend, non-root, migrates then serves
+compose.yaml        the local stack; .github/workflows/images.yml publishes both images to GHCR
+```
+
+The backend is an adapter in the layering sense (it sits above `engine`); the frontend talks to it over `/api/v1`. Uploaded bytes are scanned in memory and discarded; the stored report is the `Report` JSON plus the fingerprint when requested; an anonymous signed session cookie scopes the history; reports expire after 7 days. No accounts in v0.2.0.
+
 ## Layering rule (enforced by `tests/unit/test_layering.py`)
 
-`adapters -> engine -> views / detectors -> parsers`. Detectors never import adapters. `engine` never imports `report`. `report` reads models only. Nothing imports a network client except `adapters`, and only behind `allow_network=True`. `profiles` and `report/explanations` are data, importable by anyone.
+`adapters -> engine -> views / detectors -> parsers`. Detectors never import adapters. `engine` never imports `report`. `report` reads models only. Nothing imports a network client except `adapters`, and only behind `allow_network=True`. `models` and `profiles` (the TOML files and their models; detectors read thresholds from the profile on the page context) are shared and importable by every package. The exact allowed edges are the `ALLOWED` table in `tests/unit/test_layering.py`.
 
 ## Adapter table
 
@@ -52,7 +74,7 @@ src/paperglass/
 | LlamaIndex | `PaperglassPostprocessor`, `PaperglassReader` | same keys | v0.4.0 | `../11-integrations/LLAMAINDEX.md` |
 | Docling | pipeline step | same keys; Docling also usable as a View A extractor | v0.4.0 | `../11-integrations/DOCLING.md` |
 | MCP | `paperglass-mcp` | `scan_document` (receipt), `read_document` (gated), `clean_document` | v0.4.0 | `../11-integrations/MCP.md` |
-| REST | `paperglass-server` (fastapi) | `/v1/scan`, `/v1/clean`, `/healthz`; error body `{ "error": { "code", "message", "details"? } }` | v0.4.0 | `../11-integrations/REST.md` |
+| REST (web backend) | `backend/` (fastapi) | `/api/v1/scans` (create, read, list, fingerprint, report.html), `/api/v1/techniques`, `/healthz`, `/metrics`; error body `{ "error": { "code", "message", "details"? } }`; API keys for pipelines in v0.4.0 | v0.2.0 | `../11-integrations/REST.md` |
 | GitHub Action | `action.yml` | scans a directory, fails on malicious, uploads SARIF if present | v0.4.0 | `../11-integrations/GITHUB_ACTION.md` |
 | pre-commit | `.pre-commit-hooks.yaml` | fast tier over repository documents | v0.4.0 | `../11-integrations/GITHUB_ACTION.md` |
 

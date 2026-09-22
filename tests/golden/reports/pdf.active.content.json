@@ -1,0 +1,70 @@
+{
+  "dpi": 150,
+  "extractor": "pypdfium2",
+  "findings": [
+    {
+      "atr_rule": null,
+      "bbox": null,
+      "confidence": 1.0,
+      "extracted_text": "",
+      "extractor": "pypdfium2",
+      "id": "f-1",
+      "mechanism": "document carries JavaScript, OpenAction; not executed",
+      "page": null,
+      "render_crop": {
+        "data_uri": null,
+        "none_reason": "no raster for this candidate"
+      },
+      "reproduce": "paperglass show --actions FILE",
+      "severity": "info",
+      "severity_class": "structure-only",
+      "stage": 0,
+      "status": "confirmed",
+      "technique_id": "pdf.active.content",
+      "views": [
+        "C"
+      ],
+      "why_hidden": "The file carries JavaScript or an open action; Paperglass never runs it"
+    }
+  ],
+  "input_sha256": "184cb063af1cb3f53131cfb1e3fdf1b284019f1fb4e47b03edd38a33e880ad77",
+  "input_type": "pdf",
+  "network_used": [],
+  "page_count": 1,
+  "pages_render_verified": 1,
+  "parse_failures": [],
+  "profile": "default",
+  "rule_versions": {
+    "docx.part.hidden": "1",
+    "docx.run.color": "1",
+    "docx.run.tiny": "1",
+    "docx.run.vanish": "1",
+    "hint.phrases": "1",
+    "pdf.active.content": "1",
+    "pdf.actualtext.override": "1",
+    "pdf.annotation.hidden": "1",
+    "pdf.font.decoding_fallback": "1",
+    "pdf.font.tounicode_mismatch": "1",
+    "pdf.layer.hidden": "1",
+    "pdf.metadata.payload": "1",
+    "pdf.render.mode": "1",
+    "pdf.text.covered": "1",
+    "pdf.text.low_contrast": "1",
+    "pdf.text.offpage": "1",
+    "pdf.text.opacity": "1",
+    "pdf.text.tiny": "1",
+    "text.unicode.invisible": "1"
+  },
+  "schema_version": 1,
+  "severity_counts": {
+    "critical": 0,
+    "high": 0,
+    "info": 1,
+    "low": 0,
+    "medium": 0
+  },
+  "tier": "fast",
+  "timing_ms": {},
+  "tool_version": "<version>",
+  "verdict": "clean"
+}

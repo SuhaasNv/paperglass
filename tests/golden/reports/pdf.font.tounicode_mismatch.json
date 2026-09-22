@@ -1,0 +1,76 @@
+{
+  "dpi": 150,
+  "extractor": "pypdfium2",
+  "findings": [
+    {
+      "atr_rule": null,
+      "bbox": {
+        "x0": 72,
+        "x1": 108,
+        "y0": 600,
+        "y1": 612
+      },
+      "confidence": 0.92,
+      "extracted_text": "Rustlg",
+      "extractor": "pypdfium2",
+      "id": "f-1",
+      "mechanism": "font /F2 (Helvetica, object 6): 6 ToUnicode entries disagree with the encoding: code 0x50 draws 'P' but declares 'R'; code 0x68 draws 'h' but declares 't'; code 0x6e draws 'n' but declares 'g'; code 0x6f draws 'o' but declares 'l'",
+      "page": 1,
+      "render_crop": {
+        "data_uri": "<png True>",
+        "none_reason": null
+      },
+      "reproduce": "paperglass show --page 1 --font F2 FILE",
+      "severity": "info",
+      "severity_class": "structure-only",
+      "stage": 1,
+      "status": "possible",
+      "technique_id": "pdf.font.tounicode_mismatch",
+      "views": [
+        "B",
+        "C"
+      ],
+      "why_hidden": "The font tells the model different letters than it draws"
+    }
+  ],
+  "input_sha256": "0c7f9642acc67eefb113bb77d43c50de715e03842417069782a6ef5e696d824e",
+  "input_type": "pdf",
+  "network_used": [],
+  "page_count": 1,
+  "pages_render_verified": 1,
+  "parse_failures": [],
+  "profile": "default",
+  "rule_versions": {
+    "docx.part.hidden": "1",
+    "docx.run.color": "1",
+    "docx.run.tiny": "1",
+    "docx.run.vanish": "1",
+    "hint.phrases": "1",
+    "pdf.active.content": "1",
+    "pdf.actualtext.override": "1",
+    "pdf.annotation.hidden": "1",
+    "pdf.font.decoding_fallback": "1",
+    "pdf.font.tounicode_mismatch": "1",
+    "pdf.layer.hidden": "1",
+    "pdf.metadata.payload": "1",
+    "pdf.render.mode": "1",
+    "pdf.text.covered": "1",
+    "pdf.text.low_contrast": "1",
+    "pdf.text.offpage": "1",
+    "pdf.text.opacity": "1",
+    "pdf.text.tiny": "1",
+    "text.unicode.invisible": "1"
+  },
+  "schema_version": 1,
+  "severity_counts": {
+    "critical": 0,
+    "high": 0,
+    "info": 0,
+    "low": 0,
+    "medium": 0
+  },
+  "tier": "fast",
+  "timing_ms": {},
+  "tool_version": "<version>",
+  "verdict": "clean"
+}
