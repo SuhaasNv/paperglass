@@ -1,10 +1,20 @@
 """One module per technique id, registered with @technique, emitting Candidates only.
 
 Importing this package imports every detector module so the registry is complete.
-Modules are added here as their stories land (docs/05-planning/ISSUES.md).
 """
 
 from paperglass.detectors.base import Candidate, Detector
+from paperglass.detectors.pdf import (  # noqa: F401  # registration side effects
+    active_content,
+    annotation_hidden,
+    hidden_layer,
+    low_contrast,
+    metadata_payload,
+    offpage,
+    opacity,
+    render_mode,
+    tiny,
+)
 from paperglass.detectors.registry import (
     REGISTRY,
     SeverityDefault,
@@ -12,6 +22,7 @@ from paperglass.detectors.registry import (
     TechniqueSpec,
     technique,
 )
+from paperglass.detectors.text import unicode_invisible  # noqa: F401
 
 __all__ = [
     "REGISTRY",

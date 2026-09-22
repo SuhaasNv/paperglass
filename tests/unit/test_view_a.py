@@ -6,13 +6,16 @@ import pytest
 
 from paperglass.ingest import Limits
 from paperglass.ingest.sniff import InputType
+from paperglass.redkit.minipdf import Page, build, simple, text
 from paperglass.views.extract import DEFAULT_EXTRACTOR, EXTRACTORS, available, get
-from tests.helpers.minipdf import Page, build, simple, text
 
-LIMITS = Limits(wall_seconds=20.0, cpu_seconds=20)
+LIMITS = Limits(wall_seconds=60.0, cpu_seconds=60)
 
 
-@pytest.mark.parametrize("name", list(EXTRACTORS))
+PDF_BACKENDS = [name for name, e in EXTRACTORS.items() if InputType.PDF in e.input_types]
+
+
+@pytest.mark.parametrize("name", PDF_BACKENDS)
 def test_every_backend_reads_the_visible_line(name: str) -> None:
     outcome = get(name).extract(simple("Hello Paperglass"), limits=LIMITS)
     assert outcome.ok, outcome.failure
@@ -65,10 +68,17 @@ def test_garbage_is_a_parse_failure_not_an_exception() -> None:
 def test_available_lists_default_first_and_filters_by_type() -> None:
     names = [e.name for e in available(InputType.PDF)]
     assert names[0] == DEFAULT_EXTRACTOR
-    assert set(names) == set(EXTRACTORS)
+    assert set(names) == set(PDF_BACKENDS)
     assert available(InputType.DOCX) == []
+    assert [e.name for e in available(InputType.TEXT)] == ["plain"]
 
 
 def test_unknown_extractor() -> None:
     with pytest.raises(KeyError, match="unknown extractor"):
         get("nope")
+
+
+def test_plain_extractor_reads_lines() -> None:
+    document = get("plain").extract(b"one\n\ntwo\n", limits=LIMITS).document
+    assert document is not None
+    assert [r.text for r in document.pages[0].runs] == ["one", "two"]

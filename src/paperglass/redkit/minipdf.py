@@ -1,4 +1,4 @@
-"""A tiny, dependency-free PDF writer for fixtures and tests.
+"""A tiny, dependency-free PDF writer: the seed of the Red Kit, used for fixtures and tests.
 
 Produces a valid single-font PDF from a list of pages, each a content stream you write
 by hand, so a fixture can set a render mode, a fill colour, a font size, a clip or an
@@ -25,7 +25,7 @@ class Page:
     """Whole extra objects this page needs; "{n}" inside one is replaced by the n-th extra's ref."""
 
 
-def text(
+def text(  # noqa: PLR0913  # one keyword per text-state operator
     content: str,
     *,
     x: float = 72,

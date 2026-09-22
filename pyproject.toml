@@ -92,6 +92,8 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S", "PLR", "ANN"]
+# Detector registrations carry the THREATS.md sentence and threshold verbatim; they may be long.
+"src/paperglass/detectors/**" = ["E501"]
 "scripts/**" = ["S603", "S607"]
 
 [tool.mypy]

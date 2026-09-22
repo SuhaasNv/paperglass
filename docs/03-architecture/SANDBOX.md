@@ -29,4 +29,6 @@ PDF JavaScript, open actions, form calculations; Office macros; external referen
 
 ## Known limits
 
+Each sandboxed call spawns a fresh interpreter (about 0.3 to 1.5 s with the parser imports), which is far above the fast-tier budget of 100 ms per page. The fix is a long-lived worker per parser, reused across calls and restarted on any failure, with the same limits applied at worker start; it is part of the CLI and speed story (US-036) and the budget is measured only after it lands.
+
 A subprocess with rlimits does not stop a memory-safety exploit in a native parser from reading the host. The recommended deployment for untrusted volume is the REST image with `--network none`, a read-only filesystem and a non-root user (`../11-integrations/REST.md`); the fast tier's dependency list is kept under ten packages; `pip-audit` blocks CI; a library with an unpatched critical CVE is dropped or pinned within 30 days.
