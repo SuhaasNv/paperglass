@@ -14,8 +14,8 @@ Schema version 1, designed and built 22 Sep 2026 (US-001) in `src/paperglass/rep
 | `extracted_text` | string | what View A returned for the region (redacted to a length cap when `--redact`) |
 | `render_crop` | data URI or `{ "none": "<reason>" }` | the rendered region; reason when absent (document-level, redacted, fast tier) |
 | `why_hidden` | string | the plain-language sentence from the registry |
-| `mechanism` | string | the exact object or element: "Tr 3 at content stream byte 1214 of page 1 object 12", "w:vanish on run 7 of paragraph 3" |
-| `reproduce` | string | a one-line command: `paperglass show --object 12 file.pdf`, `qpdf --qdf --object-streams=disable file.pdf - | sed -n ...` |
+| `mechanism` | string | the exact object or element: "Tr 3 at instruction 4 of the page 1 content stream (object 4)", "w:vanish on run 7 of paragraph 3" |
+| `reproduce` | string | a one-line command: `paperglass show --page 1 --instruction 4 file.pdf`, `paperglass show --object 12 file.pdf` |
 | `severity` | `info`, `low`, `medium`, `high`, `critical` | after the severity class and profile |
 | `severity_class` | `instruction`, `data`, `benign-hidden`, `structure-only` | the class that produced the severity |
 | `confidence` | float 0 to 1 | per finding |

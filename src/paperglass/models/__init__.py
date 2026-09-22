@@ -23,6 +23,15 @@ from paperglass.models.schema import (
     sha256_of,
     verdict_of,
 )
+from paperglass.models.structure import (
+    DocumentStructure,
+    PageStructure,
+    PdfAnnotation,
+    PdfColour,
+    PdfFontInfo,
+    PdfMetadata,
+    PdfTextObject,
+)
 
 __all__ = [
     "PARSE_FAILURE_TECHNIQUE",
@@ -30,11 +39,18 @@ __all__ = [
     "SEVERITY_ORDER",
     "BBox",
     "CleanResult",
+    "DocumentStructure",
     "DocumentText",
     "Finding",
     "FindingStatus",
+    "PageStructure",
     "PageText",
     "ParseFailure",
+    "PdfAnnotation",
+    "PdfColour",
+    "PdfFontInfo",
+    "PdfMetadata",
+    "PdfTextObject",
     "Receipt",
     "RenderCrop",
     "Report",
