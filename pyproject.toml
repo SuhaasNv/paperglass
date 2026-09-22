@@ -116,8 +116,10 @@ markers = [
 ]
 
 [tool.coverage.run]
-source = ["paperglass.detectors", "paperglass.engine"]
+# Whole package until the first detector lands (US-008); then detectors and engine at 90.
+source = ["paperglass"]
 branch = true
+omit = ["*/adapters/cli.py"]
 
 [tool.coverage.report]
 fail_under = 90

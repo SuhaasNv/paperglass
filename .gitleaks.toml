@@ -1,0 +1,9 @@
+# gitleaks configuration: default rules; fixtures may contain strings that look like keys on purpose.
+[extend]
+useDefault = true
+
+[allowlist]
+paths = [
+  '''tests/fixtures/.*''',
+  '''tests/fuzz/corpus/.*''',
+]
