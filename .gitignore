@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+dist/
+build/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.hypothesis/
+.coverage
+coverage.xml
+htmlcov/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+
+# Paperglass outputs
+*.paperglass.json
+report.html
+.paperglass-cache/
+
+# Benchmark corpora are downloaded, never committed (see docs/08-benchmark/CORPUS_INDEX.md)
+bench/corpus/

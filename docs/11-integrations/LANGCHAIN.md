@@ -1,0 +1,3 @@
+# LangChain (v0.4.0, US-060)
+
+Planned. `from paperglass.adapters.langchain import PaperglassTransformer`; a `BaseDocumentTransformer` that scans each `Document.page_content` source (path in metadata or bytes), adds the shared metadata keys, and replaces `page_content` with the subtractive clean text when the Policy says so. Extra: `pip install "paperglass[langchain]"` (pins `langchain-core`). Tested in `tests/adapters/test_langchain.py` against the pinned version. Limit: if the document has no source file, only the text views run (Unicode probe and structure-only from text) and the report says so.
