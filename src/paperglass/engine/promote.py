@@ -42,7 +42,7 @@ def promote(  # noqa: PLR0911  # one return per branch of the promotion table in
     if raster is None or candidate.bbox is None:
         reason = "fast tier or no bbox" if raster is None else "document-level finding"
         return Promotion(FindingStatus.POSSIBLE, 0, None, None, RenderCrop(none_reason=reason))
-    ink = ink_check(raster, candidate.bbox)
+    ink = ink_check(raster, candidate.bbox, **_ink_thresholds(profile))
     crop = crop_data_uri(raster, candidate.bbox)
     if ink.classification == "invisible" and not structure_only:
         return Promotion(FindingStatus.CONFIRMED, 1, ink, None, crop, views=("B", "C"))
@@ -73,3 +73,12 @@ def ocr_layer_is_benign(
     if agreement(candidate.extracted_text, read.text) >= profile.allowlist.ocr_layer_min_agreement:
         return read
     return None
+
+
+def _ink_thresholds(profile: Profile) -> dict[str, float]:
+    thresholds = profile.thresholds
+    return {
+        "contrast_threshold": thresholds.contrast,
+        "visible_fraction": thresholds.ink_fraction_visible,
+        "invisible_fraction": thresholds.ink_fraction_invisible,
+    }

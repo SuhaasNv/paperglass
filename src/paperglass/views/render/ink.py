@@ -19,6 +19,7 @@ from paperglass.models.raster import InkClass, InkResult, PageRaster
 CONTRAST_THRESHOLD = 24 / 255
 INK_FRACTION_VISIBLE = 0.015
 INK_FRACTION_INVISIBLE = 0.002
+"""Defaults matching profiles/default.toml; callers with a profile pass its thresholds."""
 MARGIN_PT = 4.0
 MIN_PIXELS = 4
 
@@ -42,7 +43,14 @@ def to_pixels(raster: PageRaster, bbox: BBox, pad_pt: float = 0.0) -> tuple[int,
     return x0, y0, x1, y1
 
 
-def ink_check(raster: PageRaster, bbox: BBox) -> InkResult:
+def ink_check(
+    raster: PageRaster,
+    bbox: BBox,
+    *,
+    contrast_threshold: float = CONTRAST_THRESHOLD,
+    visible_fraction: float = INK_FRACTION_VISIBLE,
+    invisible_fraction: float = INK_FRACTION_INVISIBLE,
+) -> InkResult:
     """Classify a region visible, invisible or uncertain from the raster alone."""
     page = _luminance(raster.png)
     x0, y0, x1, y1 = to_pixels(raster, bbox)
@@ -60,13 +68,13 @@ def ink_check(raster: PageRaster, bbox: BBox) -> InkResult:
             pixels=pixels,
         )
     difference = np.abs(region - background)
-    ink_fraction = float(np.mean(difference > CONTRAST_THRESHOLD))
+    ink_fraction = float(np.mean(difference > contrast_threshold))
     contrast = float(np.max(difference))
     variance = float(np.var(region))
     classification: InkClass
-    if ink_fraction >= INK_FRACTION_VISIBLE and contrast > CONTRAST_THRESHOLD:
+    if ink_fraction >= visible_fraction and contrast > contrast_threshold:
         classification = "visible"
-    elif ink_fraction <= INK_FRACTION_INVISIBLE or contrast <= CONTRAST_THRESHOLD:
+    elif ink_fraction <= invisible_fraction or contrast <= contrast_threshold:
         classification = "invisible"
     else:
         classification = "uncertain"

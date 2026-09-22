@@ -61,7 +61,7 @@ def scan_bytes(  # noqa: PLR0913  # the public entry point takes one keyword per
     limits = limits or Limits.from_env()
     prof = load_profile(profile)
     timer = _Timer()
-    stage0 = build_pages(data, limits=limits, extractor=extractor)
+    stage0 = build_pages(data, limits=limits, extractor=extractor, profile=prof)
     timer.lap("stage0")
 
     rasters, render_failure, dpi = _render(data, stage0, limits, tier)

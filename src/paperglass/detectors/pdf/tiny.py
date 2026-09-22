@@ -8,8 +8,6 @@ from paperglass.detectors.registry import SeverityDefault, technique
 from paperglass.models import PdfTextObject
 from paperglass.views.context import PageContext
 
-TINY_PT = 2.0
-
 
 @technique(
     id="pdf.text.tiny",
@@ -28,7 +26,7 @@ class TinyTextDetector(TextObjectDetector):
         if obj.render_mode not in PAINTING_MODES:
             return None
         size = obj.font_size or 0.0
-        if size >= TINY_PT:
+        if size >= ctx.profile.thresholds.tiny_pt:
             return None
         return Candidate(
             technique_id="pdf.text.tiny",

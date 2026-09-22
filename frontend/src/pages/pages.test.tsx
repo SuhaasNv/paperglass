@@ -2,7 +2,7 @@ import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { jsonResponse, maliciousReport, renderAt, scanDetail } from '../test/render'
+import { fetchWithProfiles, jsonResponse, maliciousReport, renderAt, scanDetail } from '../test/render'
 
 afterEach(() => {
   vi.unstubAllGlobals()
@@ -29,7 +29,8 @@ describe('routes', () => {
 describe('upload', () => {
   it('scans the chosen file and moves to the report', async () => {
     const detail = scanDetail({ id: 'xyz', verdict: 'malicious', report: maliciousReport })
-    const fetchMock = vi.fn().mockImplementation(() => Promise.resolve(jsonResponse(detail, 201)))
+    const scans = vi.fn().mockImplementation(() => Promise.resolve(jsonResponse(detail, 201)))
+    const fetchMock = vi.fn().mockImplementation(fetchWithProfiles(scans))
     vi.stubGlobal('fetch', fetchMock)
     const user = userEvent.setup()
     const { router } = renderAt('/')
@@ -37,6 +38,8 @@ describe('upload', () => {
     const file = new File(['%PDF-1.4'], 'resume.pdf', { type: 'application/pdf' })
     await user.upload(screen.getByLabelText('File'), file)
     await user.selectOptions(screen.getByLabelText('Tier'), 'fast')
+    await screen.findByRole('option', { name: 'resume' })
+    await user.selectOptions(screen.getByLabelText('Profile'), 'resume')
     await user.click(screen.getByRole('button', { name: 'Scan' }))
 
     await waitFor(() => expect(router.state.location.pathname).toBe('/scans/xyz'))
@@ -44,14 +47,20 @@ describe('upload', () => {
     expect(screen.getByTestId('findings').querySelectorAll('li')).toHaveLength(1)
     expect(screen.getByText(/paperglass show --page 1 --instruction 9 resume.pdf/)).toBeInTheDocument()
     // The report came back from the mutation; the results page did not fetch it again.
-    expect(fetchMock).toHaveBeenCalledTimes(1)
+    expect(scans).toHaveBeenCalledTimes(1)
+    const [, init] = scans.mock.calls[0] as [string, RequestInit]
+    expect((init.body as FormData).get('profile')).toBe('resume')
   })
 
   it('shows the server message when the upload is refused', async () => {
     vi.stubGlobal(
       'fetch',
-      vi.fn().mockResolvedValue(
-        jsonResponse({ error: { code: 'upload_too_large', message: 'The file is 30 MB; the limit is 25 MB.' } }, 413),
+      vi.fn().mockImplementation(
+        fetchWithProfiles(() =>
+          Promise.resolve(
+            jsonResponse({ error: { code: 'upload_too_large', message: 'The file is 30 MB; the limit is 25 MB.' } }, 413),
+          ),
+        ),
       ),
     )
     const user = userEvent.setup()

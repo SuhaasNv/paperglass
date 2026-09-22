@@ -9,27 +9,28 @@ from paperglass.detectors.base import Candidate, Detector
 from paperglass.detectors.pdf._common import PAINTING_MODES, preview
 from paperglass.detectors.registry import SeverityDefault, technique
 from paperglass.models import BBox, PageStructure, PdfTextObject
+from paperglass.profiles import Thresholds
 from paperglass.views.context import PageContext
 from paperglass.views.render import ink_check
-
-NEAR_WHITE = 1.0 - 24 / 255
-ALPHA = 0.1
-TINY_PT = 2.0
 
 
 def overlaps(a: BBox, b: BBox) -> bool:
     return not (a.x1 <= b.x0 or a.x0 >= b.x1 or a.y1 <= b.y0 or a.y0 >= b.y1)
 
 
-def explained_by_state(obj: PdfTextObject, page: PageStructure) -> bool:
+def explained_by_state(obj: PdfTextObject, page: PageStructure, thresholds: Thresholds) -> bool:
     """True when another technique already accounts for the object being invisible."""
     if obj.render_mode not in PAINTING_MODES:
         return True
-    if obj.fill is not None and obj.fill.grey is not None and obj.fill.grey >= NEAR_WHITE:
+    if (
+        obj.fill is not None
+        and obj.fill.grey is not None
+        and obj.fill.grey >= 1.0 - thresholds.contrast
+    ):
         return True
-    if obj.fill_alpha < ALPHA or obj.ocg_hidden:
+    if obj.fill_alpha < thresholds.alpha or obj.ocg_hidden:
         return True
-    if (obj.font_size or 0.0) < TINY_PT:
+    if (obj.font_size or 0.0) < thresholds.tiny_pt:
         return True
     visible = page.crop_box or BBox(x0=0, y0=0, x1=page.width, y1=page.height)
     return obj.bbox is not None and not overlaps(obj.bbox, visible)
@@ -59,9 +60,17 @@ class CoveredTextDetector(Detector):
                 for obj in ctx.structure.text_objects
                 if obj.bbox is not None and overlaps(obj.bbox, run.bbox)
             ]
-            if objects and all(explained_by_state(obj, ctx.structure) for obj in objects):
+            if objects and all(
+                explained_by_state(obj, ctx.structure, ctx.profile.thresholds) for obj in objects
+            ):
                 continue
-            ink = ink_check(ctx.raster, run.bbox)
+            ink = ink_check(
+                ctx.raster,
+                run.bbox,
+                contrast_threshold=ctx.profile.thresholds.contrast,
+                visible_fraction=ctx.profile.thresholds.ink_fraction_visible,
+                invisible_fraction=ctx.profile.thresholds.ink_fraction_invisible,
+            )
             if ink.classification != "invisible":
                 continue
             found.append(

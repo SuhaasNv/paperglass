@@ -10,7 +10,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import health, scans, techniques
+from app.api import health, profiles, scans, techniques
 from app.db import get_engine, get_session
 from app.errors import install_error_handlers
 from app.models import Base
@@ -67,6 +67,7 @@ def create_app() -> FastAPI:
     app.include_router(health.router)
     app.include_router(scans.router)
     app.include_router(techniques.router)
+    app.include_router(profiles.router)
     return app
 
 

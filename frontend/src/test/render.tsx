@@ -22,6 +22,21 @@ export function withProviders(node: ReactNode) {
   return <QueryClientProvider client={makeQueryClient()}>{node}</QueryClientProvider>
 }
 
+export const profileList = {
+  profiles: [
+    { name: 'default', version: '1', description: 'Thresholds as documented.' },
+    { name: 'resume', version: '1', description: 'Resume screening.' },
+  ],
+}
+
+/** A fetch mock that answers the profile list and otherwise the given responder. */
+export function fetchWithProfiles(
+  responder: (url: string, init?: RequestInit) => Promise<Response>,
+): (url: string, init?: RequestInit) => Promise<Response> {
+  return (url, init) =>
+    url.endsWith('/api/v1/profiles') ? Promise.resolve(jsonResponse(profileList)) : responder(url, init)
+}
+
 export function jsonResponse(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
     status,

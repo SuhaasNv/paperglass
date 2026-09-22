@@ -8,8 +8,6 @@ from paperglass.detectors.registry import SeverityDefault, technique
 from paperglass.models import PdfTextObject
 from paperglass.views.context import PageContext
 
-ALPHA_THRESHOLD = 0.1
-
 
 @technique(
     id="pdf.text.opacity",
@@ -24,7 +22,7 @@ ALPHA_THRESHOLD = 0.1
 )
 class OpacityDetector(TextObjectDetector):
     def check(self, ctx: PageContext, obj: PdfTextObject) -> Candidate | None:
-        if obj.render_mode not in PAINTING_MODES or obj.fill_alpha >= ALPHA_THRESHOLD:
+        if obj.render_mode not in PAINTING_MODES or obj.fill_alpha >= ctx.profile.thresholds.alpha:
             return None
         return Candidate(
             technique_id="pdf.text.opacity",

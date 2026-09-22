@@ -38,7 +38,7 @@ paperglass show resume.pdf --page 1 --instruction 9   # the bytes behind a findi
 paperglass version                           # tool and rule versions
 ```
 
-Exit codes: 0 clean or benign-hidden, 1 suspicious, 2 malicious, 3 error. Tiers: `fast` (structure and a raster ink check, about 18 ms per one-page document on a laptop), `standard` (adds OCR on crops), `deep` (opt-in, later). Profiles (`resume`, `peer-review`, `rag-ingest`) arrive with v0.2.0. Full contract: `docs/04-report-design/CLI_DESIGN.md`.
+Exit codes: 0 clean or benign-hidden, 1 suspicious, 2 malicious, 3 error. Tiers: `fast` (structure and a raster ink check, about 18 ms per one-page document on a laptop), `standard` (adds OCR on crops), `deep` (opt-in, later). Profiles: `--profile resume`, `peer-review` or `rag-ingest` change the thresholds, the benign-hidden allowances and the instruction phrases (`docs/04-report-design/REPORT_DESIGN.md`, Profiles). Full contract: `docs/04-report-design/CLI_DESIGN.md`.
 
 Example output for a resume with a white-on-white paragraph:
 

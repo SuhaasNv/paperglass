@@ -1,0 +1,21 @@
+# Manuscript review. Ligature and hyphenation ActualText and tagged structure are expected
+# in a typeset paper, figure alt text runs long, and the phrases to watch are about the
+# review itself. Everything not stated comes from default.
+
+extends = "default"
+name = "peer-review"
+version = "1"
+
+[allowlist]
+actual_text_max_chars = 6     # ligatures, hyphenation and short symbol substitutions
+alt_text_max_chars = 600      # figure descriptions
+
+[severity]
+instruction_critical_verbs = ["accept", "reject", "praise", "rate", "grade"]
+
+[phrases]
+instruction = [
+  "strong accept", "accept this paper", "recommend acceptance", "reviewer", "give a high score",
+  "novel contribution", "well written", "no weaknesses", "do not reject", "rating",
+  "meta-review", "area chair", "overall score",
+]

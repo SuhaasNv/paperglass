@@ -62,7 +62,7 @@ The backend is an adapter in the layering sense (it sits above `engine`); the fr
 
 ## Layering rule (enforced by `tests/unit/test_layering.py`)
 
-`adapters -> engine -> views / detectors -> parsers`. Detectors never import adapters. `engine` never imports `report`. `report` reads models only. Nothing imports a network client except `adapters`, and only behind `allow_network=True`. `models` and `profiles` are shared and importable by every package. The exact allowed edges are the `ALLOWED` table in `tests/unit/test_layering.py`.
+`adapters -> engine -> views / detectors -> parsers`. Detectors never import adapters. `engine` never imports `report`. `report` reads models only. Nothing imports a network client except `adapters`, and only behind `allow_network=True`. `models` and `profiles` (the TOML files and their models; detectors read thresholds from the profile on the page context) are shared and importable by every package. The exact allowed edges are the `ALLOWED` table in `tests/unit/test_layering.py`.
 
 ## Adapter table
 

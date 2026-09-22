@@ -6,6 +6,7 @@ import {
   createScan,
   fingerprintScan,
   getScan,
+  listProfiles,
   listScans,
   listTechniques,
   type CreateScanInput,
@@ -16,6 +17,7 @@ export const keys = {
   scans: ['scans'] as const,
   scan: (id: string) => ['scans', id] as const,
   techniques: ['techniques'] as const,
+  profiles: ['profiles'] as const,
 }
 
 export function useScan(id: string) {
@@ -34,6 +36,10 @@ export function useScans() {
 
 export function useTechniques() {
   return useQuery({ queryKey: keys.techniques, queryFn: listTechniques, staleTime: Infinity })
+}
+
+export function useProfiles() {
+  return useQuery({ queryKey: keys.profiles, queryFn: listProfiles, staleTime: Infinity })
 }
 
 export function useCreateScan() {

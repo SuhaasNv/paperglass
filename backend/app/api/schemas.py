@@ -46,3 +46,13 @@ class TechniqueOut(BaseModel):
 
 class TechniqueList(BaseModel):
     techniques: list[TechniqueOut]
+
+
+class ProfileOut(BaseModel):
+    name: str
+    version: str
+    description: str
+
+
+class ProfileList(BaseModel):
+    profiles: list[ProfileOut]

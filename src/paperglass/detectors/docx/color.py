@@ -10,8 +10,6 @@ from paperglass.detectors.registry import SeverityDefault, technique
 from paperglass.models.docx import DocxRun, DocxStructure
 from paperglass.views.context import PageContext
 
-CONTRAST = 24 / 255
-
 
 def _hex_grey(value: str | None) -> float | None:
     if not value or len(value) != 6:
@@ -54,7 +52,7 @@ class ColorRunDetector(Detector):
             if run.grey is None or not run.text.strip() or run.vanish:
                 continue
             background = background_of(run, ctx.docx) or 1.0
-            if abs(run.grey - background) > CONTRAST:
+            if abs(run.grey - background) > ctx.profile.thresholds.contrast:
                 continue
             found.append(
                 Candidate(
